@@ -387,7 +387,7 @@ const CAMERA_PRESETS = {
     sensor: '1:1',
     fovRatioH: 2.50,
     fovRatioV: 2.50,
-    note: '1:1 sensor, Wide mode. Measured FOV ratio 2.50.',
+    note: '1:1 sensor, variable f/2.0\u2013f/4.0 aperture, Wide mode. FOV ratio 2.50.',
     corner: {
       wide:   { label: '1\u00D7',      fovRatioH: 2.50, fovRatioV: 2.50 },
       zoomed: { label: '2\u00D7 Zoom', fovRatioH: 1.25, fovRatioV: 1.25 }
@@ -530,10 +530,10 @@ function computeLighting() {
   const t = 1 / state.shutterSpeed; // seconds
   const subjectLux = (C * N * N) / (t * state.iso);
 
-  // Green screen: 0.5–1.0 stops below subject
-  const gsIdealLux = subjectLux * 0.7;  // ~0.5 stops under
-  const gsMinLux = subjectLux * 0.5;    // 1.0 stop under (lower bound)
-  const gsMaxLux = subjectLux * 1.0;    // same as subject (upper bound)
+  // Green screen: 1.0–1.5 stops below subject (industry standard for clean chroma key)
+  const gsIdealLux = subjectLux * 0.42;  // ~1.25 stops under (midpoint)
+  const gsMinLux = subjectLux * 0.35;    // 1.5 stops under (lower bound)
+  const gsMaxLux = subjectLux * 0.50;    // 1.0 stop under (upper bound)
 
   // Spill distance: action zone edge → nearest wall (side direction)
   const spillSide = state.sideMargin + (state.matSize - state.actionWidth) / 2;
@@ -577,14 +577,15 @@ function updateLightingPanel() {
     <div class="font-bold text-gray-300 mb-1">Required Illumination</div>
     <div><span class="text-gray-500">Action area:</span> <span class="text-yellow-300 font-mono font-bold">${fmt(L.subjectLux)} lux</span></div>
     <div><span class="text-gray-500">Green screen:</span> <span class="text-green-400 font-mono font-bold">${fmt(L.gsIdealLux)} lux</span> <span class="text-gray-600">(range: ${fmt(L.gsMinLux)}\u2013${fmt(L.gsMaxLux)})</span></div>
-    <div class="text-gray-600 mt-1">GS should be 0.5\u20131.0 stops below subject. Evenness: \u00B10.5 stops across surface (max:min \u2264 2:1).</div>
+    <div class="text-gray-600 mt-1">GS should be 1.0\u20131.5 stops below subject. Evenness: \u00B10.25 stops across surface (max:min \u2264 1.4:1).</div>
     <div class="mt-1"><span class="text-gray-500">EV:</span> <span class="font-mono">${L.ev.toFixed(1)}</span></div>
     <div class="mt-2 border-t border-gray-800 pt-2">
       <div class="text-gray-500 font-bold mb-1">Formula &amp; Assumptions</div>
       <div class="font-mono text-gray-600">Lux = (C \u00D7 N\u00B2) / (t \u00D7 ISO)</div>
       <div class="text-gray-600 mt-1">C = 250 (ISO 2720 incident flat-receptor calibration constant)<br>N = ${state.fStop} (f-stop) \u00B7 t = 1/${state.shutterSpeed}s \u00B7 ISO ${state.iso}<br>= (250 \u00D7 ${state.fStop}\u00B2) / (${(1/state.shutterSpeed).toFixed(5)} \u00D7 ${state.iso}) = <b>${fmt(L.subjectLux)} lux</b></div>
-      <div class="text-gray-600 mt-1">GS ideal = subject \u00D7 0.7 (\u22480.5 stops under)<br>GS range = subject \u00D7 0.5\u20131.0 (0.5\u20131.0 stops under)</div>
-      <div class="text-gray-600 mt-1">Evenness: \u00B10.5 stops across GS surface (max:min \u2264 2:1)</div>
+      <div class="text-gray-600 mt-1">GS ideal = subject \u00D7 0.42 (\u22481.25 stops under)<br>GS range = subject \u00D7 0.35\u20130.50 (1.0\u20131.5 stops under)</div>
+      <div class="text-gray-600 mt-1">Evenness: \u00B10.25 stops across GS surface (max:min \u2264 1.4:1)</div>
+      <div class="text-gray-600 mt-1">DJI OA6: variable f/2.0\u2013f/4.0, 10-bit HEVC 4:2:0.<br>Recommend <b>Standard</b> colour profile for green screen<br>(D-Log M needs CST before keying; 4:2:0 limits log advantage).</div>
     </div>
     <div class="mt-2 font-bold text-gray-300">Green Spill Check</div>
     <div><span class="text-gray-500">Distance to wall:</span> <span style="color:${spillColor}" class="font-mono">${spillIcon} ${L.spillSide.toFixed(2)}m</span> <span class="text-gray-600">(min 1.8m recommended)</span></div>
