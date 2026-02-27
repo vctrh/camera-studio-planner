@@ -1,0 +1,1636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Camera Studio Planner — 8-Cam Taekwondo Setup</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    border-radius: 3px;
+    background: #374151;
+    outline: none;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #22c55e;
+    cursor: pointer;
+    border: 2px solid #111827;
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #22c55e;
+    cursor: pointer;
+    border: 2px solid #111827;
+  }
+  .num-input {
+    background: #1f2937;
+    border: 1px solid #374151;
+    border-radius: 4px;
+    padding: 4px 8px;
+    color: #f3f4f6;
+    font-family: monospace;
+    font-size: 13px;
+    width: 100%;
+    outline: none;
+  }
+  .num-input:focus { border-color: #22c55e; }
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: #6b7280;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .data-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 3px 0;
+  }
+  .data-label { color: #9ca3af; font-size: 11px; }
+  .data-value { color: #e5e7eb; font-size: 12px; font-family: monospace; font-weight: 600; }
+  .data-desc { color: #4b5563; font-size: 9px; margin-top: -2px; margin-bottom: 4px; }
+  .cam-group-label { font-size: 10px; font-weight: 700; letter-spacing: 0.05em; color: #22c55e; margin-top: 8px; margin-bottom: 4px; }
+</style>
+</head>
+<body class="bg-gray-950 text-gray-100 font-mono overflow-hidden">
+<div class="flex flex-col md:flex-row h-screen">
+
+  <!-- SIDEBAR -->
+  <aside class="w-full md:w-80 flex-shrink-0 bg-gray-900 border-b md:border-b-0 md:border-r border-gray-800 overflow-y-auto p-5">
+    <div class="mb-5">
+      <h1 class="text-base font-bold text-green-400 tracking-widest">STUDIO PLANNER</h1>
+      <p class="text-[10px] text-gray-500 mt-0.5">8-Camera Poomsae Capture</p>
+    </div>
+
+    <!-- Studio Dimensions -->
+    <div class="mb-5">
+      <div class="section-label">Studio Dimensions</div>
+      <div class="mb-3">
+        <div class="flex justify-between text-xs text-gray-400 mb-1">
+          <span>Mat Size</span>
+          <span id="matSizeDisplay" class="text-gray-200">9.0 m</span>
+        </div>
+        <input type="range" id="matSize" min="6" max="12" step="0.5" value="9" class="w-full">
+      </div>
+      <div class="mb-3">
+        <div class="flex justify-between text-xs text-gray-400 mb-1">
+          <span>Side Cam Margin</span>
+          <span id="sideMarginDisplay" class="text-gray-200">0.5 m</span>
+        </div>
+        <input type="range" id="sideMargin" min="0" max="3" step="0.1" value="0.5" class="w-full">
+      </div>
+      <div>
+        <div class="flex justify-between text-xs text-gray-400 mb-1">
+          <span>Corner Cam Margin</span>
+          <span id="cornerMarginDisplay" class="text-gray-200">0.5 m</span>
+        </div>
+        <input type="range" id="cornerMargin" min="0" max="3" step="0.1" value="0.5" class="w-full">
+      </div>
+    </div>
+
+    <!-- Camera Setup -->
+    <div class="mb-5">
+      <div class="section-label">Camera Setup</div>
+      <div class="mb-3">
+        <div class="flex justify-between text-xs text-gray-400 mb-1">
+          <span>Tripod Height</span>
+          <span id="tripodHeightDisplay" class="text-gray-200">1.60 m</span>
+        </div>
+        <input type="range" id="tripodHeight" min="0.3" max="2.5" step="0.05" value="1.60" class="w-full">
+      </div>
+      <div class="mb-3">
+        <div class="flex justify-between text-xs text-gray-400 mb-1">
+          <span>Max Kick Height</span>
+          <span id="kickHeightDisplay" class="text-gray-200">1.92 m</span>
+        </div>
+        <input type="range" id="kickHeight" min="1.5" max="3.0" step="0.01" value="1.92" class="w-full">
+      </div>
+      <div>
+        <div class="flex justify-between text-xs text-gray-400 mb-1">
+          <span>Green Screen Height</span>
+          <span id="greenScreenHeightDisplay" class="text-gray-200">3.50 m</span>
+        </div>
+        <input type="range" id="greenScreenHeight" min="2.0" max="5.0" step="0.1" value="3.5" class="w-full">
+      </div>
+    </div>
+
+    <!-- Action Zone -->
+    <div class="mb-5">
+      <div class="section-label">Action Zone</div>
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="text-[10px] text-gray-500 block mb-1">Width (m)</label>
+          <input type="number" id="actionWidth" value="5.5" step="0.1" min="1" max="12" class="num-input">
+        </div>
+        <div>
+          <label class="text-[10px] text-gray-500 block mb-1">Height (m)</label>
+          <input type="number" id="actionHeight" value="5.5" step="0.1" min="1" max="12" class="num-input">
+        </div>
+      </div>
+    </div>
+
+    <!-- Poomsae Visualization -->
+    <div class="mb-5">
+      <div class="section-label">Poomsae Floor Pattern</div>
+      <div class="mb-3">
+        <label class="text-[10px] text-gray-500 block mb-1">Select Poomsae</label>
+        <select id="selectedPoomsae" class="num-input">
+          <option value="none">-- None --</option>
+          <!-- Populated dynamically from POOMSAE_FLOOR_PATTERNS -->
+        </select>
+      </div>
+      <div id="patternInfo" class="text-[10px] text-gray-600 mb-2 hidden"></div>
+    </div>
+
+    <!-- Lighting Planner -->
+    <div class="mb-5">
+      <div class="section-label">Lighting Planner</div>
+      <div class="grid grid-cols-3 gap-2 mb-3">
+        <div>
+          <label class="text-[10px] text-gray-500 block mb-1">F-stop</label>
+          <select id="fStop" class="num-input">
+            <option value="2.0">f/2.0</option>
+            <option value="2.6">f/2.6</option>
+            <option value="2.8" selected>f/2.8</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-[10px] text-gray-500 block mb-1">ISO</label>
+          <select id="iso" class="num-input">
+            <option value="100" selected>100</option>
+            <option value="200">200</option>
+            <option value="400">400</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-[10px] text-gray-500 block mb-1">Shutter</label>
+          <select id="shutterSpeed" class="num-input">
+            <option value="60">1/60</option>
+            <option value="100">1/100</option>
+            <option value="120" selected>1/120</option>
+            <option value="160">1/160</option>
+            <option value="200">1/200</option>
+            <option value="240">1/240</option>
+          </select>
+        </div>
+      </div>
+      <div id="lightingResults" class="text-[10px] text-gray-400 space-y-1"></div>
+    </div>
+
+    <!-- Optics -->
+    <div class="mb-5">
+      <div class="section-label">Optics</div>
+      <div class="mb-3">
+        <label class="text-[10px] text-gray-500 block mb-1">Camera Preset</label>
+        <select id="cameraPreset" class="num-input mb-2">
+          <option value="dji-oa6">DJI Osmo Action 6</option>
+          <option value="gopro-hero12">GoPro HERO 12</option>
+          <option value="gopro-hero13">GoPro HERO 13</option>
+          <option value="custom">Custom</option>
+        </select>
+        <div id="cameraNote" class="text-[9px] text-gray-500 mb-2"></div>
+      </div>
+      <div class="mb-3">
+        <div class="grid grid-cols-2 gap-2 mb-2">
+          <div>
+            <label class="text-[10px] text-gray-500 block mb-1">H FOV ratio</label>
+            <input type="number" id="fovRatioH" value="2.5" step="0.05" min="0.3" max="8" class="num-input">
+          </div>
+          <div>
+            <label class="text-[10px] text-gray-500 block mb-1">V FOV ratio</label>
+            <input type="number" id="fovRatioV" value="2.5" step="0.05" min="0.3" max="8" class="num-input">
+          </div>
+        </div>
+        <div class="flex justify-between text-xs text-gray-400 mb-1">
+          <span>H: <span id="fovAngleHDisplay" class="text-green-400">102.6&deg;</span></span>
+          <span>V: <span id="fovAngleVDisplay" class="text-green-400">102.6&deg;</span></span>
+        </div>
+      </div>
+      <div>
+        <label class="text-[10px] text-gray-500 block mb-2">Corner Camera Mode</label>
+        <div class="flex gap-2">
+          <button id="btnWide" onclick="setCornerMode('wide')"
+            class="flex-1 py-1.5 px-3 text-xs rounded font-semibold bg-green-600 text-white transition-colors">1&times;</button>
+          <button id="btnZoomed" onclick="setCornerMode('zoomed')"
+            class="flex-1 py-1.5 px-3 text-xs rounded font-semibold bg-gray-700 text-gray-400 transition-colors">2&times; Zoom</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="border-t border-gray-800 my-4"></div>
+
+    <!-- Data Panel -->
+    <div class="mb-4">
+      <div class="section-label">Camera Data</div>
+
+      <!-- Side Cameras -->
+      <div class="cam-group-label">SIDE CAMERAS (N, S, E, W)</div>
+      <div class="data-row">
+        <span class="data-label">Distance to action zone</span>
+        <span class="data-value" id="dataSideDist">3.25 m</span>
+      </div>
+      <div class="data-desc">Lens to nearest edge of the action zone</div>
+      <div class="data-row">
+        <span class="data-label">Frame size at zone edge</span>
+        <span class="data-value" id="dataSideFrame">8.13 &times; 8.13 m</span>
+      </div>
+      <div class="data-desc">H &times; V visible where the athlete reaches the zone boundary</div>
+      <div class="data-row">
+        <span class="data-label">Headroom at zone edge</span>
+        <span class="data-value" id="dataSideHeadroom">3.16 m</span>
+      </div>
+      <div class="data-desc">Space above a 1.70m athlete's head in frame, accounting for tripod height</div>
+
+      <!-- Corner Cameras -->
+      <div class="cam-group-label" style="margin-top:12px">CORNER CAMERAS (NE, NW, SE, SW)</div>
+      <div class="data-row">
+        <span class="data-label">Distance to action zone</span>
+        <span class="data-value" id="dataCornerDist">4.60 m</span>
+      </div>
+      <div class="data-desc">Lens to nearest corner of the action zone (diagonal)</div>
+      <div class="data-row">
+        <span class="data-label">Frame size at zone edge</span>
+        <span class="data-value" id="dataCornerFrame">11.49 &times; 11.49 m</span>
+      </div>
+      <div class="data-desc">H &times; V visible at the zone corner (affected by zoom mode)</div>
+      <div class="data-row">
+        <span class="data-label">Headroom at zone edge</span>
+        <span class="data-value" id="dataCornerHeadroom">4.85 m</span>
+      </div>
+      <div class="data-desc">Space above a 1.70m athlete's head in frame, accounting for tripod height</div>
+      <div id="vfovWarning" class="text-[10px] mt-2 hidden" style="color:#ef4444"></div>
+
+      <!-- Comparison -->
+      <div class="cam-group-label" style="margin-top:12px">COMPARISON</div>
+      <div class="data-row">
+        <span class="data-label">Pixel density drop-off</span>
+        <span class="data-value" id="dataDropoff">29.3%</span>
+      </div>
+      <div class="data-desc">Resolution loss at zone edge: corner vs side (farther = less detail per pixel)</div>
+    </div>
+
+    <!-- Green Screen -->
+    <div class="border-t border-gray-800 my-4 pt-4">
+      <div class="section-label">Green Screen</div>
+      <div class="data-row">
+        <span class="data-label">Required height (side)</span>
+        <span class="data-value" id="dataGsSide">4.52 m</span>
+      </div>
+      <div class="data-desc">Min. green screen height so kick doesn't exceed it in side camera view</div>
+      <div class="data-row">
+        <span class="data-label">Required height (corner)</span>
+        <span class="data-value" id="dataGsCorner">4.52 m</span>
+      </div>
+      <div class="data-desc">Min. green screen height for corner cameras (along diagonal)</div>
+      <div class="data-row">
+        <span class="data-label">Status</span>
+        <span class="data-value" id="dataGsStatus" style="color:#ef4444">&#9888; TOO LOW</span>
+      </div>
+      <div class="data-desc">Whether current green screen height covers the worst-case sight line</div>
+    </div>
+
+    <!-- Coverage -->
+    <div class="border-t border-gray-800 pt-4">
+      <div class="flex items-center gap-2">
+        <span id="coverageBadge" class="px-2 py-1 rounded text-[10px] font-bold bg-green-900 text-green-400">FULL COVERAGE</span>
+        <span id="coveragePercent" class="text-xs text-gray-400 font-mono">100.0%</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- CANVAS -->
+  <main id="canvasContainer" class="flex-1 flex items-center justify-center bg-gray-200 p-2 md:p-4 min-h-0 relative">
+    <canvas id="studioCanvas"></canvas>
+    <!-- Side-View Overlay -->
+    <div id="povOverlay" class="absolute hidden pointer-events-none" style="width:400px">
+      <div class="bg-gray-900/95 border border-gray-700 rounded-lg shadow-2xl p-3">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-2 h-2 rounded-full bg-green-400"></div>
+          <span id="povCamLabel" class="text-sm font-bold text-gray-100">N</span>
+          <span id="povCamType" class="text-xs text-gray-500">Side Camera</span>
+          <span class="text-xs text-gray-600 ml-auto">Side View Cross-Section</span>
+        </div>
+        <canvas id="povCanvas" width="376" height="200" class="w-full rounded border border-gray-700 bg-gray-950"></canvas>
+        <div class="mt-2 grid grid-cols-2 gap-x-4 gap-y-1">
+          <div class="flex justify-between text-xs">
+            <span class="text-gray-500">Dist. to zone</span>
+            <span id="povDist" class="text-gray-200 font-mono">3.25 m</span>
+          </div>
+          <div class="flex justify-between text-xs">
+            <span class="text-gray-500">GS required</span>
+            <span id="povGsRequired" class="text-gray-200 font-mono">4.52 m</span>
+          </div>
+          <div class="flex justify-between text-xs">
+            <span class="text-gray-500">GS clearance</span>
+            <span id="povGsClearance" class="text-red-400 font-mono font-bold">-1.52 m</span>
+          </div>
+          <div class="flex justify-between text-xs">
+            <span class="text-gray-500">Kick in frame</span>
+            <span id="povKickPercent" class="text-gray-200 font-mono">25.8%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</div>
+
+<script>
+// ── CONSTANTS ─────────────────────────────────────────
+const ATHLETE_HEIGHT = 1.70; // meters
+
+// ── POOMSAE FLOOR PATTERNS ─────────────────────────────
+// Each pattern: path of {x, fwd} waypoints relative to start position.
+// x = lateral meters (+ = right), fwd = forward meters (toward -Y in world).
+// bounds = pre-computed bounding box. symbol = traditional character.
+const POOMSAE_FLOOR_PATTERNS = {
+  'Koryo': { symbol: '士',  // Scholar: wider bar at start, narrower at far end
+    path: [ {x:0,fwd:0}, {x:-2.0,fwd:0}, {x:0,fwd:0}, {x:2.0,fwd:0}, {x:0,fwd:0},
+            {x:0,fwd:3.5}, {x:-1.0,fwd:3.5}, {x:0,fwd:3.5}, {x:1.0,fwd:3.5},
+            {x:0,fwd:3.5}, {x:0,fwd:0} ],
+    bounds: { minX:-2.0, maxX:2.0, minFwd:0, maxFwd:3.5 } },
+
+  'Sipjin': { symbol: '十',  // Equal-armed cross, starts from CENTER
+    path: [ {x:0,fwd:0}, {x:-2.5,fwd:0}, {x:0,fwd:0}, {x:2.5,fwd:0}, {x:0,fwd:0},
+            {x:0,fwd:2.5}, {x:0,fwd:0}, {x:0,fwd:-2.5}, {x:0,fwd:0} ],
+    bounds: { minX:-2.5, maxX:2.5, minFwd:-2.5, maxFwd:2.5 } },
+
+  'Chonkwon': { symbol: 'ㅜ',  // Inverted T: vertical forward + lateral bar at top
+    path: [ {x:0,fwd:0}, {x:0,fwd:3.0}, {x:-1.5,fwd:3.0}, {x:0,fwd:3.0},
+            {x:1.5,fwd:3.0}, {x:0,fwd:3.0}, {x:0,fwd:0} ],
+    bounds: { minX:-1.5, maxX:1.5, minFwd:0, maxFwd:3.0 } },
+
+  'Ilyeo': { symbol: '卍',  // Buddhist swastika, all turns counterclockwise
+    path: [ {x:0,fwd:0}, {x:0,fwd:1.2}, {x:-1.2,fwd:1.2}, {x:0,fwd:1.2}, {x:0,fwd:0},
+            {x:1.2,fwd:0}, {x:1.2,fwd:1.2}, {x:1.2,fwd:0}, {x:0,fwd:0},
+            {x:0,fwd:-1.2}, {x:1.2,fwd:-1.2}, {x:0,fwd:-1.2}, {x:0,fwd:0},
+            {x:-1.2,fwd:0}, {x:-1.2,fwd:-1.2}, {x:-1.2,fwd:0}, {x:0,fwd:0} ],
+    bounds: { minX:-1.2, maxX:1.2, minFwd:-1.2, maxFwd:1.2 } },
+};
+
+const CAMERA_PRESETS = {
+  'dji-oa6': {
+    name: 'DJI Osmo Action 6',
+    sensor: '1:1',
+    fovRatioH: 2.50,
+    fovRatioV: 2.50,
+    note: '1:1 sensor, Wide mode. Measured FOV ratio 2.50.',
+    corner: {
+      wide:   { label: '1\u00D7',      fovRatioH: 2.50, fovRatioV: 2.50 },
+      zoomed: { label: '2\u00D7 Zoom', fovRatioH: 1.25, fovRatioV: 1.25 }
+    }
+  },
+  'gopro-hero12': {
+    name: 'GoPro HERO 12',
+    sensor: '8:7 \u2192 16:9',
+    fovRatioH: 2.72,
+    fovRatioV: 1.53,
+    note: '8:7 sensor, 16:9 crop for 4K60. 100 Mbps. H +9% wider than DJI, V 39% narrower.',
+    corner: {
+      wide:   { label: 'Wide',            fovRatioH: 2.72, fovRatioV: 1.53 },
+      zoomed: { label: '1.38\u00D7 Crop', fovRatioH: 1.97, fovRatioV: 1.11 }
+    }
+  },
+  'gopro-hero13': {
+    name: 'GoPro HERO 13',
+    sensor: '8:7 \u2192 16:9',
+    fovRatioH: 2.72,
+    fovRatioV: 1.53,
+    note: '8:7 sensor, 16:9 crop for 4K60. 120 Mbps, GP-Log, HB lenses. H +9% wider than DJI, V 39% narrower.',
+    corner: {
+      wide:   { label: 'Wide',            fovRatioH: 2.72, fovRatioV: 1.53 },
+      zoomed: { label: '1.38\u00D7 Crop', fovRatioH: 1.97, fovRatioV: 1.11 }
+    }
+  },
+  'custom': {
+    name: 'Custom',
+    sensor: 'custom',
+    fovRatioH: 2.50,
+    fovRatioV: 2.50,
+    note: 'Enter your own FOV ratios',
+    corner: {
+      wide:   { label: '1\u00D7',      fovRatioH: 2.50, fovRatioV: 2.50 },
+      zoomed: { label: '2\u00D7 Zoom', fovRatioH: 1.25, fovRatioV: 1.25 }
+    }
+  }
+};
+
+// ── STATE ──────────────────────────────────────────────
+const state = {
+  matSize: 9,
+  sideMargin: 0.5,
+  cornerMargin: 0.5,
+  actionWidth: 5.5,
+  actionHeight: 5.5,
+  fovRatioH: 2.5,
+  fovRatioV: 2.5,
+  cameraPreset: 'dji-oa6',
+  cornerMode: 'wide',
+  tripodHeight: 1.60,
+  kickHeight: 1.92,
+  greenScreenHeight: 3.50,
+  selectedPoomsae: 'none',
+  fStop: 2.8,
+  iso: 100,
+  shutterSpeed: 120
+};
+
+let hoveredCamId = null; // which camera is hovered
+
+// ── DOM REFS ───────────────────────────────────────────
+const canvas = document.getElementById('studioCanvas');
+const ctx = canvas.getContext('2d');
+const container = document.getElementById('canvasContainer');
+const povOverlay = document.getElementById('povOverlay');
+const povCanvas = document.getElementById('povCanvas');
+const povCtx = povCanvas.getContext('2d');
+let dpr = 1;
+
+// ── DERIVED COMPUTATIONS ───────────────────────────────
+function computeDerived() {
+  const halfMat = state.matSize / 2;
+  const sideOffset = halfMat + state.sideMargin;
+  const cornerOffset = halfMat + state.cornerMargin;
+  const sideDistance = sideOffset;
+  const cornerDistance = Math.SQRT2 * cornerOffset;
+  // Look up corner FOV from preset's corner config
+  const preset = CAMERA_PRESETS[state.cameraPreset];
+  const cornerCfg = preset && preset.corner
+    ? preset.corner[state.cornerMode] || preset.corner.wide
+    : { fovRatioH: state.fovRatioH, fovRatioV: state.fovRatioV };
+  const cornerFovRatioH = cornerCfg.fovRatioH;
+  const cornerFovRatioV = cornerCfg.fovRatioV;
+  const fovAngleHDeg = 2 * Math.atan(state.fovRatioH / 2) * (180 / Math.PI);
+  const fovAngleVDeg = 2 * Math.atan(state.fovRatioV / 2) * (180 / Math.PI);
+  return { halfMat, sideOffset, cornerOffset, sideDistance, cornerDistance, cornerFovRatioH, cornerFovRatioV, fovAngleHDeg, fovAngleVDeg };
+}
+
+// ── CAMERAS ────────────────────────────────────────────
+function getCameras(derived) {
+  const s = derived.sideOffset;
+  const c = derived.cornerOffset;
+  return [
+    { id: 'N',  x:  0, y: -s, type: 'side' },
+    { id: 'S',  x:  0, y:  s, type: 'side' },
+    { id: 'E',  x:  s, y:  0, type: 'side' },
+    { id: 'W',  x: -s, y:  0, type: 'side' },
+    { id: 'NE', x:  c, y: -c, type: 'corner' },
+    { id: 'NW', x: -c, y: -c, type: 'corner' },
+    { id: 'SE', x:  c, y:  c, type: 'corner' },
+    { id: 'SW', x: -c, y:  c, type: 'corner' },
+  ];
+}
+
+// ── FLOOR PATTERN PLACEMENT ─────────────────────────────
+// Centers the pattern bounding box within the action zone
+// to maximize the minimum edge clearance.
+function computePatternPlacement(pattern) {
+  const hw = state.actionWidth / 2, hh = state.actionHeight / 2;
+  const b = pattern.bounds;
+  // Optimal: center bounding box in action zone
+  let tx = -(b.maxX + b.minX) / 2;
+  let ty = (b.maxFwd + b.minFwd) / 2;
+  // Clamp to feasible range; if bounds invert (pattern too big), use midpoint
+  const txLo = -hw - b.minX, txHi = hw - b.maxX;
+  tx = (txLo > txHi) ? (txLo + txHi) / 2 : Math.max(txLo, Math.min(txHi, tx));
+  const tyLo = b.maxFwd - hh, tyHi = hh + b.minFwd;
+  ty = (tyLo > tyHi) ? (tyLo + tyHi) / 2 : Math.max(tyLo, Math.min(tyHi, ty));
+  // Compute margins (distance from pattern edges to action zone edges)
+  const mL = tx + b.minX + hw;   // left margin
+  const mR = hw - tx - b.maxX;   // right margin
+  const mN = ty - b.maxFwd + hh; // north (forward) margin
+  const mS = hh - ty + b.minFwd; // south (backward) margin
+  const patternW = b.maxX - b.minX;
+  const patternH = b.maxFwd - b.minFwd;
+  return {
+    tx, ty,
+    minMargin: Math.min(mL, mR, mN, mS),
+    fits: patternW <= state.actionWidth && patternH <= state.actionHeight,
+    margins: { left: mL, right: mR, north: mN, south: mS }
+  };
+}
+
+// ── LIGHTING COMPUTATIONS ──────────────────────────────
+function computeLighting() {
+  const C = 250; // ISO 2720 incident flat-receptor calibration constant
+  const N = state.fStop;
+  const t = 1 / state.shutterSpeed; // seconds
+  const subjectLux = (C * N * N) / (t * state.iso);
+
+  // Green screen: 0.5–1.0 stops below subject
+  const gsIdealLux = subjectLux * 0.7;  // ~0.5 stops under
+  const gsMinLux = subjectLux * 0.5;    // 1.0 stop under (lower bound)
+  const gsMaxLux = subjectLux * 1.0;    // same as subject (upper bound)
+
+  // Spill distance: action zone edge → nearest wall (side direction)
+  const spillSide = state.sideMargin + (state.matSize - state.actionWidth) / 2;
+  // Corner distance: action zone corner → corner wall (diagonal)
+  const halfW = state.actionWidth / 2, halfH = state.actionHeight / 2;
+  const halfMat = state.matSize / 2;
+  const wallCorner = halfMat + state.cornerMargin;
+  const spillCornerX = wallCorner - halfW;
+  const spillCornerY = wallCorner - halfH;
+  const spillCorner = Math.sqrt(spillCornerX * spillCornerX + spillCornerY * spillCornerY);
+
+  // EV for reference
+  const ev = Math.log2(N * N / t) - Math.log2(state.iso / 100);
+
+  return {
+    subjectLux, gsIdealLux, gsMinLux, gsMaxLux,
+    ev, spillSide, spillCorner
+  };
+}
+
+function updateLightingPanel() {
+  const el = document.getElementById('lightingResults');
+  if (!el) return;
+
+  const L = computeLighting();
+  const fmt = (v) => v >= 1000 ? v.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',') : v.toFixed(0);
+
+  // Spill status
+  let spillColor, spillIcon;
+  if (L.spillSide >= 1.8) { spillColor = '#22c55e'; spillIcon = '\u2705'; }
+  else if (L.spillSide >= 1.2) { spillColor = '#f59e0b'; spillIcon = '\u26A0\uFE0F'; }
+  else { spillColor = '#ef4444'; spillIcon = '\u274C'; }
+
+  // Distance difference flag
+  const distDiff = Math.abs(L.spillSide - L.spillCorner);
+  const distNote = distDiff > 0.3
+    ? `<div style="color:#f59e0b">\u26A0 Side walls at ${L.spillSide.toFixed(1)}m, corners at ${L.spillCorner.toFixed(1)}m \u2014 adjust green screen lighting per wall to compensate for inverse-square falloff</div>`
+    : '';
+
+  el.innerHTML = `
+    <div class="font-bold text-gray-300 mb-1">Required Illumination</div>
+    <div><span class="text-gray-500">Action area:</span> <span class="text-yellow-300 font-mono font-bold">${fmt(L.subjectLux)} lux</span></div>
+    <div><span class="text-gray-500">Green screen:</span> <span class="text-green-400 font-mono font-bold">${fmt(L.gsIdealLux)} lux</span> <span class="text-gray-600">(range: ${fmt(L.gsMinLux)}\u2013${fmt(L.gsMaxLux)})</span></div>
+    <div class="text-gray-600 mt-1">GS should be 0.5\u20131.0 stops below subject. Evenness: \u00B10.5 stops across surface (max:min \u2264 2:1).</div>
+    <div class="mt-1"><span class="text-gray-500">EV:</span> <span class="font-mono">${L.ev.toFixed(1)}</span></div>
+    <div class="mt-2 border-t border-gray-800 pt-2">
+      <div class="text-gray-500 font-bold mb-1">Formula &amp; Assumptions</div>
+      <div class="font-mono text-gray-600">Lux = (C \u00D7 N\u00B2) / (t \u00D7 ISO)</div>
+      <div class="text-gray-600 mt-1">C = 250 (ISO 2720 incident flat-receptor calibration constant)<br>N = ${state.fStop} (f-stop) \u00B7 t = 1/${state.shutterSpeed}s \u00B7 ISO ${state.iso}<br>= (250 \u00D7 ${state.fStop}\u00B2) / (${(1/state.shutterSpeed).toFixed(5)} \u00D7 ${state.iso}) = <b>${fmt(L.subjectLux)} lux</b></div>
+      <div class="text-gray-600 mt-1">GS ideal = subject \u00D7 0.7 (\u22480.5 stops under)<br>GS range = subject \u00D7 0.5\u20131.0 (0.5\u20131.0 stops under)</div>
+      <div class="text-gray-600 mt-1">Evenness: \u00B10.5 stops across GS surface (max:min \u2264 2:1)</div>
+    </div>
+    <div class="mt-2 font-bold text-gray-300">Green Spill Check</div>
+    <div><span class="text-gray-500">Distance to wall:</span> <span style="color:${spillColor}" class="font-mono">${spillIcon} ${L.spillSide.toFixed(2)}m</span> <span class="text-gray-600">(min 1.8m recommended)</span></div>
+    ${distNote}
+  `;
+}
+
+// ── CANVAS SIZING ──────────────────────────────────────
+let ppm = 1;
+let worldExtent = 16;
+
+function resizeCanvas() {
+  dpr = window.devicePixelRatio || 1;
+  const rect = container.getBoundingClientRect();
+  const size = Math.min(rect.width, rect.height) - 16;
+  canvas.width = size * dpr;
+  canvas.height = size * dpr;
+  canvas.style.width = size + 'px';
+  canvas.style.height = size + 'px';
+  render();
+}
+
+// ── COORDINATE SETUP ───────────────────────────────────
+function setupTransform() {
+  const w = canvas.width;
+  const h = canvas.height;
+  const padding = 2.5;
+  const maxMargin = Math.max(state.sideMargin, state.cornerMargin);
+  worldExtent = state.matSize + 2 * maxMargin + 2 * padding;
+  ppm = Math.min(w, h) / worldExtent;
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, w, h);
+  ctx.translate(w / 2, h / 2);
+  ctx.scale(ppm, ppm);
+}
+
+// ── DRAWING FUNCTIONS ──────────────────────────────────
+
+function drawFloor() {
+  const ext = worldExtent / 2 + 2;
+  ctx.fillStyle = '#d1d5db';
+  ctx.fillRect(-ext, -ext, ext * 2, ext * 2);
+}
+
+function drawMat() {
+  const h = state.matSize / 2;
+  ctx.fillStyle = '#2563eb';
+  ctx.fillRect(-h, -h, state.matSize, state.matSize);
+  ctx.strokeStyle = '#1d4ed8';
+  ctx.lineWidth = 0.06;
+  ctx.setLineDash([]);
+  ctx.strokeRect(-h, -h, state.matSize, state.matSize);
+
+  ctx.save();
+  ctx.scale(1 / ppm, 1 / ppm);
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.font = `bold ${Math.round(16 * dpr)}px monospace`;
+  ctx.textAlign = 'center';
+  ctx.fillText('Mat ' + state.matSize.toFixed(1) + ' \u00D7 ' + state.matSize.toFixed(1) + 'm', 0, (-h + 0.55) * ppm);
+  ctx.restore();
+}
+
+function drawActionZone() {
+  const hw = state.actionWidth / 2;
+  const hh = state.actionHeight / 2;
+  ctx.save();
+  ctx.strokeStyle = '#f59e0b';
+  ctx.lineWidth = 0.08;
+  ctx.setLineDash([0.25, 0.15]);
+  ctx.strokeRect(-hw, -hh, state.actionWidth, state.actionHeight);
+  ctx.restore();
+
+  ctx.save();
+  ctx.scale(1 / ppm, 1 / ppm);
+  ctx.font = `bold ${Math.round(15 * dpr)}px monospace`;
+  ctx.textAlign = 'center';
+  const actionLabel = 'Action ' + state.actionWidth.toFixed(1) + ' \u00D7 ' + state.actionHeight.toFixed(1) + 'm';
+  const actionLabelY = (hh + 0.55) * ppm;
+  ctx.fillStyle = 'rgba(0,0,0,0.5)';
+  ctx.fillText(actionLabel, 1 * dpr, actionLabelY + 1 * dpr);
+  ctx.fillStyle = '#f59e0b';
+  ctx.fillText(actionLabel, 0, actionLabelY);
+  ctx.restore();
+}
+
+// ── FLOOR PATTERN DRAWING ─────────────────────────────
+function drawFloorPattern(cameras, derived) {
+  if (state.selectedPoomsae === 'none') return;
+
+  const pattern = POOMSAE_FLOOR_PATTERNS[state.selectedPoomsae];
+  if (!pattern) return;
+
+  const placement = computePatternPlacement(pattern);
+  const { tx, ty, fits, minMargin } = placement;
+
+  // Convert pattern point to world coords
+  const toWorld = (pt) => ({ wx: tx + pt.x, wy: ty - pt.fwd });
+
+  // Colors: dark gray when fits, red when exceeds
+  const mainColor = fits ? '#1f2937' : '#dc2626';
+  const accentColor = fits ? '#374151' : '#ef4444';
+  const faintColor = fits ? 'rgba(55,65,81,0.25)' : 'rgba(239,68,68,0.35)';
+  const dotFill = fits ? 'rgba(55,65,81,0.5)' : 'rgba(239,68,68,0.4)';
+  const dotStroke = fits ? 'rgba(31,41,55,0.7)' : 'rgba(239,68,68,0.7)';
+
+  ctx.save();
+
+  // ── 1. Faint dashed bounding box ──
+  const b = pattern.bounds;
+  const boxL = tx + b.minX, boxR = tx + b.maxX;
+  const boxT = ty - b.maxFwd, boxB = ty - b.minFwd;
+  ctx.strokeStyle = faintColor;
+  ctx.lineWidth = 0.03;
+  ctx.setLineDash([0.12, 0.08]);
+  ctx.strokeRect(boxL, boxT, boxR - boxL, boxB - boxT);
+  ctx.setLineDash([]);
+
+  // ── 2. Polyline path (dark gray) ──
+  ctx.strokeStyle = mainColor;
+  ctx.lineWidth = 0.08;
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  pattern.path.forEach((pt, i) => {
+    const w = toWorld(pt);
+    if (i === 0) ctx.moveTo(w.wx, w.wy);
+    else ctx.lineTo(w.wx, w.wy);
+  });
+  ctx.stroke();
+
+  // ── 3. Direction arrows at segment midpoints ──
+  ctx.fillStyle = mainColor;
+  for (let i = 0; i < pattern.path.length - 1; i++) {
+    const a = toWorld(pattern.path[i]);
+    const b2 = toWorld(pattern.path[i + 1]);
+    const dx = b2.wx - a.wx, dy = b2.wy - a.wy;
+    const len = Math.sqrt(dx * dx + dy * dy);
+    if (len < 0.15) continue; // skip short segments
+    const mx = (a.wx + b2.wx) / 2, my = (a.wy + b2.wy) / 2;
+    const angle = Math.atan2(dy, dx);
+    const arrowSize = 0.12;
+    ctx.save();
+    ctx.translate(mx, my);
+    ctx.rotate(angle);
+    ctx.beginPath();
+    ctx.moveTo(arrowSize, 0);
+    ctx.lineTo(-arrowSize * 0.6, -arrowSize * 0.5);
+    ctx.lineTo(-arrowSize * 0.6, arrowSize * 0.5);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // ── 4. Waypoint dots at unique positions ──
+  const seen = new Set();
+  pattern.path.forEach(pt => {
+    const key = pt.x.toFixed(2) + ',' + pt.fwd.toFixed(2);
+    if (seen.has(key)) return;
+    seen.add(key);
+    const w = toWorld(pt);
+    ctx.beginPath();
+    ctx.arc(w.wx, w.wy, 0.08, 0, Math.PI * 2);
+    ctx.fillStyle = dotFill;
+    ctx.fill();
+    ctx.strokeStyle = dotStroke;
+    ctx.lineWidth = 0.02;
+    ctx.stroke();
+  });
+
+  // ── 5. Start diamond (at pattern origin) ──
+  const startW = toWorld({ x: 0, fwd: 0 });
+  const dR = 0.20;
+  ctx.fillStyle = fits ? 'rgba(31,41,55,0.8)' : 'rgba(239,68,68,0.7)';
+  ctx.strokeStyle = mainColor;
+  ctx.lineWidth = 0.04;
+  ctx.beginPath();
+  ctx.moveTo(startW.wx, startW.wy - dR);
+  ctx.lineTo(startW.wx + dR * 0.7, startW.wy);
+  ctx.lineTo(startW.wx, startW.wy + dR);
+  ctx.lineTo(startW.wx - dR * 0.7, startW.wy);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+  // ── 6. Label above pattern ──
+  const fontSize = Math.round(11 * dpr);
+  const labelY = boxT - 0.18;
+  ctx.save();
+  ctx.scale(1 / ppm, 1 / ppm);
+  ctx.font = `bold ${fontSize}px sans-serif`;
+  ctx.textAlign = 'center';
+
+  const marginText = fits
+    ? `margin: ${minMargin.toFixed(2)}m`
+    : 'EXCEEDS ZONE';
+  const label = `${pattern.symbol} ${state.selectedPoomsae} (${marginText})`;
+
+  // Shadow
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  ctx.fillText(label, tx * ppm + 1 * dpr, labelY * ppm + 1 * dpr);
+  // Foreground
+  ctx.fillStyle = fits ? '#111827' : '#dc2626';
+  ctx.fillText(label, tx * ppm, labelY * ppm);
+  ctx.restore();
+
+  // ── 7. Update sidebar info panel ──
+  const infoEl = document.getElementById('patternInfo');
+  if (infoEl) {
+    const bds = pattern.bounds;
+    const w = (bds.maxX - bds.minX).toFixed(1);
+    const h = (bds.maxFwd - bds.minFwd).toFixed(1);
+    const m = placement.margins;
+    infoEl.classList.remove('hidden');
+    infoEl.innerHTML = `<b>${pattern.symbol} ${state.selectedPoomsae}</b><br>` +
+      `Size: ${w}m \u00D7 ${h}m &nbsp;|&nbsp; ` +
+      (fits
+        ? `Margins: L${m.left.toFixed(1)} R${m.right.toFixed(1)} N${m.north.toFixed(1)} S${m.south.toFixed(1)}`
+        : '<span style="color:#ef4444">\u26A0 Pattern exceeds action zone</span>');
+  }
+
+  ctx.restore();
+}
+
+// ── FOV CONES ──────────────────────────────────────────
+
+function drawFOVCones(cameras, derived) {
+  const h = derived.halfMat;
+
+  cameras.forEach(cam => {
+    const ratio = cam.type === 'corner' ? derived.cornerFovRatioH : state.fovRatioH;
+    const angleToCenter = Math.atan2(-cam.y, -cam.x);
+    const halfAngle = Math.atan(ratio / 2);
+    const maxDist = state.matSize * 2;
+
+    const lA = angleToCenter + halfAngle;
+    const rA = angleToCenter - halfAngle;
+    const flx = cam.x + maxDist * Math.cos(lA);
+    const fly = cam.y + maxDist * Math.sin(lA);
+    const frx = cam.x + maxDist * Math.cos(rA);
+    const fry = cam.y + maxDist * Math.sin(rA);
+
+    const isHovered = hoveredCamId === cam.id;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(-h, -h, state.matSize, state.matSize);
+    ctx.clip();
+
+    ctx.beginPath();
+    ctx.moveTo(cam.x, cam.y);
+    ctx.lineTo(flx, fly);
+    ctx.lineTo(frx, fry);
+    ctx.closePath();
+    ctx.fillStyle = isHovered ? 'rgba(34, 197, 94, 0.30)' : 'rgba(34, 197, 94, 0.12)';
+    ctx.fill();
+
+    ctx.strokeStyle = isHovered ? 'rgba(16, 185, 129, 0.9)' : 'rgba(16, 185, 129, 0.4)';
+    ctx.lineWidth = isHovered ? 0.06 : 0.03;
+    ctx.setLineDash([]);
+    ctx.beginPath();
+    ctx.moveTo(cam.x, cam.y);
+    ctx.lineTo(flx, fly);
+    ctx.moveTo(cam.x, cam.y);
+    ctx.lineTo(frx, fry);
+    ctx.stroke();
+
+    ctx.restore();
+  });
+}
+
+// ── DEAD ZONE DETECTION ────────────────────────────────
+function isPointInCone(px, py, cam) {
+  const dx = px - cam.x;
+  const dy = py - cam.y;
+  const angleToPoint = Math.atan2(dy, dx);
+  let diff = angleToPoint - cam.aimAngle;
+  if (diff > Math.PI) diff -= 2 * Math.PI;
+  if (diff < -Math.PI) diff += 2 * Math.PI;
+  return Math.abs(diff) <= cam.halfAngle;
+}
+
+function drawDeadZones(cameras, derived) {
+  const hw = state.actionWidth / 2;
+  const hh = state.actionHeight / 2;
+  const res = 150;
+
+  const coneParams = cameras.map(cam => {
+    const ratio = cam.type === 'corner' ? derived.cornerFovRatioH : state.fovRatioH;
+    return {
+      x: cam.x, y: cam.y,
+      aimAngle: Math.atan2(-cam.y, -cam.x),
+      halfAngle: Math.atan(ratio / 2)
+    };
+  });
+
+  const offscreen = document.createElement('canvas');
+  offscreen.width = res;
+  offscreen.height = res;
+  const offCtx = offscreen.getContext('2d');
+  const imageData = offCtx.createImageData(res, res);
+  const data = imageData.data;
+
+  const stepX = state.actionWidth / res;
+  const stepY = state.actionHeight / res;
+  let deadCount = 0;
+
+  for (let j = 0; j < res; j++) {
+    for (let i = 0; i < res; i++) {
+      const px = -hw + (i + 0.5) * stepX;
+      const py = -hh + (j + 0.5) * stepY;
+      let covered = false;
+      for (let c = 0; c < coneParams.length; c++) {
+        if (isPointInCone(px, py, coneParams[c])) {
+          covered = true;
+          break;
+        }
+      }
+      if (!covered) {
+        deadCount++;
+        const idx = (j * res + i) * 4;
+        data[idx] = 220;
+        data[idx + 1] = 38;
+        data[idx + 2] = 38;
+        data[idx + 3] = 120;
+      }
+    }
+  }
+
+  offCtx.putImageData(imageData, 0, 0);
+  ctx.drawImage(offscreen, -hw, -hh, state.actionWidth, state.actionHeight);
+  return { total: res * res, dead: deadCount };
+}
+
+function drawCameraIcons(cameras) {
+  cameras.forEach(cam => {
+    const aim = Math.atan2(-cam.y, -cam.x);
+    const isHovered = hoveredCamId === cam.id;
+    ctx.save();
+    ctx.translate(cam.x, cam.y);
+    ctx.rotate(aim);
+
+    const s = 0.3;
+
+    // Hover glow ring
+    if (isHovered) {
+      ctx.beginPath();
+      ctx.arc(0, 0, s * 1.1, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(34, 197, 94, 0.25)';
+      ctx.fill();
+      ctx.strokeStyle = '#22c55e';
+      ctx.lineWidth = 0.04;
+      ctx.stroke();
+    }
+
+    ctx.fillStyle = isHovered ? '#111827' : '#1f2937';
+    ctx.strokeStyle = isHovered ? '#22c55e' : '#374151';
+    ctx.lineWidth = 0.03;
+    const rw = s * 1.2, rh = s * 0.9, rx = -s * 0.6, ry = -s * 0.45, rr = s * 0.15;
+    ctx.beginPath();
+    ctx.moveTo(rx + rr, ry);
+    ctx.lineTo(rx + rw - rr, ry);
+    ctx.arcTo(rx + rw, ry, rx + rw, ry + rr, rr);
+    ctx.lineTo(rx + rw, ry + rh - rr);
+    ctx.arcTo(rx + rw, ry + rh, rx + rw - rr, ry + rh, rr);
+    ctx.lineTo(rx + rr, ry + rh);
+    ctx.arcTo(rx, ry + rh, rx, ry + rh - rr, rr);
+    ctx.lineTo(rx, ry + rr);
+    ctx.arcTo(rx, ry, rx + rr, ry, rr);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(s * 0.55, 0, s * 0.25, 0, Math.PI * 2);
+    ctx.fillStyle = isHovered ? '#22c55e' : '#3b82f6';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(s * 0.55, 0, s * 0.13, 0, Math.PI * 2);
+    ctx.fillStyle = '#111827';
+    ctx.fill();
+
+    ctx.restore();
+  });
+}
+
+function drawLabels(cameras, derived) {
+  cameras.forEach(cam => {
+    const isHovered = hoveredCamId === cam.id;
+    ctx.save();
+    ctx.translate(cam.x, cam.y);
+    ctx.scale(1 / ppm, 1 / ppm);
+
+    const awayAngle = Math.atan2(cam.y, cam.x);
+    const offPx = 30 * dpr;
+    const lx = offPx * Math.cos(awayAngle);
+    const ly = offPx * Math.sin(awayAngle);
+
+    ctx.fillStyle = isHovered ? '#22c55e' : '#1f2937';
+    ctx.font = `bold ${Math.round(17 * dpr)}px monospace`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(cam.id, lx, ly);
+
+    const dist = cam.type === 'side' ? derived.sideDistance : derived.cornerDistance;
+    ctx.fillStyle = isHovered ? '#4ade80' : '#6b7280';
+    ctx.font = `${Math.round(13 * dpr)}px monospace`;
+    ctx.fillText(dist.toFixed(1) + 'm', lx, ly + 18 * dpr);
+
+    ctx.restore();
+  });
+}
+
+// ── POV OVERLAY DRAWING ────────────────────────────────
+
+function drawPOVOverlay(cam, derived) {
+  const hCam = state.tripodHeight;
+  const isSide = cam.type === 'side';
+
+  // ── Compute distances along the camera's axis ──
+  let margin_dist, matLen, actionLen, distToZone, gsWallX;
+  if (isSide) {
+    const looksAlongY = (cam.x === 0); // N or S
+    const actionAlongAxis = looksAlongY ? state.actionHeight : state.actionWidth;
+    margin_dist = state.sideMargin;
+    matLen = state.matSize;
+    actionLen = actionAlongAxis;
+    distToZone = derived.sideOffset - actionAlongAxis / 2;
+    gsWallX = 2 * derived.sideOffset;
+  } else {
+    // Corner: cross-section along the diagonal
+    margin_dist = state.cornerMargin * Math.SQRT2;
+    matLen = state.matSize * Math.SQRT2;
+    const actionDiag = Math.sqrt(state.actionWidth * state.actionWidth + state.actionHeight * state.actionHeight);
+    actionLen = actionDiag;
+    const cdx = derived.cornerOffset - state.actionWidth / 2;
+    const cdy = derived.cornerOffset - state.actionHeight / 2;
+    distToZone = Math.sqrt(cdx * cdx + cdy * cdy);
+    gsWallX = 2 * derived.cornerOffset * Math.SQRT2;
+  }
+
+  const nearMatX = margin_dist;
+  const nearActionX = distToZone; // from camera to near action edge
+  const farActionX = nearMatX + (matLen + actionLen) / 2;
+  const farMatX = nearMatX + matLen;
+
+  // ── Sight line: camera through kick apex to green screen ──
+  const kickX = nearActionX;
+  const kickY = state.kickHeight;
+  const slope = (kickY - hCam) / kickX;
+  const gsIntersectHeight = hCam + slope * gsWallX;
+  const gsClearance = state.greenScreenHeight - gsIntersectHeight;
+
+  // ── Kick as percentage of frame ──
+  const ratioV = isSide ? state.fovRatioV : derived.cornerFovRatioV;
+  const frameSize = distToZone * ratioV;
+  const kickPct = (state.kickHeight / frameSize) * 100;
+
+  // ── Update text stats ──
+  document.getElementById('povCamLabel').textContent = cam.id;
+  document.getElementById('povCamType').textContent = isSide ? 'Side Camera' : 'Corner Camera';
+  document.getElementById('povDist').textContent = distToZone.toFixed(2) + ' m';
+  document.getElementById('povGsRequired').textContent = gsIntersectHeight.toFixed(2) + ' m';
+  const clEl = document.getElementById('povGsClearance');
+  clEl.textContent = (gsClearance >= 0 ? '+' : '') + gsClearance.toFixed(2) + ' m';
+  clEl.className = gsClearance >= 0
+    ? 'text-green-400 font-mono font-bold'
+    : 'text-red-400 font-mono font-bold';
+  document.getElementById('povKickPercent').textContent = kickPct.toFixed(1) + '%';
+
+  // ── Set up canvas ──
+  const pc = povCanvas;
+  const p = povCtx;
+  const pdpr = dpr;
+  const cssW = 376, cssH = 200;
+  pc.width = cssW * pdpr;
+  pc.height = cssH * pdpr;
+  pc.style.width = cssW + 'px';
+  pc.style.height = cssH + 'px';
+  const W = pc.width;
+  const H = pc.height;
+  const mL = 8 * pdpr, mR = 8 * pdpr, mT = 14 * pdpr, mB = 18 * pdpr;
+  const drawW = W - mL - mR;
+  const drawH = H - mT - mB;
+
+  // World bounds
+  const worldXMin = -0.5;
+  const worldXMax = gsWallX + 0.8;
+  const maxH = Math.max(state.greenScreenHeight, gsIntersectHeight, state.kickHeight) + 0.5;
+  const worldYMin = -0.15;
+  const worldYMax = maxH;
+
+  // Pixels per meter
+  const ppmX = drawW / (worldXMax - worldXMin);
+  const ppmY = drawH / (worldYMax - worldYMin);
+
+  function toX(wx) { return mL + (wx - worldXMin) * ppmX; }
+  function toY(wy) { return mT + (worldYMax - wy) * ppmY; } // y-up → canvas y-down
+
+  p.clearRect(0, 0, W, H);
+
+  // Background
+  p.fillStyle = '#0f172a';
+  p.fillRect(0, 0, W, H);
+
+  // ── Floor line ──
+  p.strokeStyle = '#475569';
+  p.lineWidth = 1.5 * pdpr;
+  p.setLineDash([]);
+  p.beginPath();
+  p.moveTo(toX(worldXMin), toY(0));
+  p.lineTo(toX(worldXMax), toY(0));
+  p.stroke();
+
+  // ── Mat area (blue rectangle on floor) ──
+  const matX1 = toX(nearMatX);
+  const matX2 = toX(farMatX);
+  const floorPx = toY(0);
+  const matThickness = 4 * pdpr;
+  p.fillStyle = '#2563eb';
+  p.fillRect(matX1, floorPx - matThickness / 2, matX2 - matX1, matThickness);
+
+  // Mat label
+  p.fillStyle = 'rgba(37,99,235,0.7)';
+  p.font = `${Math.round(9 * pdpr)}px monospace`;
+  p.textAlign = 'center';
+  p.fillText(isSide ? state.matSize.toFixed(0) + 'm' : matLen.toFixed(1) + 'm', (matX1 + matX2) / 2, floorPx + 11 * pdpr);
+
+  // ── Action zone markers (orange dots on floor) ──
+  const nearAX = toX(nearActionX);
+  const farAX = toX(farActionX);
+  p.fillStyle = '#f59e0b';
+  [nearAX, farAX].forEach(ax => {
+    p.beginPath();
+    p.arc(ax, floorPx, 3 * pdpr, 0, Math.PI * 2);
+    p.fill();
+  });
+
+  // ── Camera icon (tripod + box) ──
+  const camPxX = toX(0);
+  const camPxY = toY(hCam);
+  // Tripod leg
+  p.strokeStyle = '#9ca3af';
+  p.lineWidth = 1.5 * pdpr;
+  p.beginPath();
+  p.moveTo(camPxX, floorPx);
+  p.lineTo(camPxX, camPxY);
+  p.stroke();
+  // Camera body
+  const cbW = 8 * pdpr, cbH = 6 * pdpr;
+  p.fillStyle = '#1f2937';
+  p.strokeStyle = '#6b7280';
+  p.lineWidth = 1 * pdpr;
+  p.fillRect(camPxX - cbW / 2, camPxY - cbH / 2, cbW, cbH);
+  p.strokeRect(camPxX - cbW / 2, camPxY - cbH / 2, cbW, cbH);
+  // Lens
+  p.fillStyle = '#3b82f6';
+  p.beginPath();
+  p.arc(camPxX + cbW / 2, camPxY, 2.5 * pdpr, 0, Math.PI * 2);
+  p.fill();
+  // Cam height label
+  p.fillStyle = '#9ca3af';
+  p.font = `${Math.round(9 * pdpr)}px monospace`;
+  p.textAlign = 'center';
+  p.fillText(hCam.toFixed(2) + 'm', camPxX, camPxY - cbH / 2 - 4 * pdpr);
+
+  // ── Athlete stick figure with sidekick ──
+  const athX = toX(nearActionX);
+  const athFloor = toY(0);
+  const athHead = toY(ATHLETE_HEIGHT);
+  const athKick = toY(state.kickHeight);
+  const figH = athFloor - athHead;
+  // Body
+  p.strokeStyle = '#f59e0b';
+  p.fillStyle = '#f59e0b';
+  p.lineWidth = 1.5 * pdpr;
+  p.lineCap = 'round';
+  // Sidekick lean: torso tilts away from kick
+  const lean = figH * 0.18;
+  // Head (offset left by lean)
+  const hr = figH * 0.06;
+  p.beginPath();
+  p.arc(athX - lean, athHead + hr, hr, 0, Math.PI * 2);
+  p.fill();
+  // Neck-torso (angled from hip to leaned neck)
+  const nk = athHead + hr * 2;
+  const hip = nk + figH * 0.35;
+  p.beginPath();
+  p.moveTo(athX - lean, nk);
+  p.lineTo(athX, hip);
+  p.stroke();
+  // Arms (at shoulder level along torso line)
+  const shY = nk + figH * 0.05;
+  const shT = (shY - nk) / (hip - nk);
+  const shX = (athX - lean) + shT * lean;
+  const armW = figH * 0.15;
+  p.beginPath();
+  p.moveTo(shX - armW, shY + figH * 0.1);
+  p.lineTo(shX, shY);
+  p.lineTo(shX + armW, shY + figH * 0.1);
+  p.stroke();
+  // Standing leg (straight down from hip)
+  p.beginPath();
+  p.moveTo(athX, hip);
+  p.lineTo(athX, athFloor);
+  p.stroke();
+  // Kicking leg (extending upward from hip)
+  p.strokeStyle = '#f59e0b';
+  p.lineWidth = 2 * pdpr;
+  p.beginPath();
+  p.moveTo(athX, hip);
+  p.lineTo(athX + 3 * pdpr, athKick);
+  p.stroke();
+  // Kick foot dot
+  p.fillStyle = '#f59e0b';
+  p.beginPath();
+  p.arc(athX + 3 * pdpr, athKick, 2.5 * pdpr, 0, Math.PI * 2);
+  p.fill();
+  // Kick height label
+  p.fillStyle = '#f59e0b';
+  p.font = `bold ${Math.round(9 * pdpr)}px monospace`;
+  p.textAlign = 'left';
+  p.fillText(state.kickHeight.toFixed(2) + 'm', athX + 8 * pdpr, athKick + 3 * pdpr);
+
+  // ── Green screen (tall green bar) ──
+  const gsX = toX(gsWallX);
+  const gsTop = toY(state.greenScreenHeight);
+  const gsBot = toY(0);
+  p.fillStyle = 'rgba(34, 197, 94, 0.3)';
+  p.fillRect(gsX - 3 * pdpr, gsTop, 6 * pdpr, gsBot - gsTop);
+  p.strokeStyle = '#22c55e';
+  p.lineWidth = 2 * pdpr;
+  p.setLineDash([]);
+  p.beginPath();
+  p.moveTo(gsX, gsBot);
+  p.lineTo(gsX, gsTop);
+  p.stroke();
+  // GS height label
+  p.fillStyle = '#22c55e';
+  p.font = `bold ${Math.round(9 * pdpr)}px monospace`;
+  p.textAlign = 'left';
+  p.fillText(state.greenScreenHeight.toFixed(1) + 'm', gsX + 5 * pdpr, gsTop + 10 * pdpr);
+
+  // ── Critical sight line (RED DASHED) ──
+  // From camera through kick apex, extending to green screen and a bit beyond
+  const sightEndX = gsWallX + 0.5;
+  const sightEndY = hCam + slope * sightEndX;
+  p.strokeStyle = '#ef4444';
+  p.lineWidth = 1.5 * pdpr;
+  p.setLineDash([6 * pdpr, 4 * pdpr]);
+  p.beginPath();
+  p.moveTo(toX(0), toY(hCam));
+  p.lineTo(toX(sightEndX), toY(sightEndY));
+  p.stroke();
+  p.setLineDash([]);
+
+  // ── Green screen intersection point ──
+  const gsIntPxY = toY(gsIntersectHeight);
+  if (gsIntersectHeight <= state.greenScreenHeight) {
+    // OK — intersection is on the green screen
+    p.fillStyle = '#22c55e';
+    p.beginPath();
+    p.arc(gsX, gsIntPxY, 4 * pdpr, 0, Math.PI * 2);
+    p.fill();
+  } else {
+    // ABOVE screen — red warning
+    p.fillStyle = '#ef4444';
+    p.beginPath();
+    p.arc(gsX, gsIntPxY, 4 * pdpr, 0, Math.PI * 2);
+    p.fill();
+    // Draw the "above" extent
+    p.strokeStyle = 'rgba(239,68,68,0.5)';
+    p.lineWidth = 1 * pdpr;
+    p.setLineDash([2 * pdpr, 2 * pdpr]);
+    p.beginPath();
+    p.moveTo(gsX, gsTop);
+    p.lineTo(gsX, gsIntPxY);
+    p.stroke();
+    p.setLineDash([]);
+  }
+  // Intersection height label
+  p.fillStyle = gsIntersectHeight <= state.greenScreenHeight ? '#22c55e' : '#ef4444';
+  p.font = `bold ${Math.round(9 * pdpr)}px monospace`;
+  p.textAlign = 'right';
+  p.fillText(gsIntersectHeight.toFixed(2) + 'm', gsX - 6 * pdpr, gsIntPxY + 3 * pdpr);
+
+  // ── Distance labels along floor ──
+  p.fillStyle = '#6b7280';
+  p.font = `${Math.round(8 * pdpr)}px monospace`;
+  p.textAlign = 'center';
+  // Margin distance
+  if (margin_dist > 0.3) {
+    const midMargin = toX(margin_dist / 2);
+    p.fillText(margin_dist.toFixed(1) + 'm', midMargin, floorPx + 11 * pdpr);
+  }
+}
+
+// ── MAIN RENDER ────────────────────────────────────────
+function render() {
+  const derived = computeDerived();
+  const cameras = getCameras(derived);
+
+  setupTransform();
+  drawFloor();
+  drawMat();
+  drawActionZone();
+  drawFOVCones(cameras, derived);
+  const coverage = drawDeadZones(cameras, derived);
+  drawFloorPattern(cameras, derived);
+  drawCameraIcons(cameras);
+  drawLabels(cameras, derived);
+
+  updateDataPanel(derived, coverage);
+  updateLightingPanel();
+
+  // Update POV overlay if hovering
+  if (hoveredCamId) {
+    const cam = cameras.find(c => c.id === hoveredCamId);
+    if (cam) drawPOVOverlay(cam, derived);
+  }
+}
+
+// ── DATA PANEL ─────────────────────────────────────────
+function updateDataPanel(derived, coverage) {
+  const sideDistToZone = derived.sideDistance - Math.max(state.actionWidth, state.actionHeight) / 2;
+  const cdx = derived.cornerOffset - state.actionWidth / 2;
+  const cdy = derived.cornerOffset - state.actionHeight / 2;
+  const cornerDistToZone = Math.sqrt(cdx * cdx + cdy * cdy);
+
+  const sideFrameH = sideDistToZone * state.fovRatioH;
+  const sideFrameV = sideDistToZone * state.fovRatioV;
+  const cornerFrameH = cornerDistToZone * derived.cornerFovRatioH;
+  const cornerFrameV = cornerDistToZone * derived.cornerFovRatioV;
+  const sideHeadroom = (state.tripodHeight + sideFrameV / 2) - ATHLETE_HEIGHT;
+  const cornerHeadroom = (state.tripodHeight + cornerFrameV / 2) - ATHLETE_HEIGHT;
+  const dropoff = (1 - sideDistToZone / cornerDistToZone) * 100;
+
+  document.getElementById('dataSideDist').textContent = sideDistToZone.toFixed(2) + ' m';
+  document.getElementById('dataCornerDist').textContent = cornerDistToZone.toFixed(2) + ' m';
+  document.getElementById('dataSideFrame').textContent = sideFrameH.toFixed(2) + ' \u00D7 ' + sideFrameV.toFixed(2) + ' m';
+  document.getElementById('dataCornerFrame').textContent = cornerFrameH.toFixed(2) + ' \u00D7 ' + cornerFrameV.toFixed(2) + ' m';
+  document.getElementById('dataSideHeadroom').textContent = sideHeadroom.toFixed(2) + ' m';
+  document.getElementById('dataCornerHeadroom').textContent = cornerHeadroom.toFixed(2) + ' m';
+  document.getElementById('dataDropoff').textContent = dropoff.toFixed(1) + '%';
+
+  // V-FOV coverage check: can each camera see ground (0) to kickHeight at closest approach?
+  const sideBottom = state.tripodHeight - sideFrameV / 2;
+  const sideTop = state.tripodHeight + sideFrameV / 2;
+  const cornerBottom = state.tripodHeight - cornerFrameV / 2;
+  const cornerTop = state.tripodHeight + cornerFrameV / 2;
+  const vfovWarnings = [];
+  if (sideBottom > 0) vfovWarnings.push('Side: ground cut off by ' + sideBottom.toFixed(2) + 'm');
+  if (sideTop < state.kickHeight) vfovWarnings.push('Side: kick cut off by ' + (state.kickHeight - sideTop).toFixed(2) + 'm');
+  if (cornerBottom > 0) vfovWarnings.push('Corner: ground cut off by ' + cornerBottom.toFixed(2) + 'm');
+  if (cornerTop < state.kickHeight) vfovWarnings.push('Corner: kick cut off by ' + (state.kickHeight - cornerTop).toFixed(2) + 'm');
+  const vfovEl = document.getElementById('vfovWarning');
+  if (vfovWarnings.length > 0) {
+    vfovEl.innerHTML = '\u26A0 V-FOV: ' + vfovWarnings.join('<br>\u26A0 V-FOV: ');
+    vfovEl.classList.remove('hidden');
+  } else {
+    vfovEl.classList.add('hidden');
+  }
+
+  const coveragePct = ((coverage.total - coverage.dead) / coverage.total * 100);
+  const full = coverage.dead === 0;
+  document.getElementById('coveragePercent').textContent = coveragePct.toFixed(1) + '%';
+  const badge = document.getElementById('coverageBadge');
+  badge.textContent = full ? 'FULL COVERAGE' : 'DEAD ZONES';
+  badge.className = full
+    ? 'px-2 py-1 rounded text-[10px] font-bold bg-green-900 text-green-400'
+    : 'px-2 py-1 rounded text-[10px] font-bold bg-red-900 text-red-400';
+
+  document.getElementById('matSizeDisplay').textContent = state.matSize.toFixed(1) + ' m';
+  document.getElementById('sideMarginDisplay').textContent = state.sideMargin.toFixed(1) + ' m';
+  document.getElementById('cornerMarginDisplay').textContent = state.cornerMargin.toFixed(1) + ' m';
+  document.getElementById('fovAngleHDisplay').innerHTML = derived.fovAngleHDeg.toFixed(1) + '&deg;';
+  document.getElementById('fovAngleVDisplay').innerHTML = derived.fovAngleVDeg.toFixed(1) + '&deg;';
+  document.getElementById('tripodHeightDisplay').textContent = state.tripodHeight.toFixed(2) + ' m';
+  document.getElementById('kickHeightDisplay').textContent = state.kickHeight.toFixed(2) + ' m';
+  document.getElementById('greenScreenHeightDisplay').textContent = state.greenScreenHeight.toFixed(1) + ' m';
+
+  // Green screen calculations
+  const sideGsWall = 2 * derived.sideOffset;
+  const sideSlope = (state.kickHeight - state.tripodHeight) / sideDistToZone;
+  const sideGsIntersect = state.tripodHeight + sideSlope * sideGsWall;
+
+  const cornerGsWall = 2 * derived.cornerOffset * Math.SQRT2;
+  const cornerSlope = (state.kickHeight - state.tripodHeight) / cornerDistToZone;
+  const cornerGsIntersect = state.tripodHeight + cornerSlope * cornerGsWall;
+
+  document.getElementById('dataGsSide').textContent = sideGsIntersect.toFixed(2) + ' m';
+  document.getElementById('dataGsCorner').textContent = cornerGsIntersect.toFixed(2) + ' m';
+
+  const worstCase = Math.max(sideGsIntersect, cornerGsIntersect);
+  const gsOk = state.greenScreenHeight >= worstCase;
+  const gsStatusEl = document.getElementById('dataGsStatus');
+  if (gsOk) {
+    gsStatusEl.textContent = '\u2705 OK';
+    gsStatusEl.style.color = '#22c55e';
+  } else {
+    gsStatusEl.textContent = '\u26A0 TOO LOW (need ' + worstCase.toFixed(1) + 'm)';
+    gsStatusEl.style.color = '#ef4444';
+  }
+
+  // Update camera note
+  const preset = CAMERA_PRESETS[state.cameraPreset];
+  if (preset) {
+    document.getElementById('cameraNote').textContent = preset.note;
+  }
+}
+
+// ── HOVER DETECTION ────────────────────────────────────
+
+function canvasToWorld(clientX, clientY) {
+  const rect = canvas.getBoundingClientRect();
+  const cssX = clientX - rect.left;
+  const cssY = clientY - rect.top;
+  const px = cssX * dpr;
+  const py = cssY * dpr;
+  const wx = (px - canvas.width / 2) / ppm;
+  const wy = (py - canvas.height / 2) / ppm;
+  return { x: wx, y: wy };
+}
+
+function findHoveredCamera(wx, wy) {
+  const derived = computeDerived();
+  const cameras = getCameras(derived);
+  const hitRadius = 0.5; // meters
+  for (const cam of cameras) {
+    const dx = wx - cam.x;
+    const dy = wy - cam.y;
+    if (dx * dx + dy * dy <= hitRadius * hitRadius) {
+      return cam.id;
+    }
+  }
+  return null;
+}
+
+canvas.addEventListener('mousemove', (e) => {
+  const w = canvasToWorld(e.clientX, e.clientY);
+  const newHover = findHoveredCamera(w.x, w.y);
+
+  if (newHover !== hoveredCamId) {
+    hoveredCamId = newHover;
+    render();
+
+    if (hoveredCamId) {
+      povOverlay.classList.remove('hidden');
+      canvas.style.cursor = 'pointer';
+    } else {
+      povOverlay.classList.add('hidden');
+      canvas.style.cursor = 'default';
+    }
+  }
+
+  // Position overlay near the mouse
+  if (hoveredCamId) {
+    const containerRect = container.getBoundingClientRect();
+    let ox = e.clientX - containerRect.left + 20;
+    let oy = e.clientY - containerRect.top - 80;
+    // Keep within container
+    const ow = 400;
+    const oh = 310;
+    if (ox + ow > containerRect.width) ox = e.clientX - containerRect.left - ow - 20;
+    if (oy + oh > containerRect.height) oy = containerRect.height - oh - 10;
+    if (oy < 10) oy = 10;
+    povOverlay.style.left = ox + 'px';
+    povOverlay.style.top = oy + 'px';
+  }
+});
+
+canvas.addEventListener('mouseleave', () => {
+  if (hoveredCamId) {
+    hoveredCamId = null;
+    render();
+    povOverlay.classList.add('hidden');
+    canvas.style.cursor = 'default';
+  }
+});
+
+// ── CORNER MODE ────────────────────────────────────────
+function setCornerMode(mode) {
+  state.cornerMode = mode;
+  const btnW = document.getElementById('btnWide');
+  const btnZ = document.getElementById('btnZoomed');
+  if (mode === 'wide') {
+    btnW.className = 'flex-1 py-1.5 px-3 text-xs rounded font-semibold bg-green-600 text-white transition-colors';
+    btnZ.className = 'flex-1 py-1.5 px-3 text-xs rounded font-semibold bg-gray-700 text-gray-400 transition-colors';
+  } else {
+    btnZ.className = 'flex-1 py-1.5 px-3 text-xs rounded font-semibold bg-green-600 text-white transition-colors';
+    btnW.className = 'flex-1 py-1.5 px-3 text-xs rounded font-semibold bg-gray-700 text-gray-400 transition-colors';
+  }
+  render();
+}
+window.setCornerMode = setCornerMode;
+
+// ── INPUT WIRING ───────────────────────────────────────
+function bindInputs() {
+  document.getElementById('matSize').addEventListener('input', e => {
+    state.matSize = parseFloat(e.target.value);
+    render();
+  });
+  document.getElementById('sideMargin').addEventListener('input', e => {
+    state.sideMargin = parseFloat(e.target.value);
+    render();
+  });
+  document.getElementById('cornerMargin').addEventListener('input', e => {
+    state.cornerMargin = parseFloat(e.target.value);
+    render();
+  });
+  document.getElementById('tripodHeight').addEventListener('input', e => {
+    state.tripodHeight = parseFloat(e.target.value);
+    render();
+  });
+  document.getElementById('kickHeight').addEventListener('input', e => {
+    state.kickHeight = parseFloat(e.target.value);
+    render();
+  });
+  document.getElementById('greenScreenHeight').addEventListener('input', e => {
+    state.greenScreenHeight = parseFloat(e.target.value);
+    render();
+  });
+  document.getElementById('actionWidth').addEventListener('input', e => {
+    const v = parseFloat(e.target.value);
+    if (!isNaN(v) && v > 0) { state.actionWidth = v; render(); }
+  });
+  document.getElementById('actionHeight').addEventListener('input', e => {
+    const v = parseFloat(e.target.value);
+    if (!isNaN(v) && v > 0) { state.actionHeight = v; render(); }
+  });
+  // Camera preset dropdown
+  document.getElementById('cameraPreset').addEventListener('change', e => {
+    const key = e.target.value;
+    state.cameraPreset = key;
+    const preset = CAMERA_PRESETS[key];
+    if (preset) {
+      state.fovRatioH = preset.fovRatioH;
+      state.fovRatioV = preset.fovRatioV;
+      document.getElementById('fovRatioH').value = preset.fovRatioH;
+      document.getElementById('fovRatioV').value = preset.fovRatioV;
+      const isCustom = key === 'custom';
+      document.getElementById('fovRatioH').readOnly = !isCustom;
+      document.getElementById('fovRatioV').readOnly = !isCustom;
+      document.getElementById('fovRatioH').style.opacity = isCustom ? '1' : '0.6';
+      document.getElementById('fovRatioV').style.opacity = isCustom ? '1' : '0.6';
+      // Update corner button labels from preset
+      if (preset.corner) {
+        document.getElementById('btnWide').textContent = preset.corner.wide.label;
+        document.getElementById('btnZoomed').textContent = preset.corner.zoomed.label;
+      }
+    }
+    // Reset corner to wide on preset change
+    setCornerMode('wide');
+  });
+
+  // H/V FOV ratio inputs
+  function switchToCustom() {
+    if (state.cameraPreset !== 'custom') {
+      state.cameraPreset = 'custom';
+      document.getElementById('cameraPreset').value = 'custom';
+      document.getElementById('fovRatioH').readOnly = false;
+      document.getElementById('fovRatioV').readOnly = false;
+      document.getElementById('fovRatioH').style.opacity = '1';
+      document.getElementById('fovRatioV').style.opacity = '1';
+      const cp = CAMERA_PRESETS.custom;
+      document.getElementById('btnWide').textContent = cp.corner.wide.label;
+      document.getElementById('btnZoomed').textContent = cp.corner.zoomed.label;
+    }
+  }
+  function syncCustomCorner() {
+    const cp = CAMERA_PRESETS.custom;
+    cp.fovRatioH = state.fovRatioH;
+    cp.fovRatioV = state.fovRatioV;
+    cp.corner.wide.fovRatioH = state.fovRatioH;
+    cp.corner.wide.fovRatioV = state.fovRatioV;
+    cp.corner.zoomed.fovRatioH = state.fovRatioH / 2;
+    cp.corner.zoomed.fovRatioV = state.fovRatioV / 2;
+  }
+  document.getElementById('fovRatioH').addEventListener('input', e => {
+    const v = parseFloat(e.target.value);
+    if (!isNaN(v) && v > 0) {
+      state.fovRatioH = v;
+      switchToCustom();
+      syncCustomCorner();
+      render();
+    }
+  });
+  document.getElementById('fovRatioV').addEventListener('input', e => {
+    const v = parseFloat(e.target.value);
+    if (!isNaN(v) && v > 0) {
+      state.fovRatioV = v;
+      switchToCustom();
+      syncCustomCorner();
+      render();
+    }
+  });
+  document.getElementById('selectedPoomsae').addEventListener('change', e => {
+    state.selectedPoomsae = e.target.value;
+    // Hide pattern info when "none" selected
+    const infoEl = document.getElementById('patternInfo');
+    if (infoEl && state.selectedPoomsae === 'none') infoEl.classList.add('hidden');
+    render();
+  });
+  // Lighting planner inputs
+  document.getElementById('fStop').addEventListener('change', e => {
+    state.fStop = parseFloat(e.target.value);
+    render();
+  });
+  document.getElementById('iso').addEventListener('change', e => {
+    state.iso = parseInt(e.target.value);
+    render();
+  });
+  document.getElementById('shutterSpeed').addEventListener('change', e => {
+    state.shutterSpeed = parseInt(e.target.value);
+    render();
+  });
+}
+
+// ── INIT ───────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  bindInputs();
+  // Set initial preset state (non-custom = read-only FOV fields)
+  const isCustom = state.cameraPreset === 'custom';
+  document.getElementById('fovRatioH').readOnly = !isCustom;
+  document.getElementById('fovRatioV').readOnly = !isCustom;
+  document.getElementById('fovRatioH').style.opacity = isCustom ? '1' : '0.6';
+  document.getElementById('fovRatioV').style.opacity = isCustom ? '1' : '0.6';
+  const preset = CAMERA_PRESETS[state.cameraPreset];
+  if (preset) {
+    document.getElementById('cameraNote').textContent = preset.note;
+    if (preset.corner) {
+      document.getElementById('btnWide').textContent = preset.corner.wide.label;
+      document.getElementById('btnZoomed').textContent = preset.corner.zoomed.label;
+    }
+  }
+  // Populate poomsae dropdown from POOMSAE_FLOOR_PATTERNS
+  const poomsaeSelect = document.getElementById('selectedPoomsae');
+  Object.entries(POOMSAE_FLOOR_PATTERNS).forEach(([name, pattern]) => {
+    const opt = document.createElement('option');
+    opt.value = name;
+    opt.textContent = `${pattern.symbol} ${name}`;
+    poomsaeSelect.appendChild(opt);
+  });
+
+  resizeCanvas();
+  new ResizeObserver(() => resizeCanvas()).observe(container);
+});
+</script>
+</body>
+</html>
