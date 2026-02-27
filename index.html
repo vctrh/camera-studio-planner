@@ -87,16 +87,16 @@
       <div class="mb-3">
         <div class="flex justify-between text-xs text-gray-400 mb-1">
           <span>Side Cam Margin</span>
-          <span id="sideMarginDisplay" class="text-gray-200">0.5 m</span>
+          <span id="sideMarginDisplay" class="text-gray-200">0.0 m</span>
         </div>
-        <input type="range" id="sideMargin" min="0" max="3" step="0.1" value="0.5" class="w-full">
+        <input type="range" id="sideMargin" min="0" max="3" step="0.1" value="0" class="w-full">
       </div>
       <div>
         <div class="flex justify-between text-xs text-gray-400 mb-1">
           <span>Corner Cam Margin</span>
-          <span id="cornerMarginDisplay" class="text-gray-200">0.5 m</span>
+          <span id="cornerMarginDisplay" class="text-gray-200">0.0 m</span>
         </div>
-        <input type="range" id="cornerMargin" min="0" max="3" step="0.1" value="0.5" class="w-full">
+        <input type="range" id="cornerMargin" min="0" max="3" step="0.1" value="0" class="w-full">
       </div>
     </div>
 
@@ -113,16 +113,16 @@
       <div class="mb-3">
         <div class="flex justify-between text-xs text-gray-400 mb-1">
           <span>Max Kick Height</span>
-          <span id="kickHeightDisplay" class="text-gray-200">1.92 m</span>
+          <span id="kickHeightDisplay" class="text-gray-200">1.85 m</span>
         </div>
-        <input type="range" id="kickHeight" min="1.5" max="3.0" step="0.01" value="1.92" class="w-full">
+        <input type="range" id="kickHeight" min="1.5" max="3.0" step="0.01" value="1.85" class="w-full">
       </div>
       <div>
         <div class="flex justify-between text-xs text-gray-400 mb-1">
           <span>Green Screen Height</span>
-          <span id="greenScreenHeightDisplay" class="text-gray-200">3.50 m</span>
+          <span id="greenScreenHeightDisplay" class="text-gray-200">3.0 m</span>
         </div>
-        <input type="range" id="greenScreenHeight" min="2.0" max="5.0" step="0.1" value="3.5" class="w-full">
+        <input type="range" id="greenScreenHeight" min="2.0" max="5.0" step="0.1" value="3.0" class="w-full">
       </div>
     </div>
 
@@ -161,16 +161,16 @@
         <div>
           <label class="text-[10px] text-gray-500 block mb-1">F-stop</label>
           <select id="fStop" class="num-input">
-            <option value="2.0">f/2.0</option>
+            <option value="2.0" selected>f/2.0</option>
             <option value="2.6">f/2.6</option>
-            <option value="2.8" selected>f/2.8</option>
+            <option value="2.8">f/2.8</option>
           </select>
         </div>
         <div>
           <label class="text-[10px] text-gray-500 block mb-1">ISO</label>
           <select id="iso" class="num-input">
-            <option value="100" selected>100</option>
-            <option value="200">200</option>
+            <option value="100">100</option>
+            <option value="200" selected>200</option>
             <option value="400">400</option>
           </select>
         </div>
@@ -222,9 +222,9 @@
         <label class="text-[10px] text-gray-500 block mb-2">Corner Camera Mode</label>
         <div class="flex gap-2">
           <button id="btnWide" onclick="setCornerMode('wide')"
-            class="flex-1 py-1.5 px-3 text-xs rounded font-semibold bg-green-600 text-white transition-colors">1&times;</button>
+            class="flex-1 py-1.5 px-3 text-xs rounded font-semibold bg-gray-700 text-gray-400 transition-colors">1&times;</button>
           <button id="btnZoomed" onclick="setCornerMode('zoomed')"
-            class="flex-1 py-1.5 px-3 text-xs rounded font-semibold bg-gray-700 text-gray-400 transition-colors">2&times; Zoom</button>
+            class="flex-1 py-1.5 px-3 text-xs rounded font-semibold bg-green-600 text-white transition-colors">2&times; Zoom</button>
         </div>
       </div>
     </div>
@@ -431,20 +431,20 @@ const CAMERA_PRESETS = {
 // ── STATE ──────────────────────────────────────────────
 const state = {
   matSize: 9,
-  sideMargin: 0.5,
-  cornerMargin: 0.5,
+  sideMargin: 0,
+  cornerMargin: 0,
   actionWidth: 5.5,
   actionHeight: 5.5,
   fovRatioH: 2.5,
   fovRatioV: 2.5,
   cameraPreset: 'dji-oa6',
-  cornerMode: 'wide',
+  cornerMode: 'zoomed',
   tripodHeight: 1.60,
-  kickHeight: 1.92,
-  greenScreenHeight: 3.50,
+  kickHeight: 1.85,
+  greenScreenHeight: 3.00,
   selectedPoomsae: 'none',
-  fStop: 2.8,
-  iso: 100,
+  fStop: 2.0,
+  iso: 200,
   shutterSpeed: 120
 };
 
