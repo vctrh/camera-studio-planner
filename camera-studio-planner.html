@@ -561,6 +561,18 @@ function updateLightingPanel() {
   const L = computeLighting();
   const fmt = (v) => v >= 1000 ? v.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',') : v.toFixed(0);
 
+  // Action area lux feasibility (5.5m × 5.5m ≈ 30m², easier to light)
+  let subjectColor, subjectIcon;
+  if (L.subjectLux <= 1500) { subjectColor = '#22c55e'; subjectIcon = '\u2705'; }
+  else if (L.subjectLux <= 3000) { subjectColor = '#f59e0b'; subjectIcon = '\u26A0\uFE0F'; }
+  else { subjectColor = '#ef4444'; subjectIcon = '\u274C'; }
+
+  // GS lux feasibility (4 walls × 9m × 3m = 108m², must be even ±0.25 stops)
+  let gsColor, gsIcon;
+  if (L.gsIdealLux <= 500) { gsColor = '#22c55e'; gsIcon = '\u2705'; }
+  else if (L.gsIdealLux <= 1000) { gsColor = '#f59e0b'; gsIcon = '\u26A0\uFE0F'; }
+  else { gsColor = '#ef4444'; gsIcon = '\u274C'; }
+
   // Spill status
   let spillColor, spillIcon;
   if (L.spillSide >= 1.8) { spillColor = '#22c55e'; spillIcon = '\u2705'; }
@@ -575,9 +587,10 @@ function updateLightingPanel() {
 
   el.innerHTML = `
     <div class="font-bold text-gray-300 mb-1">Required Illumination</div>
-    <div><span class="text-gray-500">Action area:</span> <span class="text-yellow-300 font-mono font-bold">${fmt(L.subjectLux)} lux</span></div>
-    <div><span class="text-gray-500">Green screen:</span> <span class="text-green-400 font-mono font-bold">${fmt(L.gsIdealLux)} lux</span> <span class="text-gray-600">(range: ${fmt(L.gsMinLux)}\u2013${fmt(L.gsMaxLux)})</span></div>
+    <div><span class="text-gray-500">Action area:</span> <span style="color:${subjectColor}" class="font-mono font-bold">${subjectIcon} ${fmt(L.subjectLux)} lux</span></div>
+    <div><span class="text-gray-500">Green screen:</span> <span style="color:${gsColor}" class="font-mono font-bold">${gsIcon} ${fmt(L.gsIdealLux)} lux</span> <span class="text-gray-600">(range: ${fmt(L.gsMinLux)}\u2013${fmt(L.gsMaxLux)})</span></div>
     <div class="text-gray-600 mt-1">GS should be 1.0\u20131.5 stops below subject. Evenness: \u00B10.25 stops across surface (max:min \u2264 1.4:1).</div>
+    <div class="text-gray-600">GS wall area: 4 \u00D7 ${state.matSize}m \u00D7 ${state.greenScreenHeight}m = ${(4 * state.matSize * state.greenScreenHeight).toFixed(0)} m\u00B2 (even coverage required)</div>
     <div class="mt-1"><span class="text-gray-500">EV:</span> <span class="font-mono">${L.ev.toFixed(1)}</span></div>
     <div class="mt-2 border-t border-gray-800 pt-2">
       <div class="text-gray-500 font-bold mb-1">Formula &amp; Assumptions</div>
