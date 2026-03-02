@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Camera Studio Planner — 8-Cam Taekwondo Setup</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <style>
   input[type="range"] {
     -webkit-appearance: none;
@@ -62,10 +63,39 @@
   .data-value { color: #e5e7eb; font-size: 12px; font-family: monospace; font-weight: 600; }
   .data-desc { color: #4b5563; font-size: 9px; margin-top: -2px; margin-bottom: 4px; }
   .cam-group-label { font-size: 10px; font-weight: 700; letter-spacing: 0.05em; color: #22c55e; margin-top: 8px; margin-bottom: 4px; }
+  /* Research tab markdown */
+  .md-content h1 { font-size: 1.5rem; font-weight: 700; color: #e5e7eb; margin: 2rem 0 1rem; border-bottom: 1px solid #374151; padding-bottom: 0.5rem; }
+  .md-content h2 { font-size: 1.15rem; font-weight: 700; color: #d1d5db; margin: 1.5rem 0 0.75rem; }
+  .md-content h3 { font-size: 1rem; font-weight: 600; color: #9ca3af; margin: 1rem 0 0.5rem; }
+  .md-content p { color: #9ca3af; margin: 0.5rem 0; line-height: 1.6; }
+  .md-content a { color: #4ade80; text-decoration: underline; text-underline-offset: 2px; }
+  .md-content a:hover { color: #86efac; }
+  .md-content code { color: #4ade80; background: #1f2937; padding: 0.15em 0.4em; border-radius: 3px; font-size: 0.9em; }
+  .md-content pre { background: #111827; border: 1px solid #374151; border-radius: 6px; padding: 1rem; overflow-x: auto; margin: 0.75rem 0; }
+  .md-content pre code { background: none; padding: 0; color: #d1d5db; }
+  .md-content blockquote { border-left: 2px solid #16a34a; padding-left: 1rem; margin: 0.75rem 0; color: #6b7280; }
+  .md-content table { width: 100%; border-collapse: collapse; margin: 0.75rem 0; font-size: 0.85rem; }
+  .md-content thead tr { background: #1f2937; }
+  .md-content th { color: #d1d5db; font-weight: 600; padding: 0.5rem 0.75rem; text-align: left; border-bottom: 2px solid #374151; }
+  .md-content td { color: #9ca3af; padding: 0.5rem 0.75rem; border-bottom: 1px solid #1f2937; }
+  .md-content tbody tr:hover { background: #111827; }
+  .md-content strong { color: #e5e7eb; }
+  .md-content em { color: #9ca3af; font-style: italic; }
+  .md-content hr { border: none; border-top: 1px solid #374151; margin: 2rem 0; }
+  .md-content ul, .md-content ol { color: #9ca3af; padding-left: 1.5rem; margin: 0.5rem 0; }
+  .md-content li { margin: 0.25rem 0; line-height: 1.6; }
 </style>
 </head>
 <body class="bg-gray-950 text-gray-100 font-mono overflow-hidden">
-<div class="flex flex-col md:flex-row h-screen">
+
+<!-- TAB BAR -->
+<nav class="bg-gray-900 border-b border-gray-800 flex items-center px-5 gap-6 flex-shrink-0" style="height:40px">
+  <button id="tabPlanner" class="text-[11px] tracking-widest font-bold uppercase font-mono text-green-400 border-b-2 border-green-400 h-full flex items-center" onclick="switchTab('planner')">Studio Planner</button>
+  <button id="tabResearch" class="text-[11px] tracking-widest font-bold uppercase font-mono text-gray-500 border-b-2 border-transparent h-full flex items-center" onclick="switchTab('research')">Equipment Research</button>
+</nav>
+
+<!-- TAB: STUDIO PLANNER -->
+<div id="tab-planner" class="flex flex-col md:flex-row" style="height:calc(100vh - 40px)">
 
   <!-- SIDEBAR -->
   <aside class="w-full md:w-80 flex-shrink-0 bg-gray-900 border-b md:border-b-0 md:border-r border-gray-800 overflow-y-auto p-5">
@@ -347,6 +377,645 @@
   </main>
 
 </div>
+
+<!-- TAB: EQUIPMENT RESEARCH -->
+<div id="tab-research" class="overflow-y-auto bg-gray-950" style="height:calc(100vh - 40px); display:none">
+  <div class="max-w-4xl mx-auto px-6 py-8 md-content" id="researchContent"></div>
+</div>
+
+<script type="text/markdown" id="researchMarkdown">
+# DJI Osmo Action 6 — Shoot Planning Research
+
+Research for multi-camera poomsae filming setup. Assumes 8–9 cameras, 4K 60fps, Standard colour profile, ~10-minute recording segments.
+
+---
+
+## 1. File Size for a 10-Minute 4K 60fps Clip
+
+The Osmo Action 6 records in **H.265/HEVC** in MP4 containers. Reported max bitrate varies between sources:
+
+| Source | Max Bitrate |
+|--------|-------------|
+| [Newsshooter](https://www.newsshooter.com/2025/11/18/dji-osmo-action-6/) | 100 Mbps |
+| [CineD](https://www.cined.com/dji-osmo-action-6-announced-variable-aperture-1-1-1-inch-sensor-4k-120fps/) | 120 Mbps |
+
+The camera has Low/Medium/High bitrate tiers. In Standard colour profile at 4K/60fps, expect the High tier to land around **100 Mbps**.
+
+**Estimated file size per 10-minute segment:**
+
+| Bitrate | Per Minute | Per 10 Minutes |
+|---------|-----------|-----------------|
+| 100 Mbps (High) | ~750 MB | **~7.5 GB** |
+| 80 Mbps (Medium) | ~600 MB | **~6.0 GB** |
+
+Real-world reports from DJI forum users confirm ~720 MB/min at 4K/60 on similar DJI action cameras ([DPReview Forum](https://www.dpreview.com/forums/post/67151105)).
+
+**For 9 cameras × 10 minutes ≈ 54–68 GB per take.**
+
+> **Note:** Standard colour profile may use slightly lower bitrate than D-Log M at the same tier, but DJI does not publish per-profile bitrate breakdowns. Scene complexity also matters — a static gym with one moving athlete will compress more efficiently than chaotic outdoor footage, so real sizes may be at the lower end.
+
+---
+
+## 2. Wireless Transfer Speed & Methods
+
+### Wi-Fi 6 Transfer (via DJI Mimo app)
+
+The Osmo Action 6 supports **Wi-Fi 6**, with advertised wireless transfer speeds of **up to 80 MB/s** — a 2x improvement over the Osmo Action 5 Pro ([Tom's Guide](https://www.tomsguide.com/cameras-photography/gopro-action-cameras/dji-osmo-action-6-review), [DroneXL](https://dronexl.co/2025/11/25/dji-osmo-action-6-beginners-guide/)).
+
+Real-world tests show **50–80 MB/s** depending on conditions ([eloutput review](https://en.eloutput.com/products/Gadgets/DJI-Osmo-Action-6-Test-Review/)).
+
+**Transfer time for one 7.5 GB file wirelessly:**
+
+| Speed | Time |
+|-------|------|
+| 80 MB/s (peak) | ~1 min 34 sec |
+| 50 MB/s (typical) | ~2 min 30 sec |
+
+For **9 cameras sequentially** at 50 MB/s: **~22 minutes** (one at a time — see multi-camera limitation below).
+
+### DJI Mimo App
+
+The **DJI Mimo app** is the only official way to wirelessly transfer files. It connects via Bluetooth for pairing, then uses Wi-Fi for data transfer. Features include:
+- Preview and select clips before downloading
+- Basic editing and trimming
+- **Cloud backup** to Google Drive, OneDrive, or NAS (new for OA6)
+
+**Tip:** Set Wi-Fi to **5 GHz** in camera settings for best speed: System Settings > Wireless Connection > Wi-Fi Frequency ([DJI Support](https://support.dji.com/help/content?customId=en-us03400006964&spaceId=34&re=US&lang=en&documentType=artical&paperDocType=paper)).
+
+### Third-Party Apps
+
+No widely-used third-party app exists for faster wireless transfer from the Osmo Action 6. The camera uses DJI's proprietary wireless protocol, so **DJI Mimo is effectively the only option** for Wi-Fi transfers ([Slashdot alternatives list](https://slashdot.org/software/p/DJI-Mimo/alternatives), [DJI Forum](https://forum.dji.com/thread-221570-1-1.html)).
+
+**Workarounds for faster multi-camera offload:**
+- USB-C direct to laptop (see section 4)
+- SD card swap with reader (see section 4)
+- Cloud upload from each camera independently (if on Wi-Fi network)
+
+---
+
+## 3. Simultaneous Multi-Camera Wireless Download
+
+**No — you cannot wirelessly connect to multiple cameras and download from them simultaneously.**
+
+The DJI Mimo app only connects to **one camera at a time** via Wi-Fi. Multiple DJI Forum users confirm this limitation:
+
+- *"I can get them all to show up in the MIMO App, but I can only control one camera. Once I connect to a single camera... I cannot find out how to change to another camera."* ([DJI Forum](https://forum.dji.com/thread-206488-1-1.html))
+- *"Presently I can only connect to one action cam at a time and must constantly visit my wifi connection to switch between cameras."* ([DJI Forum](https://forum.dji.com/thread-248058-1-1.html))
+
+Switching between cameras requires disconnecting from the first, which makes sequential wireless offload of 9 cameras tedious.
+
+**Potential workaround:** The Osmo Action 6's new **cloud upload feature** could allow each camera to independently upload footage to Google Drive/OneDrive/NAS over a shared Wi-Fi network — but this requires a Wi-Fi network with internet access (or a local NAS), and real-world upload speeds would depend on the network bandwidth divided across cameras.
+
+---
+
+## 4. USB-C vs SD Card: Which Is Faster for Offloading?
+
+### USB-C Direct (Camera → Computer)
+
+| Spec | Detail |
+|------|--------|
+| Interface | USB 3.1 |
+| Advertised speed | Up to **800 MB/s** (ideal) |
+| Realistic speed | **~300 MB/s** (conservative) |
+| Access internal storage? | **Yes** |
+| Cable included? | Yes (USB-C to USB-C PD, USB 3.1) |
+
+DJI claims you can transfer 40 GB to a laptop in under 3 minutes via USB-C ([DroneXL](https://dronexl.co/2025/11/25/dji-osmo-action-6-beginners-guide/)). At 300 MB/s, a 7.5 GB file takes **~25 seconds**.
+
+### SD Card Reader (Card → Computer)
+
+| Spec | Detail |
+|------|--------|
+| Card type | microSD, **UHS-I only** |
+| UHS-I bus max | 104 MB/s |
+| Fast UHS-I cards (e.g. SanDisk Extreme) | ~150–190 MB/s read (but capped by UHS-I bus in camera) |
+| Access internal storage? | **No** |
+
+At ~100 MB/s (UHS-I bus), a 7.5 GB file takes **~75 seconds**.
+
+### Verdict
+
+**USB-C is faster** and gives access to both SD and internal storage. However, the SD card swap approach lets you **free the camera immediately** — pop in a fresh card and keep shooting while offloading the old card.
+
+**Recommended workflow for 9 cameras:**
+1. **Fastest total time:** USB-C daisy-chain — plug cameras in one by one, copy at ~300 MB/s. Nine 7.5 GB files ≈ 4 minutes total (plus swap time).
+2. **Most parallel:** Record to SD cards. After the take, pull all 9 SD cards simultaneously, use a multi-slot card reader or multiple single readers. Nine cards offloading in parallel at ~100 MB/s each ≈ 75 seconds total wall-clock time.
+3. **Hybrid:** Record to SD, pull cards for parallel offload, but also USB-C any cameras that used internal storage.
+
+Sources: [DJI Support — Exporting](https://support.dji.com/help/content?customId=en-us03400006849&spaceId=34&re=US&lang=en&documentType=artical&paperDocType=paper), [DJI Forum — USB-C speed](https://forum.dji.com/thread-194568-1-1.html), [Memory Wolf — SD cards](https://www.memorywolf.com/collections/dji-osmo-action-6-memory-cards)
+
+---
+
+## 5. Simultaneous Recording to Internal Memory + SD Card
+
+**No — the Osmo Action 6 does not support simultaneous recording to internal storage and SD card.**
+
+The camera records to one storage medium at a time. You can switch between them via the settings menu. If a microSD card is inserted, the camera typically defaults to recording to the card. You can manually select internal storage in settings.
+
+The 64 GB internal storage (50 GB usable) serves as a **backup/overflow** option — e.g., if your SD card fills up mid-session, you can switch to internal and keep shooting ([Tom's Guide](https://www.tomsguide.com/cameras-photography/gopro-action-cameras/dji-osmo-action-6-review)).
+
+**For safety/redundancy:** You'll need to rely on the SD card alone (or internal alone) per take, or shoot the same content from multiple angles as your inherent redundancy. Consider high-quality SD cards (SanDisk Extreme Pro, V30+) and formatting before each session.
+
+Sources: [DJI Osmo Action 6 Specs](https://www.dji.com/osmo-action-6/specs), [B&H Photo](https://www.bhphotovideo.com/c/product/1928318-REG/dji_cp_os_00000505_02_osmo_action_6_standard.html)
+
+---
+
+## 6. DJI Osmo Action GPS Remote with 8–9 Cameras
+
+The **DJI Osmo Action GPS Bluetooth Remote Controller** connects via Bluetooth and supports **up to 16 cameras simultaneously** in multi-camera mode.
+
+### Multi-Camera Mode Basics
+
+- Default mode is single-camera. Switch to multi-camera by holding **Shutter/Record + Link** for 4 seconds.
+- The remote searches for cameras and starts linking. Follow prompts on each camera screen.
+- Press **Shutter/Record** once to start recording on all cameras; press twice to stop.
+- Press **Quick Switch** to set all cameras to a unified shooting mode.
+- **Each camera uses its own preset shooting parameters** — the remote triggers recording but doesn't override individual camera settings.
+
+### Standby & Wake-Up
+
+**The Wake Up Camera function is NOT available in multi-camera control mode.** This is a confirmed, documented limitation.
+
+| Scenario | Works? |
+|----------|--------|
+| Wake camera from sleep (single-camera mode) | **Yes** — press Link button |
+| Wake camera from sleep (multi-camera mode) | **No** |
+| Power on camera remotely (single-camera mode) | **Yes** — press and hold Link |
+| Power on camera remotely (multi-camera mode) | **No** |
+
+This means: **if your cameras go to sleep or power off, the remote cannot wake them in multi-camera mode.** You must manually power each camera back on.
+
+DJI Forum users confirm this frustration: *"It is impossible to turn off or wake up multiple cameras... as soon as the cameras turn off automatically, the remote becomes useless."* ([DJI Forum](https://forum.dji.com/thread-301300-1-1.html))
+
+**Workaround:** Disable auto power-off on each camera, or set it to the maximum duration. Keep cameras powered on throughout the session.
+
+### Reconnection After Power Off
+
+The documentation is unclear on whether cameras automatically reconnect to the remote in multi-camera mode after being powered back on manually. In single-camera mode, the remote auto-searches and reconnects on power-on. For multi-camera mode, you may need to **re-initiate the linking process** (hold Shutter/Record + Link for 4 seconds).
+
+### Do Cameras Keep Their Settings?
+
+- In multi-camera mode, "the shooting parameters will be based on the presets of each camera" — meaning **each camera retains its own settings** and the remote doesn't override them.
+- DJI cameras generally retain shooting settings (resolution, frame rate, colour profile, manual exposure, etc.) across power cycles — only a **factory reset** clears them.
+- **Manual PRO mode settings** (ISO, shutter speed, aperture, white balance, 2x crop) should persist through power off/on based on standard DJI behaviour, though DJI's documentation doesn't explicitly confirm this for every parameter.
+- The **SnapShot feature** (quick-record from power-off) uses its own separate preset, not your main shooting mode settings.
+
+**Recommendation:** Before each shoot day, configure all 9 cameras individually with the exact settings you want (4K/60, Standard, manual exposure, etc.), then link them to the remote in multi-camera mode. Test by starting/stopping a short recording and verifying each camera's output.
+
+Sources: [DJI Support — GPS Remote](https://support.dji.com/help/content?customId=en-us03400008289&spaceId=34&re=US&lang=en&documentType=artical&paperDocType=paper), [Remote User Guide (Manuals+)](https://manuals.plus/dji/osmo-action-gps-bluetooth-remote-controller-manual), [DJI Osmo Action 6 FAQ](https://www.dji.com/osmo-action-6/faq), [DJI Osmo Action 6 User Manual (PDF)](https://dl.djicdn.com/downloads/DJI_Osmo_Action_6/UM/1104/DJI_Osmo_Action_6_User_Manual_v1.0_en.pdf)
+
+---
+
+## 7. Is DJI App Registration Required?
+
+**Yes — activation through the DJI Mimo app is required.**
+
+On first power-on, the camera prompts you to scan a QR code to download DJI Mimo and activate. You can **skip activation up to 5 times** (each power cycle counts as one skip). After 5 skips, the camera **requires activation before it can be used**.
+
+### Activation Process
+1. Power on the Osmo Action 6
+2. Download DJI Mimo (scan QR on screen or from app store)
+3. Create or log into a **DJI account**
+4. Connect phone to camera via Bluetooth + Wi-Fi
+5. Follow activation prompts in the app
+
+### For the GPS Remote
+The remote itself does not require separate app activation — it pairs directly with the cameras via Bluetooth. However, to use GPS data overlays (speed, route, elevation), you do need DJI Mimo.
+
+### Practical Implication for 9 Cameras
+You'll need to activate **each camera individually** through the Mimo app before the shoot. This is a one-time process per camera. You can use the same DJI account for all cameras. Plan to do this setup ahead of time — not on shoot day.
+
+Sources: [DJI Support — Activation](https://support.dji.com/help/content?customId=01700006759&spaceId=17&re=US&lang=en&documentType=&paperDocType=ARTICLE), [Heliguy — How to Activate](https://www.heliguy.com/blogs/posts/how-to-activate-the-dji-osmo-action/), [DJI Support — Troubleshooting Activation](https://support.dji.com/help/content?customId=en-us03400009406&spaceId=34&re=US&lang=en&documentType=barrierTree&paperDocType=resource)
+
+---
+
+## 8. Mount System & Tripod Compatibility
+
+### What's Included
+
+The Osmo Action 6 has a **magnetic quick-release clip** on the camera body. The **Standard Combo** includes:
+
+- **Osmo Dual-Direction Quick-Release Adapter Mount** — clips magnetically to the camera and provides standard **GoPro-style 3-prong "fingers"** on the bottom
+- **Curved Adhesive Base** — with the standard 3-prong GoPro buckle
+- **Locking Screw**
+
+### Is It a Standard GoPro Mount?
+
+**Yes.** The included Quick-Release Adapter Mount outputs to the standard **GoPro 3-prong mount interface** (two prongs that slot between three prongs, secured by a thumbscrew/bolt). This is the same mount system that has been standard since the early GoPro days and is universally compatible with the massive GoPro accessory ecosystem.
+
+Sources: [Digital Camera World review](https://www.digitalcameraworld.com/cameras/action-cameras/dji-osmo-action-6-review), [Heliguy — Standard vs Adventure Combo](https://www.heliguy.com/blogs/knowledge-base/what-is-the-difference-between-the-dji-osmo-action-6-standard-combo-and-adventure-combo/), [B&H Photo](https://www.bhphotovideo.com/c/product/1928318-REG/dji_cp_os_00000505_02_osmo_action_6_standard.html)
+
+### What You Need for Tripods
+
+To mount the cameras on standard tripods (with 1/4"-20 screw), you need a **GoPro-to-1/4"-20 tripod adapter** for each camera. These are small, cheap adapters that accept the GoPro 3-prong fingers on top and have a 1/4"-20 female thread on the bottom.
+
+**Recommended adapters (you need 9):**
+
+| Product | Price | Material | Notes |
+|---------|-------|----------|-------|
+| [NEEWER GP-89](https://www.amazon.com/NEEWER-Compatible-Standard-Accessories-GP-89/dp/B0FMYBT7NF) | ~$8 | Aluminum | 360° swivel, compact |
+| [Mechrig 1/4" Adapter (2-pack)](https://www.came-tv.com/products/1-4-tripod-adapter-compatible-with-gopro-aluminum-camera-1-4-20-tripod-mount-adapter-compatible-with-gopro-hero-11-10-9-8-7-6-5-4-3-3-2-1-dji-osmo-action-and-more-2-pack) | ~$7/2-pack | Aluminum | Simple, lightweight |
+| [Revo AC-TM (B&H)](https://www.bhphotovideo.com/c/product/1064721-REG/revo_ac_tm_tripod_mount_1_4_20_for.html) | ~$5 | Plastic | Budget option |
+| [JJC ACD-C1 (3-pack)](https://jjcfoto.com/product/acd-c1k3/) | ~$8/3-pack | Aluminum | Good value multi-pack |
+
+**Assembly per camera:**
+1. Magnetic Quick-Release Adapter snaps onto camera body
+2. Quick-Release Adapter's GoPro prongs slot into the GoPro-to-tripod adapter
+3. Tighten thumbscrew
+4. Screw the 1/4"-20 thread into your tripod head
+
+---
+
+## 9. Rented Cameras on Different DJI Accounts + GPS Remote
+
+### Does DJI Account Ownership Affect Remote Pairing?
+
+**No — the GPS remote pairs via Bluetooth directly, not through the DJI account system.**
+
+The remote's multi-camera linking is initiated from hardware buttons (hold Shutter/Record + Link for 4 seconds). Each camera displays a Bluetooth pairing prompt on-screen. The process is entirely local — there is no app or account involved in the remote-to-camera connection.
+
+DJI's device management documentation notes that when a connected device is not activated with the current account, account information is simply masked as "******" for privacy — it does not block the connection ([DJI Support — Device Management](https://support.dji.com/help/content?customId=01700008783&spaceId=17&re=US&lang=en&documentType=&paperDocType=ARTICLE)). Furthermore, the account bind/unbind restriction only applies to Osmo Mobile Series, not Osmo Action cameras.
+
+**Bottom line:** You should be able to pair 8 cameras from different owners (activated under different DJI accounts) to a single GPS remote without issues. The remote doesn't care which account activated each camera.
+
+Sources: [DJI Support — GPS Remote](https://support.dji.com/help/content?customId=en-us03400008289&spaceId=34&re=US&lang=en&documentType=artical&paperDocType=paper), [DJI Forum — Multi-camera pairing](https://forum.dji.com/thread-298140-1-1.html), [DJI Support — Device Management](https://support.dji.com/help/content?customId=01700008783&spaceId=17&re=US&lang=en&documentType=&paperDocType=ARTICLE)
+
+---
+
+## 10. Overheating: Cameras On All Day Without Recording
+
+### Is Idle Overheating a Concern?
+
+**Unlikely.** All documented overheating issues across the DJI Osmo Action line occur during **active recording**, particularly at high resolutions (4K/60fps+). No reports were found of cameras overheating while powered on but idle.
+
+The main heat source is the image processor encoding video. When idle (live preview on screen but not recording), the thermal load is dramatically lower.
+
+**Overheating during recording (for reference):**
+
+| Scenario | Time to Overheat |
+|----------|-----------------|
+| 4K/60fps, static, no airflow | 20–35 minutes ([Tom's Guide](https://www.tomsguide.com/cameras-photography/gopro-action-cameras/dji-osmo-action-6-review)) |
+| 4K/60fps, with airflow (mounted outdoors) | Generally runs until battery dies |
+| 8K/30fps, static | ~65 minutes ([Tom's Guide](https://www.tomsguide.com/cameras-photography/gopro-action-cameras/dji-osmo-action-6-review)) |
+
+**For your use case** (cameras on tripods in a gym, idle between 10-min recording bursts), overheating should not be a problem. The cameras will cool down between takes. The bigger concern is **battery life** — see below.
+
+**Tips to minimize heat during recording:**
+- Turn screens off or dim to minimum when recording (reduces power draw)
+- Ensure some airflow — even a small fan pointed at the cameras helps
+- The included rubber lens protector helps prevent contact burns but doesn't reduce heat generation
+
+Sources: [DJI Support — Usage Notes](https://support.dji.com/help/content?customId=01700006932&spaceId=17&re=US&lang=en&documentType=&paperDocType=ARTICLE), [DJI Support — Battery Overheating](https://repair.dji.com/help/content?customId=01700006471&spaceId=17&re=US&lang=en&documentType=&paperDocType=ARTICLE)
+
+---
+
+## 11. External Power: Keeping 9 Cameras Running All Day
+
+### Battery Life (Internal Only)
+
+The included **Extreme Battery Plus (1,950 mAh)** provides:
+
+| Mode | Battery Life |
+|------|-------------|
+| 1080p/24fps recording | ~240 min (4 hours) |
+| 4K recording | ~120 min (2 hours) |
+| 4K/60fps recording (estimated) | ~90 min (1.5 hours) |
+| Idle (powered on, not recording) | Not officially stated, but significantly longer than recording |
+
+For a full shoot day with the cameras powered on continuously (idle + periodic 10-min recordings), the internal battery alone will not last. You need external power.
+
+### USB-C Power Delivery While Idle/Recording
+
+The Osmo Action 6 charges via **USB-C PD** (Power Delivery). DJI recommends:
+- A charger supporting **PD 3.0 protocol, 30W+ output**
+- Keep the internal battery installed — DJI does not recommend running without a battery
+
+**Important caveat:** DJI does **not officially recommend charging while recording**, citing overheating risk. However, for your use case (mostly idle with short recording bursts), this is less of a concern than continuous recording.
+
+**Real-world note:** Forum users report that even with external USB-C power connected, the **battery still drains slowly during recording** — the camera draws more power than USB-C input provides. One user saw batteries drop to 75–82% after 45 minutes of recording while plugged into a power bank ([DJI Forum](https://forum.dji.com/thread-306499-1-1.html)). This means external power **extends** battery life significantly but may not keep it at 100% during active recording.
+
+### What Power Bank to Use
+
+**Per camera, you need:**
+
+| Spec | Requirement |
+|------|------------|
+| Output | USB-C PD, 30W+ per port |
+| Cable | USB-C to USB-C (included with each camera) |
+| Capacity | 10,000 mAh is plenty for a full day of idle + intermittent recording |
+
+**For 9 cameras, options:**
+
+1. **9 individual small power banks** (e.g., Anker 622, 5,000 mAh each) — simplest, one per camera/tripod. Attach with velcro to the tripod leg. ~$20–30 each.
+
+2. **A few multi-port PD power banks** — something like the Anker Prime 27,650 mAh (3× USB-C PD ports) could power 3 cameras each. You'd need 3 of them. More cost-effective but requires longer cables.
+
+3. **9× cheap 10,000 mAh PD banks** — e.g., Baseus, INIU, or similar. ~$15–20 each. Just make sure they support **USB-C PD output** (not just USB-A QC).
+
+**Key requirement:** The power bank must support **USB-C Power Delivery output** (not just input). Many cheap power banks only support PD for *charging the bank itself* and only output via USB-A. Check that the USB-C port is bidirectional PD.
+
+### Recommended Setup Per Camera
+
+```
+[Tripod] → [GoPro adapter] → [DJI magnetic mount] → [Camera]
+                                                        ↕ USB-C cable
+                                                   [Power bank velcroed to tripod leg]
+```
+
+Keep the internal battery installed. The power bank tops it off between takes. Even if the battery slowly drains during 10-min recordings, it will recharge during idle time between takes.
+
+Sources: [DJI Support — Charging Guide](https://repair.dji.com/help/content?customId=01700006770&spaceId=17&re=US&lang=en&documentType=&paperDocType=ARTICLE), [DJI Forum — External Power Drain](https://forum.dji.com/thread-306499-1-1.html), [Engadget Review](https://www.engadget.com/cameras/dji-osmo-action-6-review-an-action-camera-that-excels-in-low-light-143027343.html), [BIKMAN Tech — OA6 FAQ](https://bikmantech.com/blogs/blogs/dji-osmo-action-6-top-10-questions-and-answers)
+
+---
+
+## 12. Ceiling Camera: Powered On for Two Days Continuously
+
+### The Problem
+
+One camera will be ceiling-mounted and inaccessible for the full two-day shoot. It needs to:
+1. Stay powered on for ~48 hours (idle between takes, recording when triggered by remote)
+2. Not auto-power-off
+3. Not overheat
+4. Not run out of power
+
+### Auto Power-Off: "Never" Option Confirmed
+
+**User-tested: the Osmo Action 6 has a "Never" setting for standby/auto power-off.** This eliminates the biggest risk. Set this before mounting the camera on the ceiling.
+
+(Note: earlier Osmo Action generations lacked this option — it was one of the most-requested features on the DJI forums ([DJI Forum](https://forum.dji.com/thread-282763-1-1.html)). DJI appears to have finally added it for the Action 6.)
+
+### Power Consumption Calculations
+
+**Battery specs:** Extreme Battery Plus — 1,950 mAh, 3.87V, **7.5 Wh** ([Focus Camera](https://www.focuscamera.com/dji-osmo-action-extreme-3-87v-1950-mah-li-ion-battery-plus-with-fast-charging.html))
+
+**Deriving power draw from battery life tests:**
+
+| Mode | Battery Life | Power Draw (7.5 Wh ÷ hours) |
+|------|-------------|------------------------------|
+| 1080p/24fps recording | 240 min (4.0 hrs) | **~1.9 W** |
+| 4K/30fps recording | ~129 min (2.15 hrs) | **~3.5 W** |
+| 4K/60fps recording | ~127 min (2.12 hrs) | **~3.5 W** |
+| Idle (screen on, not recording) | Not officially stated | **~0.5–1.0 W** (estimated — see below) |
+
+The idle estimate is based on: the camera isn't encoding video (the main power hog), but is running the sensor preview, Bluetooth for GPS remote, and the display. Comparable small electronics idle at 0.5–1.0W. DJI forum users have reported overnight standby drain from 100% to 57% (~3.2 Wh over ~8 hours = ~0.4W), though that was in sleep mode, not fully idle with screen on ([DJI Forum](https://forum.dji.com/thread-319275-1-1.html)).
+
+**Conservative estimate for idle: ~1.0 W** (screen on, Bluetooth active, sensor preview running).
+
+### Will a 20,000 mAh Power Bank Last 48 Hours?
+
+**Power bank energy:** 20,000 mAh × 3.7V (nominal Li-ion) = **74 Wh**
+
+But not all of that reaches the camera — voltage conversion (3.7V → 5V+ for USB-C output) and cable losses eat ~10–15%. **Usable energy: ~63–67 Wh.**
+
+**Scenario: Mostly idle with intermittent recording**
+
+Assume a two-day shoot with ~10 hours of active shooting per day, recording in ~10-minute bursts:
+
+| Activity | Hours | Power Draw | Energy |
+|----------|-------|-----------|--------|
+| Idle between takes (day hours) | ~14 hrs/day × 2 = 28 hrs | ~1.0 W | **28 Wh** |
+| Idle overnight | ~8 hrs | ~1.0 W | **8 Wh** |
+| Recording 4K/60fps | ~3 hrs total (est. across 2 days) | ~3.5 W | **10.5 Wh** |
+| **Total** | **~48 hrs** | | **~46.5 Wh** |
+
+**With the internal battery (7.5 Wh) + 20,000 mAh power bank (~65 Wh) = ~72.5 Wh total.**
+
+**Result: Yes, a 20,000 mAh power bank should be sufficient for 48 hours** with significant headroom (~25 Wh spare). Even if idle draw is higher than estimated (up to 1.5W), total consumption would be ~65 Wh — still within range.
+
+| Scenario | Total Energy Needed | 20K mAh bank + internal battery | Margin |
+|----------|--------------------|---------------------------------|--------|
+| Conservative (idle 1.0W, 3 hrs recording) | ~46.5 Wh | ~72.5 Wh | **+26 Wh (56% spare)** |
+| Pessimistic (idle 1.5W, 5 hrs recording) | ~72 Wh | ~72.5 Wh | **Barely enough** |
+| Safe bet | — | — | **Use 26,800 mAh bank for comfort** |
+
+### Power Bank Auto-Off Risk
+
+Many power banks **automatically shut off when they detect very low current draw** (below ~50–100 mA). An idle camera drawing ~200–260 mA at 5V should be above most auto-off thresholds, but this is worth testing. Some banks have an "always on" or "low current" mode — look for that feature when selecting a bank.
+
+**Recommended:** Use a power bank with a confirmed **low-current / always-on mode**, such as:
+- Anker 737 (24,000 mAh, 140W) — has low-current mode
+- Nitecore NB20000 (20,000 mAh) — designed for low-current devices
+- Or any bank marketed for dashcams / IoT / trickle-charge devices
+
+### 512 GB SD Card: How Many Hours of 4K/60fps?
+
+**At 4K/60fps, High bitrate (~100 Mbps):**
+
+```
+100 Mbps = 12.5 MB/s = 750 MB/min
+512 GB usable ≈ ~476 GB (formatted capacity)
+476,000 MB ÷ 750 MB/min = ~635 minutes = ~10.6 hours
+```
+
+**At Medium bitrate (~80 Mbps):**
+
+```
+80 Mbps = 10 MB/s = 600 MB/min
+476,000 MB ÷ 600 MB/min = ~793 minutes = ~13.2 hours
+```
+
+| Bitrate | Recording Time on 512 GB |
+|---------|-------------------------|
+| High (~100 Mbps) | **~10.5 hours** |
+| Medium (~80 Mbps) | **~13 hours** |
+
+**For your use case** (~3 hours of actual recording across 2 days): a 512 GB card has more than enough room — you could fit **3–4x** as much footage as you'll actually shoot.
+
+Even a **256 GB card** (~5–6.5 hours at 4K/60) would be sufficient, but the 512 GB gives you a comfortable safety margin and eliminates any risk of running out mid-session.
+
+### Summary for Ceiling Camera
+
+With the "Never" standby setting confirmed, the ceiling camera setup is straightforward:
+
+1. **Set standby to "Never"** before mounting
+2. **Use a 20,000 mAh power bank** (with low-current/always-on mode) — should last 48 hours with comfortable margin. For extra safety, use a 26,800 mAh bank. A **wall charger** remains the safest option if a power outlet is accessible.
+3. **Use a 512 GB SD card** — gives ~10.5 hours of 4K/60fps recording, far more than needed
+4. **Include the ceiling camera in the GPS remote group** — it will stay on and respond to remote start/stop commands
+5. **Test the full setup** (power bank + never standby + remote control) for 24+ hours before the shoot to verify everything works end-to-end
+
+Sources: [Focus Camera — Battery Specs](https://www.focuscamera.com/dji-osmo-action-extreme-3-87v-1950-mah-li-ion-battery-plus-with-fast-charging.html), [Jon Deutsch — Battery Life Test](https://jdeutsch.com/2025/07/01/dji-osmo-action-5-pro-battery-life-test/), [DJI Forum — Overnight Drain](https://forum.dji.com/thread-319275-1-1.html), [DJI Support — Loop Recording](https://support.dji.com/help/content?customId=01700006963&spaceId=17&re=US&lang=en&documentType=&paperDocType=ARTICLE), [Newsshooter — OA6 Bitrate](https://www.newsshooter.com/2025/11/18/dji-osmo-action-6/)
+
+---
+
+## 13. GPS Remote: What Information Does It Show?
+
+### Display Screen
+
+The remote has a small screen that shows different information depending on the mode:
+
+**Single-camera mode:**
+- Bluetooth connection status icon
+- GPS signal strength
+- Remote battery level
+- Remaining photo count or video recording time (based on current shooting mode and available storage)
+- Verification code during pairing
+
+**Multi-camera mode:**
+- **Number of cameras connected** — the screen displays the count of linked cameras
+- Remote battery level
+- GPS signal strength
+
+The screen does **not** show per-camera details in multi-camera mode — you cannot see individual camera battery levels, recording settings, or storage status for each camera. The Quick Switch button lets you cycle through cameras, but the documentation doesn't indicate that it shows per-camera info on the remote's screen.
+
+### LED Status Indicator
+
+| LED State | Meaning |
+|-----------|---------|
+| Solid green | Ready to use |
+| Temporarily off | Taking a photo |
+| Blinking red | **Recording video** |
+| Blinking blue | Linking/pairing |
+
+**The blinking red LED is your confirmation that recording has started.** When you press the shutter button to stop recording (press twice), the LED returns to solid green.
+
+### What the Remote Does NOT Show
+
+- Individual camera battery levels
+- Individual camera storage remaining
+- Camera temperature / overheat warnings
+- Per-camera recording confirmation (you can't tell if one camera failed to start)
+- Recording settings (resolution, frame rate, colour profile) of connected cameras
+
+### Practical Implication for 8–9 Camera Shoots
+
+The remote tells you *that* cameras are connected and *that* recording is happening (via LED), but it can't tell you *which* cameras are recording or if one dropped out. **Before each take, visually confirm all cameras show a recording indicator on their own screens** — or do a short test recording and check all cameras responded.
+
+The remote screen enters sleep mode after 3 minutes of no interaction and powers off after 10 minutes with no camera connected. Press any button to wake it.
+
+Sources: [DJI Support — GPS Remote](https://support.dji.com/help/content?customId=en-us03400008289&spaceId=34&re=US&lang=en&documentType=artical&paperDocType=paper), [Remote User Guide (Manuals+)](https://manuals.plus/dji/cp-os-00000281-01-osmo-action-gps-bluetooth-remote-controller-manual), [ManualsLib](https://www.manualslib.com/manual/3154981/Dji-Osmo-Action-Gps.html)
+
+---
+
+## 14. Timecode Sync Across Multiple Cameras
+
+### Timecode at 4K/60fps: NOT AVAILABLE
+
+**Timecode is not available when recording at 60fps or above.** This is a confirmed DJI limitation across all Osmo Action models (3, 4, 5 Pro, 6).
+
+Since you're shooting at **4K/60fps**, the built-in timecode feature is off the table entirely. You need alternative sync methods.
+
+Source: [DJI Support — Introduction to the Use of Timecode](https://support.dji.com/help/content?customId=01700007306&spaceId=17&re=US&lang=en&documentType=&paperDocType=ARTICLE)
+
+### Even If You Could Use Timecode, It Drifts Badly
+
+For reference (in case you ever shoot at 30fps or below): the DJI Osmo Action internal clock is notoriously inaccurate. Multiple users report significant drift:
+
+- *"The cameras are incapable of keeping time properly... sync drifts on each camera a different amount within minutes"* — Action 4 user with 3 cameras ([DJI Forum](https://forum.dji.com/thread-312257-1-1.html))
+- *"In less than 16 minutes there was 2 minutes of drift"* — Action 4 with Deity TC-1 ([DJI Forum](https://forum.dji.com/thread-308265-1-1.html))
+- Action 5 Pro internal clock "will lose sync after a few hours" — requires frequent re-jamming ([Deity Microphones](https://deitymic.com/blog/how-to-set-up-timecode-on-your-dji-osmo-action-5/))
+
+The cameras don't have a TCXO (temperature-compensated crystal oscillator), so timecode drift is inherent to the hardware.
+
+### Does Timecode Require the Same DJI Account?
+
+**No.** Timecode is set per-camera either via:
+1. Connecting to the DJI Mimo app (syncs the camera's clock to the phone's system time) — any DJI account works, or
+2. Using a USB-C timecode generator (Deity TC-1, Tentacle Sync, etc.) — no account involved at all
+3. Manually resetting timecode on the camera screen
+
+Each camera's timecode is independent. The DJI account is irrelevant to timecode.
+
+### Does Timecode Persist Through Power Off?
+
+**Yes** — on the Osmo Action 3, timecode persists through power-off and battery swaps ([Deity Microphones — OA3 Timecode](https://deitymic.com/blog/how-to-setup-timecode-on-your-osmo-action-3/)). Likely the same for later models, though the drift means it becomes increasingly inaccurate over time regardless.
+
+### How to Sync 9 Cameras at 4K/60fps (Your Options)
+
+Since timecode is unavailable at 60fps, here are your alternatives, ranked by reliability:
+
+**1. GPS Remote simultaneous start/stop (primary method)**
+
+The GPS remote triggers all cameras to start and stop recording at the same time. The Bluetooth command latency introduces a small offset (likely <100ms across cameras), but for your use case this is negligible — you're not cutting between angles on the beat of a drum. This is your built-in sync mechanism.
+
+**2. Audio waveform sync in post (backup method)**
+
+All 9 cameras have built-in microphones. A clap or sharp audio cue at the start of each take gives you a visible audio spike. In DaVinci Resolve or Premiere Pro, you can auto-sync multicam clips by audio waveform — this typically achieves **frame-accurate sync** and works regardless of frame rate.
+
+**3. Visual slate / clap (insurance)**
+
+Even with the remote's simultaneous start, do a **clap in view of all cameras** at the start of each session. This gives you both a visual and audio sync point, and is your safety net if any camera's start was delayed.
+
+### Recommended Workflow
+
+1. Configure all cameras to 4K/60fps with identical settings
+2. Link all cameras to the GPS remote in multi-camera mode
+3. At the start of each recording session, have someone **clap once in the center of the mat** (visible and audible to all cameras)
+4. Use the GPS remote to start recording on all cameras simultaneously
+5. In post, use **audio waveform sync** in your NLE to align all angles. The remote's simultaneous start gets you close; audio sync gets you frame-accurate.
+
+Sources: [DJI Support — Timecode](https://support.dji.com/help/content?customId=01700007306&spaceId=17&re=US&lang=en&documentType=&paperDocType=ARTICLE), [DJI Forum — Timecode Drift](https://forum.dji.com/thread-312257-1-1.html), [DJI Forum — Timecode Issues](https://forum.dji.com/thread-308265-1-1.html), [Deity — OA5 Timecode](https://deitymic.com/blog/how-to-set-up-timecode-on-your-dji-osmo-action-5/), [Deity — OA3 Timecode](https://deitymic.com/blog/how-to-setup-timecode-on-your-osmo-action-3/), [Tentacle Sync — DJI Compatibility](https://support.tentaclesync.com/hc/en-us/articles/25738325743005-DJI-Osmo-Pocket-Action-Serie-Tentacle-Sync)
+
+---
+
+## 15. Internal Storage vs SD Card for the 8 Surround Cameras
+
+### Recording Time on 50 GB Internal Storage (4K/60fps)
+
+```
+~100 Mbps = 750 MB/min
+50 GB usable ÷ 750 MB/min ≈ 67 minutes ≈ 1 hour 7 minutes
+```
+
+That's roughly **six 10-minute segments** before the internal storage is full and you need to offload.
+
+### Reliability: Internal (eMMC) vs microSD
+
+| Factor | Internal (eMMC) | microSD |
+|--------|-----------------|---------|
+| Physical durability | Soldered to board, vibration-proof | Removable, can lose contact |
+| Corruption risk | Lower — better wear leveling, error correction | Higher — especially with cheap/old/fake cards |
+| Flash type | Typically MLC (more durable) | Typically TLC (less durable) |
+| Counterfeit risk | Zero | Real risk if not bought from reputable source |
+| Capacity | 50 GB (~67 min at 4K/60) | Up to 1 TB |
+| Offload method | USB-C only | USB-C or pull card |
+
+Internal eMMC storage is inherently more reliable. But DJI cameras also mitigate SD card risk by **chaptering recordings into ~4 GB segments** — if corruption occurs, you only lose one segment (~5 min), not the entire take.
+
+### Practical Trade-Off
+
+| | Internal (50 GB) | SD 256 GB |
+|---|---|---|
+| Recording capacity | ~67 min (6–7 takes) | ~5.5 hrs (33 takes) |
+| Offload frequency | Every 6 takes | Rarely / end of day |
+| Offload method | USB-C cable to laptop | USB-C or pull card for parallel offload |
+| Data safety | Higher | Good with quality V30 cards |
+
+### Recommendation
+
+Internal storage is a viable option if you build in a disciplined offload routine — after every 5–6 takes, plug each camera in via USB-C and pull the files (~25 sec per camera at USB 3.1 speeds). The reliability advantage is real but modest when using quality SD cards.
+
+For maximum simplicity on shoot day, **use 256 GB SD cards** — they hold a full day of recording without needing to offload between takes. Use reputable V30+ cards (SanDisk Extreme Pro, Lexar Silver Plus, Kingston Canvas Go Plus), format them in-camera before each shoot day, and buy from authorized retailers to avoid counterfeits.
+
+Sources: [DJI Support — Recommended Storage Cards](https://support.dji.com/help/content?customId=01700011256&spaceId=17&re=US&lang=en&documentType=&paperDocType=ARTICLE), [Memory Wolf — OA6 Cards](https://www.memorywolf.com/collections/dji-osmo-action-6-memory-cards), [Tom's Guide — OA6 Review](https://www.tomsguide.com/cameras-photography/gopro-action-cameras/dji-osmo-action-6-review)
+
+---
+
+## Summary: Key Concerns for the Shoot
+
+| Topic | Finding | Impact |
+|-------|---------|--------|
+| File size per take (9 cams × 10 min) | ~54–68 GB | Need 256 GB+ SD cards per camera for multiple takes |
+| Wireless multi-cam download | Not possible simultaneously | Must offload one camera at a time, or use SD card swap |
+| Fastest offload method | USB-C direct (~300 MB/s) or parallel SD card readers | SD card swap is best for 9 cameras in parallel |
+| Dual storage recording | Not supported | No built-in redundancy — use reliable SD cards |
+| Remote wake-up in multi-cam mode | **Not supported** | Cameras must stay powered on; disable auto-sleep |
+| Remote reconnection after power-off | Likely requires re-linking | Avoid powering cameras off during session |
+| Settings retention | Settings persist across power cycles | Configure once per camera before the shoot |
+| App activation | Required per camera (one-time) | Do this in advance, not on shoot day |
+| Different DJI accounts | No problem — remote pairs via Bluetooth, not accounts | Rented cameras from different owners work fine |
+| Overheating while idle | Not a concern — only happens during recording | Safe to leave cameras on all day between takes |
+| External power | USB-C PD 30W+ power bank per camera | 9× small PD banks (~$15–25 each), velcroed to tripods |
+| Ceiling camera (48 hrs) | "Never" standby confirmed; 20K mAh bank lasts ~48 hrs | Set standby to "Never", use power bank with low-current mode, 512 GB card |
+| GPS remote display | Shows # of cameras connected; LED blinks red when recording | Can't see per-camera status — visually confirm all cameras before takes |
+| Timecode at 4K/60fps | **Not available** at 60fps+ | Use GPS remote simultaneous start + audio waveform sync in post |
+| Timecode & DJI accounts | Account-independent — set per camera | Rented cameras from different accounts can all be synced |
+| Internal vs SD storage | eMMC more reliable; 50 GB = ~67 min at 4K/60 | Internal is safer but needs frequent offload; 256 GB SD cards more practical |
+| Mount type | Standard GoPro 3-prong | Buy 9× GoPro-to-1/4"-20 tripod adapters (~$4–8 each) |
+
+---
+
+*Research compiled 2026-02-28*
+</script>
 
 <script>
 // ── CONSTANTS ─────────────────────────────────────────
@@ -1616,6 +2285,26 @@ function bindInputs() {
   });
 }
 
+// ── TAB SWITCHING ──────────────────────────────────────
+function switchTab(tab) {
+  const plannerEl = document.getElementById('tab-planner');
+  const researchEl = document.getElementById('tab-research');
+  const tabPlannerBtn = document.getElementById('tabPlanner');
+  const tabResearchBtn = document.getElementById('tabResearch');
+  if (tab === 'planner') {
+    plannerEl.style.display = 'flex';
+    researchEl.style.display = 'none';
+    tabPlannerBtn.className = tabPlannerBtn.className.replace('text-gray-500', 'text-green-400').replace('border-transparent', 'border-green-400');
+    tabResearchBtn.className = tabResearchBtn.className.replace('text-green-400', 'text-gray-500').replace('border-green-400', 'border-transparent');
+    resizeCanvas();
+  } else {
+    plannerEl.style.display = 'none';
+    researchEl.style.display = 'block';
+    tabResearchBtn.className = tabResearchBtn.className.replace('text-gray-500', 'text-green-400').replace('border-transparent', 'border-green-400');
+    tabPlannerBtn.className = tabPlannerBtn.className.replace('text-green-400', 'text-gray-500').replace('border-green-400', 'border-transparent');
+  }
+}
+
 // ── INIT ───────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   bindInputs();
@@ -1641,6 +2330,10 @@ document.addEventListener('DOMContentLoaded', () => {
     opt.textContent = `${pattern.symbol} ${name}`;
     poomsaeSelect.appendChild(opt);
   });
+
+  // Render research markdown
+  const mdSource = document.getElementById('researchMarkdown').textContent;
+  document.getElementById('researchContent').innerHTML = marked.parse(mdSource);
 
   resizeCanvas();
   new ResizeObserver(() => resizeCanvas()).observe(container);
