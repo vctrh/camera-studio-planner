@@ -125,12 +125,14 @@ Since you're already using DaVinci Resolve, this is the most relevant head-to-he
 | Aspect | DaVinci Resolve Super Scale | Topaz Video AI |
 |--------|----------------------------|----------------|
 | **Upscale quality** | Very good. Clean, natural results. Slight softness at 3×+ compared to Topaz. | Best-in-class. Starlight diffusion models excel at extreme restoration. |
+| **ML approach** | **Conservative/preservative** — uses the DaVinci Neural Engine (deep neural networks + ML, requires Studio version + capable GPU) to intelligently interpolate. Retains and enhances existing detail but does not invent new detail. Think "smart upscaling that understands edges and textures." | **Generative** — Starlight/diffusion models actively hallucinate new detail based on training data. Can produce sharper results on degraded footage, but may fabricate incorrect detail. |
 | **Temporal consistency** | Excellent. Motion looks smooth, no flicker. | Good but can hallucinate artefacts on fast motion (ghost limbs, shimmering halos). |
 | **Compression artifact removal** | Weak — doesn't address banding/posterisation. | Strong — de-banding and de-posterising built in. |
 | **Speed** | Much faster (3–5× for equivalent upscale). | Slow. 6+ hours for a 10-minute 4K render is common. |
 | **Workflow** | Integrated — upscale directly on the timeline alongside colour grading, keying, and audio. | Standalone — requires export → process → re-import round-trip. |
 | **Cost** | $295 one-time (already needed for green screen keying and multi-cam editing). | $299–699/year subscription. |
 | **Martial arts / sports** | Better choice — temporal stability means kicks and fast movement look clean. | May introduce artefacts on fast spinning/kicking movements. |
+| **Best source material** | Clean, well-lit footage where detail exists but needs scaling up. Our use case (clean 4K crops from controlled studio lighting) plays to its strengths. | Heavily degraded, noisy, or compressed footage where detail must be reconstructed/invented. |
 
 ---
 
