@@ -92,6 +92,7 @@
 <nav class="bg-gray-900 border-b border-gray-800 flex items-center px-5 gap-6 flex-shrink-0" style="height:40px">
   <button id="tabPlanner" class="text-[11px] tracking-widest font-bold uppercase font-mono text-green-400 border-b-2 border-green-400 h-full flex items-center" onclick="switchTab('planner')">Studio Planner</button>
   <button id="tabResearch" class="text-[11px] tracking-widest font-bold uppercase font-mono text-gray-500 border-b-2 border-transparent h-full flex items-center" onclick="switchTab('research')">Equipment Research</button>
+  <button id="tabOverhead" class="text-[11px] tracking-widest font-bold uppercase font-mono text-gray-500 border-b-2 border-transparent h-full flex items-center" onclick="switchTab('overhead')">Overhead Camera</button>
 </nav>
 
 <!-- TAB: STUDIO PLANNER -->
@@ -372,6 +373,102 @@
             <span id="povKickPercent" class="text-gray-200 font-mono">25.8%</span>
           </div>
         </div>
+      </div>
+    </div>
+  </main>
+
+</div>
+
+<!-- TAB: OVERHEAD CAMERA -->
+<div id="tab-overhead" class="flex flex-col md:flex-row" style="height:calc(100vh - 40px); display:none">
+
+  <!-- SIDEBAR -->
+  <aside class="w-full md:w-80 flex-shrink-0 bg-gray-900 border-b md:border-b-0 md:border-r border-gray-800 overflow-y-auto p-5">
+    <div class="mb-5">
+      <h1 class="text-base font-bold text-green-400 tracking-widest">OVERHEAD CAMERA</h1>
+      <p class="text-[10px] text-gray-500 mt-0.5">DJI OA6 Ceiling-Mount FOV &amp; Distortion</p>
+    </div>
+
+    <div class="mb-5">
+      <div class="section-label">Camera Position</div>
+      <div class="mb-3">
+        <div class="flex justify-between text-xs text-gray-400 mb-1">
+          <span>Ceiling Height</span>
+          <span id="ohHeightDisplay" class="text-gray-200">3.5 m</span>
+        </div>
+        <input type="range" id="ohHeight" min="3.0" max="4.5" step="0.1" value="3.5" class="w-full">
+      </div>
+      <div class="mb-3">
+        <div class="flex justify-between text-xs text-gray-400 mb-1">
+          <span>South Offset</span>
+          <span id="ohOffsetDisplay" class="text-gray-200">0.0 m</span>
+        </div>
+        <input type="range" id="ohOffset" min="0" max="4.5" step="0.1" value="0" class="w-full">
+      </div>
+      <div class="mb-3">
+        <div class="flex justify-between text-xs text-gray-400 mb-1">
+          <span>Aim Point (N&#8211;S)</span>
+          <span id="ohAimYDisplay" class="text-gray-200">0.0 m (center)</span>
+        </div>
+        <input type="range" id="ohAimY" min="-4.5" max="4.5" step="0.1" value="0" class="w-full">
+        <div class="flex justify-between text-[9px] text-gray-600 mt-0.5"><span>&#8592; North</span><span>South &#8594;</span></div>
+      </div>
+    </div>
+
+    <div class="mb-5">
+      <div class="section-label">Poomsae Floor Pattern</div>
+      <select id="ohSelectedPoomsae" class="num-input">
+        <option value="none">-- None --</option>
+      </select>
+    </div>
+
+    <div class="border-t border-gray-800 my-4"></div>
+
+    <div class="mb-4">
+      <div class="section-label">Geometry</div>
+      <div class="data-row">
+        <span class="data-label">Tilt angle</span>
+        <span class="data-value" id="ohTiltAngle">0.0&deg;</span>
+      </div>
+      <div class="data-desc">0&deg; = straight down</div>
+
+      <div class="cam-group-label">1&times; WIDE (FOV 102.6&deg;)</div>
+      <div class="data-row"><span class="data-label">Near edge (S)</span><span class="data-value" id="oh1xNearW">--</span></div>
+      <div class="data-row"><span class="data-label">Far edge (N)</span><span class="data-value" id="oh1xFarW">--</span></div>
+      <div class="data-row"><span class="data-label">N&#8211;S span</span><span class="data-value" id="oh1xSpan">--</span></div>
+      <div class="data-row"><span class="data-label">Distortion</span><span class="data-value" id="oh1xDistortion">--</span></div>
+      <div id="oh1xWarning" class="text-[10px] mt-1 hidden" style="color:#ef4444"></div>
+
+      <div class="cam-group-label" style="margin-top:12px">2&times; ZOOM (FOV 64.0&deg;)</div>
+      <div class="data-row"><span class="data-label">Near edge (S)</span><span class="data-value" id="oh2xNearW">--</span></div>
+      <div class="data-row"><span class="data-label">Far edge (N)</span><span class="data-value" id="oh2xFarW">--</span></div>
+      <div class="data-row"><span class="data-label">N&#8211;S span</span><span class="data-value" id="oh2xSpan">--</span></div>
+      <div class="data-row"><span class="data-label">Distortion</span><span class="data-value" id="oh2xDistortion">--</span></div>
+      <div id="oh2xWarning" class="text-[10px] mt-1 hidden" style="color:#ef4444"></div>
+
+      <div class="cam-group-label" style="margin-top:12px">COVERAGE</div>
+      <div class="data-row"><span class="data-label">1&times; covers mat?</span><span class="data-value" id="oh1xCoversMat">--</span></div>
+      <div class="data-row"><span class="data-label">1&times; covers action?</span><span class="data-value" id="oh1xCoversAction">--</span></div>
+      <div class="data-row"><span class="data-label">2&times; covers mat?</span><span class="data-value" id="oh2xCoversMat">--</span></div>
+      <div class="data-row"><span class="data-label">2&times; covers action?</span><span class="data-value" id="oh2xCoversAction">--</span></div>
+    </div>
+
+    <div class="border-t border-gray-800 pt-4">
+      <div id="ohInterpretation" class="text-[10px] text-gray-500 leading-relaxed"></div>
+    </div>
+  </aside>
+
+  <!-- CANVAS -->
+  <main id="ohCanvasContainer" class="flex-1 flex items-center justify-center bg-gray-200 p-2 md:p-4 min-h-0 relative">
+    <canvas id="ohCanvas"></canvas>
+    <div id="ohSideView" class="absolute pointer-events-none" style="bottom:12px; right:12px; width:420px">
+      <div class="bg-gray-900/95 border border-gray-700 rounded-lg shadow-2xl p-3">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-2 h-2 rounded-full bg-purple-400"></div>
+          <span class="text-sm font-bold text-gray-100">Y&#8211;Z Cross Section</span>
+          <span class="text-xs text-gray-600 ml-auto">Side View</span>
+        </div>
+        <canvas id="ohSideCanvas" width="396" height="220" class="w-full rounded border border-gray-700 bg-gray-950"></canvas>
       </div>
     </div>
   </main>
@@ -1114,7 +1211,12 @@ const state = {
   selectedPoomsae: 'none',
   fStop: 2.0,
   iso: 200,
-  shutterSpeed: 120
+  shutterSpeed: 120,
+  // Overhead camera tab
+  ohHeight: 3.5,
+  ohOffset: 0,
+  ohAimY: 0,
+  ohSelectedPoomsae: 'none'
 };
 
 let hoveredCamId = null; // which camera is hovered
@@ -1127,6 +1229,10 @@ const povOverlay = document.getElementById('povOverlay');
 const povCanvas = document.getElementById('povCanvas');
 const povCtx = povCanvas.getContext('2d');
 let dpr = 1;
+
+// Overhead tab refs (initialized in DOMContentLoaded)
+let ohCanvas, ohCtx, ohContainer, ohSideCanvas, ohSideCtx;
+let ohPpm = 1, ohWorldExtent = 16;
 
 // ── DERIVED COMPUTATIONS ───────────────────────────────
 function computeDerived() {
@@ -2285,24 +2391,629 @@ function bindInputs() {
   });
 }
 
+// ── OVERHEAD CAMERA TAB ────────────────────────────────
+
+function computeOverheadFootprint(fovRatio, height, offset, aimY) {
+  const dy = offset - aimY;
+  const theta = Math.atan2(dy, height);
+  const beta = Math.atan(fovRatio / 2);
+  const sinT = Math.sin(theta), cosT = Math.cos(theta), tanB = Math.tan(beta);
+
+  const nearDz = -cosT - tanB * sinT;
+  const farDz  = -cosT + tanB * sinT;
+
+  function groundHit(dx, ddy, dz) {
+    if (dz >= -0.0001) return null;
+    const t = -height / dz;
+    return { x: t * dx, y: offset + t * ddy };
+  }
+
+  const nl = groundHit(-tanB, -sinT + tanB * cosT, nearDz);
+  const nr = groundHit( tanB, -sinT + tanB * cosT, nearDz);
+
+  let fl, fr, farEdgeInfinite = false;
+  if (farDz >= -0.001) {
+    farEdgeInfinite = true;
+    // Cap at 20m north of camera ground position
+    const capY = offset - 20;
+    // Interpolate width: trapezoid edges are linear from near to far
+    // Use a very small negative dz to get the direction, then extrapolate
+    const fakeDz = -0.01;
+    const tFake = -height / fakeDz;
+    const xFake = tanB * tFake;
+    // Scale to cap distance
+    const nearY = nl ? nl.y : offset;
+    const totalSpan = nearY - capY;
+    const fakeSpan = nearY - (offset + tFake * (-sinT - tanB * cosT));
+    const scale = fakeSpan > 0.001 ? totalSpan / fakeSpan : 10;
+    const nearHalfW = nl ? Math.abs(nl.x) : 1;
+    const farHalfW = nearHalfW * scale;
+    fl = { x: -Math.min(farHalfW, 30), y: capY };
+    fr = { x:  Math.min(farHalfW, 30), y: capY };
+  } else {
+    fl = groundHit(-tanB, -sinT - tanB * cosT, farDz);
+    fr = groundHit( tanB, -sinT - tanB * cosT, farDz);
+  }
+
+  const corners = (nl && nr && fl && fr) ? { nearLeft: nl, nearRight: nr, farLeft: fl, farRight: fr } : null;
+  let nearWidth = 0, farWidth = 0, nsSpan = 0, distortionRatio = 1;
+  if (corners) {
+    nearWidth = Math.abs(corners.nearRight.x - corners.nearLeft.x);
+    farWidth = Math.abs(corners.farRight.x - corners.farLeft.x);
+    const allY = [corners.nearLeft.y, corners.nearRight.y, corners.farLeft.y, corners.farRight.y];
+    nsSpan = Math.max(...allY) - Math.min(...allY);
+    distortionRatio = nearWidth > 0.001 ? farWidth / nearWidth : Infinity;
+  }
+
+  return { tiltDeg: theta * 180 / Math.PI, theta, beta, corners, farEdgeInfinite, nearWidth, farWidth, nsSpan, distortionRatio };
+}
+
+function resizeOhCanvas() {
+  if (!ohContainer) return;
+  dpr = window.devicePixelRatio || 1;
+  const rect = ohContainer.getBoundingClientRect();
+  const size = Math.min(rect.width, rect.height) - 16;
+  if (size <= 0) return;
+  ohCanvas.width = size * dpr;
+  ohCanvas.height = size * dpr;
+  ohCanvas.style.width = size + 'px';
+  ohCanvas.style.height = size + 'px';
+  renderOverhead();
+}
+
+function setupOhTransform() {
+  const w = ohCanvas.width, h = ohCanvas.height;
+  const padding = 3.5;
+  ohWorldExtent = state.matSize + 2 * padding;
+  ohPpm = Math.min(w, h) / ohWorldExtent;
+  ohCtx.setTransform(1, 0, 0, 1, 0, 0);
+  ohCtx.clearRect(0, 0, w, h);
+  ohCtx.translate(w / 2, h / 2);
+  ohCtx.scale(ohPpm, ohPpm);
+}
+
+function drawOhFloor() {
+  const ext = ohWorldExtent / 2 + 2;
+  ohCtx.fillStyle = '#d1d5db';
+  ohCtx.fillRect(-ext, -ext, ext * 2, ext * 2);
+}
+
+function drawOhMat() {
+  const h = state.matSize / 2;
+  ohCtx.fillStyle = '#2563eb';
+  ohCtx.fillRect(-h, -h, state.matSize, state.matSize);
+  ohCtx.strokeStyle = '#1d4ed8';
+  ohCtx.lineWidth = 0.06;
+  ohCtx.setLineDash([]);
+  ohCtx.strokeRect(-h, -h, state.matSize, state.matSize);
+  // Label
+  ohCtx.save();
+  ohCtx.scale(1 / ohPpm, 1 / ohPpm);
+  ohCtx.fillStyle = 'rgba(255,255,255,0.4)';
+  ohCtx.font = `bold ${Math.round(14 * dpr)}px monospace`;
+  ohCtx.textAlign = 'center';
+  ohCtx.textBaseline = 'middle';
+  ohCtx.fillText(`${state.matSize}m mat`, 0, (-h + 0.5) * ohPpm);
+  ohCtx.restore();
+  // N/S labels
+  ohCtx.save();
+  ohCtx.scale(1 / ohPpm, 1 / ohPpm);
+  ohCtx.fillStyle = 'rgba(255,255,255,0.25)';
+  ohCtx.font = `bold ${Math.round(11 * dpr)}px monospace`;
+  ohCtx.textAlign = 'center';
+  ohCtx.fillText('N', 0, (-h + 0.15) * ohPpm);
+  ohCtx.fillText('S', 0, (h - 0.08) * ohPpm);
+  ohCtx.fillText('W', (-h + 0.15) * ohPpm, 0.05 * ohPpm);
+  ohCtx.fillText('E', (h - 0.15) * ohPpm, 0.05 * ohPpm);
+  ohCtx.restore();
+}
+
+function drawOhActionZone() {
+  const hw = state.actionWidth / 2, hh = state.actionHeight / 2;
+  ohCtx.save();
+  ohCtx.strokeStyle = '#f59e0b';
+  ohCtx.lineWidth = 0.06;
+  ohCtx.setLineDash([0.25, 0.15]);
+  ohCtx.strokeRect(-hw, -hh, state.actionWidth, state.actionHeight);
+  ohCtx.restore();
+}
+
+function drawOhFloorPattern() {
+  if (state.ohSelectedPoomsae === 'none') return;
+  const pattern = POOMSAE_FLOOR_PATTERNS[state.ohSelectedPoomsae];
+  if (!pattern) return;
+  const placement = computePatternPlacement(pattern);
+  const tx = placement.tx, ty = placement.ty;
+
+  ohCtx.save();
+  ohCtx.strokeStyle = '#1f2937';
+  ohCtx.lineWidth = 0.10;
+  ohCtx.setLineDash([]);
+  ohCtx.beginPath();
+  pattern.path.forEach((pt, i) => {
+    const wx = pt.x + tx, wy = -(pt.fwd - ty);
+    if (i === 0) ohCtx.moveTo(wx, wy);
+    else ohCtx.lineTo(wx, wy);
+  });
+  ohCtx.stroke();
+  // Start diamond
+  const s = pattern.path[0];
+  const sx = s.x + tx, sy = -(s.fwd - ty);
+  ohCtx.fillStyle = '#374151';
+  ohCtx.beginPath();
+  ohCtx.moveTo(sx, sy - 0.12);
+  ohCtx.lineTo(sx + 0.12, sy);
+  ohCtx.lineTo(sx, sy + 0.12);
+  ohCtx.lineTo(sx - 0.12, sy);
+  ohCtx.closePath();
+  ohCtx.fill();
+  ohCtx.restore();
+}
+
+function drawOhFootprint(fp, zoomLabel) {
+  if (!fp.corners) return;
+  const c = fp.corners;
+  const is1x = zoomLabel === '1x';
+  const fillColor = is1x ? 'rgba(168, 85, 247, 0.08)' : 'rgba(34, 197, 94, 0.12)';
+  const strokeColor = is1x ? 'rgba(168, 85, 247, 0.5)' : 'rgba(34, 197, 94, 0.7)';
+  const lineWidth = is1x ? 0.04 : 0.06;
+  const dash = is1x ? [0.2, 0.12] : [];
+
+  ohCtx.save();
+  // Fill
+  ohCtx.beginPath();
+  ohCtx.moveTo(c.nearLeft.x, c.nearLeft.y);
+  ohCtx.lineTo(c.nearRight.x, c.nearRight.y);
+  ohCtx.lineTo(c.farRight.x, c.farRight.y);
+  ohCtx.lineTo(c.farLeft.x, c.farLeft.y);
+  ohCtx.closePath();
+  ohCtx.fillStyle = fillColor;
+  ohCtx.fill();
+
+  // Stroke
+  ohCtx.strokeStyle = strokeColor;
+  ohCtx.lineWidth = lineWidth;
+  ohCtx.setLineDash(dash);
+  ohCtx.stroke();
+  ohCtx.setLineDash([]);
+
+  // Width labels at near and far edges
+  ohCtx.save();
+  ohCtx.scale(1 / ohPpm, 1 / ohPpm);
+  const color = is1x ? '#a855f7' : '#22c55e';
+  ohCtx.fillStyle = color;
+  ohCtx.font = `bold ${Math.round(10 * dpr)}px monospace`;
+  ohCtx.textAlign = 'center';
+  const nearY = (c.nearLeft.y + c.nearRight.y) / 2;
+  const farY = (c.farLeft.y + c.farRight.y) / 2;
+  const nw = Math.abs(c.nearRight.x - c.nearLeft.x);
+  const fw = Math.abs(c.farRight.x - c.farLeft.x);
+  const labelOffset = is1x ? 12 : -4;
+  if (!fp.farEdgeInfinite) {
+    ohCtx.fillText(fw.toFixed(1) + 'm', 0, (farY * ohPpm) - 4 * dpr + (is1x ? -8 * dpr : 0));
+  } else {
+    ohCtx.fillStyle = '#ef4444';
+    ohCtx.fillText('\u221E (past horizon)', 0, (farY * ohPpm) - 4 * dpr);
+  }
+  ohCtx.fillStyle = color;
+  ohCtx.fillText(nw.toFixed(1) + 'm', 0, (nearY * ohPpm) + 14 * dpr + (is1x ? 10 * dpr : 0));
+  // Zoom label
+  ohCtx.font = `${Math.round(9 * dpr)}px monospace`;
+  const lx = is1x ? (c.nearRight.x * ohPpm + 8 * dpr) : (c.nearLeft.x * ohPpm - 8 * dpr);
+  ohCtx.textAlign = is1x ? 'left' : 'right';
+  ohCtx.fillText(zoomLabel, lx, (nearY * ohPpm) + 4 * dpr);
+  ohCtx.restore();
+
+  // If far edge infinite, draw red dashed line at the cap
+  if (fp.farEdgeInfinite) {
+    ohCtx.save();
+    ohCtx.strokeStyle = '#ef4444';
+    ohCtx.lineWidth = 0.04;
+    ohCtx.setLineDash([0.15, 0.1]);
+    ohCtx.beginPath();
+    ohCtx.moveTo(c.farLeft.x, c.farLeft.y);
+    ohCtx.lineTo(c.farRight.x, c.farRight.y);
+    ohCtx.stroke();
+    ohCtx.setLineDash([]);
+    ohCtx.restore();
+  }
+  ohCtx.restore();
+}
+
+function drawOhCameraIcon() {
+  const cx = 0, cy = state.ohOffset;
+  ohCtx.save();
+  ohCtx.translate(cx, cy);
+  // Outer ring
+  ohCtx.beginPath();
+  ohCtx.arc(0, 0, 0.22, 0, Math.PI * 2);
+  ohCtx.fillStyle = '#1f2937';
+  ohCtx.fill();
+  ohCtx.strokeStyle = '#a855f7';
+  ohCtx.lineWidth = 0.05;
+  ohCtx.stroke();
+  // Inner dot
+  ohCtx.beginPath();
+  ohCtx.arc(0, 0, 0.08, 0, Math.PI * 2);
+  ohCtx.fillStyle = '#a855f7';
+  ohCtx.fill();
+  // Crosshair
+  ohCtx.strokeStyle = 'rgba(168, 85, 247, 0.4)';
+  ohCtx.lineWidth = 0.02;
+  ohCtx.beginPath();
+  ohCtx.moveTo(-0.35, 0); ohCtx.lineTo(0.35, 0);
+  ohCtx.moveTo(0, -0.35); ohCtx.lineTo(0, 0.35);
+  ohCtx.stroke();
+  ohCtx.restore();
+  // Label
+  ohCtx.save();
+  ohCtx.scale(1 / ohPpm, 1 / ohPpm);
+  ohCtx.fillStyle = '#a855f7';
+  ohCtx.font = `bold ${Math.round(10 * dpr)}px monospace`;
+  ohCtx.textAlign = 'center';
+  ohCtx.fillText('\u25CE CAM', cx * ohPpm, (cy - 0.35) * ohPpm);
+  ohCtx.restore();
+}
+
+function drawOhAimPoint() {
+  if (state.ohOffset === 0 && state.ohAimY === 0) return; // no aim line when centered
+  const ax = 0, ay = state.ohAimY;
+  ohCtx.save();
+  // Dashed line from camera to aim
+  ohCtx.strokeStyle = '#f59e0b';
+  ohCtx.lineWidth = 0.03;
+  ohCtx.setLineDash([0.08, 0.06]);
+  ohCtx.beginPath();
+  ohCtx.moveTo(0, state.ohOffset);
+  ohCtx.lineTo(ax, ay);
+  ohCtx.stroke();
+  ohCtx.setLineDash([]);
+  // Target
+  const r = 0.1;
+  ohCtx.beginPath();
+  ohCtx.arc(ax, ay, r, 0, Math.PI * 2);
+  ohCtx.strokeStyle = '#f59e0b';
+  ohCtx.lineWidth = 0.04;
+  ohCtx.stroke();
+  ohCtx.beginPath();
+  ohCtx.moveTo(ax - r * 1.5, ay);
+  ohCtx.lineTo(ax + r * 1.5, ay);
+  ohCtx.moveTo(ax, ay - r * 1.5);
+  ohCtx.lineTo(ax, ay + r * 1.5);
+  ohCtx.lineWidth = 0.02;
+  ohCtx.stroke();
+  ohCtx.restore();
+}
+
+function drawOhSideView(fp1x, fp2x) {
+  const pc = ohSideCanvas;
+  const p = ohSideCtx;
+  const pdpr = dpr;
+  const cssW = 396, cssH = 220;
+  pc.width = cssW * pdpr;
+  pc.height = cssH * pdpr;
+  pc.style.width = cssW + 'px';
+  pc.style.height = cssH + 'px';
+  const W = pc.width, H = pc.height;
+  const mL = 10 * pdpr, mR = 10 * pdpr, mT = 16 * pdpr, mB = 20 * pdpr;
+  const drawW = W - mL - mR, drawH = H - mT - mB;
+
+  const halfMat = state.matSize / 2;
+  const worldYMin = -(halfMat + 2);
+  const worldYMax = Math.max(halfMat + 2, state.ohOffset + 1.5);
+  const worldZMin = -0.2;
+  const worldZMax = state.ohHeight + 0.8;
+  const ppmY = drawW / (worldYMax - worldYMin);
+  const ppmZ = drawH / (worldZMax - worldZMin);
+
+  function toX(wy) { return mL + (wy - worldYMin) * ppmY; }
+  function toY(wz) { return mT + (worldZMax - wz) * ppmZ; }
+
+  p.clearRect(0, 0, W, H);
+  p.fillStyle = '#0f172a';
+  p.fillRect(0, 0, W, H);
+
+  // Ground line
+  p.strokeStyle = '#475569';
+  p.lineWidth = 1.5 * pdpr;
+  p.setLineDash([]);
+  p.beginPath();
+  p.moveTo(toX(worldYMin), toY(0));
+  p.lineTo(toX(worldYMax), toY(0));
+  p.stroke();
+
+  // Mat on ground
+  const matX1 = toX(-halfMat), matX2 = toX(halfMat);
+  const floorPx = toY(0);
+  p.fillStyle = '#2563eb';
+  p.fillRect(matX1, floorPx - 2 * pdpr, matX2 - matX1, 4 * pdpr);
+
+  // Mat labels
+  p.fillStyle = 'rgba(37,99,235,0.7)';
+  p.font = `${Math.round(8 * pdpr)}px monospace`;
+  p.textAlign = 'center';
+  p.fillText('N', toX(-halfMat + 0.3), floorPx + 11 * pdpr);
+  p.fillText('S', toX(halfMat - 0.3), floorPx + 11 * pdpr);
+
+  // Camera icon
+  const camPxX = toX(state.ohOffset);
+  const camPxY = toY(state.ohHeight);
+  // Ceiling line
+  p.strokeStyle = '#4b5563';
+  p.lineWidth = 1 * pdpr;
+  p.setLineDash([3 * pdpr, 2 * pdpr]);
+  p.beginPath();
+  p.moveTo(mL, toY(worldZMax));
+  p.lineTo(W - mR, toY(worldZMax));
+  p.stroke();
+  p.setLineDash([]);
+  // Mount rod
+  p.strokeStyle = '#9ca3af';
+  p.lineWidth = 1.5 * pdpr;
+  p.beginPath();
+  p.moveTo(camPxX, toY(worldZMax));
+  p.lineTo(camPxX, camPxY);
+  p.stroke();
+  // Camera body
+  const cbW = 10 * pdpr, cbH = 8 * pdpr;
+  p.fillStyle = '#1f2937';
+  p.strokeStyle = '#a855f7';
+  p.lineWidth = 1.5 * pdpr;
+  p.fillRect(camPxX - cbW / 2, camPxY - cbH / 2, cbW, cbH);
+  p.strokeRect(camPxX - cbW / 2, camPxY - cbH / 2, cbW, cbH);
+  // Lens (pointing down)
+  p.fillStyle = '#a855f7';
+  p.beginPath();
+  p.arc(camPxX, camPxY + cbH / 2, 2.5 * pdpr, 0, Math.PI * 2);
+  p.fill();
+  // Height label
+  p.fillStyle = '#a855f7';
+  p.font = `bold ${Math.round(9 * pdpr)}px monospace`;
+  p.textAlign = 'right';
+  p.fillText(state.ohHeight.toFixed(1) + 'm', camPxX - cbW / 2 - 4 * pdpr, camPxY + 3 * pdpr);
+
+  // Optical axis (dashed orange)
+  p.strokeStyle = '#f59e0b';
+  p.lineWidth = 1 * pdpr;
+  p.setLineDash([4 * pdpr, 3 * pdpr]);
+  p.beginPath();
+  p.moveTo(camPxX, camPxY);
+  p.lineTo(toX(state.ohAimY), floorPx);
+  p.stroke();
+  p.setLineDash([]);
+
+  // Draw rays for each zoom
+  function drawRays(fp, color, dashPattern) {
+    if (!fp.corners) return;
+    const nearY = (fp.corners.nearLeft.y + fp.corners.nearRight.y) / 2;
+    const farY = (fp.corners.farLeft.y + fp.corners.farRight.y) / 2;
+    p.strokeStyle = color;
+    p.lineWidth = 1.5 * pdpr;
+    p.setLineDash(dashPattern);
+    // Near ray (toward south)
+    p.beginPath();
+    p.moveTo(camPxX, camPxY);
+    p.lineTo(toX(nearY), floorPx);
+    p.stroke();
+    // Far ray (toward north)
+    p.beginPath();
+    p.moveTo(camPxX, camPxY);
+    const farPx = toX(Math.max(farY, worldYMin));
+    if (fp.farEdgeInfinite) {
+      // Draw ray going to edge of view
+      p.lineTo(toX(worldYMin), floorPx);
+    } else {
+      p.lineTo(farPx, floorPx);
+    }
+    p.stroke();
+    p.setLineDash([]);
+    // Ground hit dots
+    p.fillStyle = color;
+    p.beginPath();
+    p.arc(toX(nearY), floorPx, 3 * pdpr, 0, Math.PI * 2);
+    p.fill();
+    if (!fp.farEdgeInfinite) {
+      p.beginPath();
+      p.arc(farPx, floorPx, 3 * pdpr, 0, Math.PI * 2);
+      p.fill();
+    }
+  }
+  drawRays(fp1x, '#a855f7', [4 * pdpr, 3 * pdpr]);
+  drawRays(fp2x, '#22c55e', []);
+
+  // Eva stick figure at ~2m south of center
+  const evaGroundY = 2.0;
+  const evaX = toX(evaGroundY);
+  const evaFloor = floorPx;
+  const evaHead = toY(ATHLETE_HEIGHT);
+  // Body
+  p.strokeStyle = '#9ca3af';
+  p.lineWidth = 1.5 * pdpr;
+  p.beginPath();
+  p.moveTo(evaX, evaFloor);
+  p.lineTo(evaX, evaHead + 8 * pdpr);
+  p.stroke();
+  // Head
+  p.beginPath();
+  p.arc(evaX, evaHead + 4 * pdpr, 4 * pdpr, 0, Math.PI * 2);
+  p.strokeStyle = '#9ca3af';
+  p.stroke();
+  // Label
+  p.fillStyle = '#6b7280';
+  p.font = `${Math.round(8 * pdpr)}px monospace`;
+  p.textAlign = 'center';
+  p.fillText('Eva', evaX, evaHead - 4 * pdpr);
+
+  // Legend
+  p.font = `${Math.round(8 * pdpr)}px monospace`;
+  p.textAlign = 'left';
+  const legY = mT + 10 * pdpr;
+  p.fillStyle = '#a855f7';
+  p.fillRect(mL, legY - 4 * pdpr, 12 * pdpr, 2 * pdpr);
+  p.fillText('1\u00D7', mL + 16 * pdpr, legY);
+  p.fillStyle = '#22c55e';
+  p.fillRect(mL + 40 * pdpr, legY - 4 * pdpr, 12 * pdpr, 2 * pdpr);
+  p.fillText('2\u00D7', mL + 56 * pdpr, legY);
+}
+
+function updateOhDataPanel(fp1x, fp2x) {
+  const fmt = (v) => v > 50 ? '\u221E' : v.toFixed(2) + ' m';
+  document.getElementById('ohTiltAngle').innerHTML = fp1x.tiltDeg.toFixed(1) + '&deg;';
+
+  // 1x
+  document.getElementById('oh1xNearW').textContent = fmt(fp1x.nearWidth);
+  document.getElementById('oh1xFarW').innerHTML = fp1x.farEdgeInfinite ? '<span style="color:#ef4444">\u221E</span>' : fmt(fp1x.farWidth);
+  document.getElementById('oh1xSpan').innerHTML = fp1x.farEdgeInfinite ? '<span style="color:#ef4444">\u221E</span>' : fmt(fp1x.nsSpan);
+  document.getElementById('oh1xDistortion').textContent = fp1x.farEdgeInfinite ? '\u221E' : fp1x.distortionRatio.toFixed(2) + ':1';
+  const w1 = document.getElementById('oh1xWarning');
+  if (fp1x.farEdgeInfinite) {
+    const maxTilt = (90 - fp1x.beta * 180 / Math.PI).toFixed(1);
+    w1.innerHTML = '\u26A0\uFE0F Far edge past horizontal! Tilt ' + fp1x.tiltDeg.toFixed(1) + '\u00B0 exceeds max ' + maxTilt + '\u00B0 for 1\u00D7';
+    w1.classList.remove('hidden');
+  } else { w1.classList.add('hidden'); }
+
+  // 2x
+  document.getElementById('oh2xNearW').textContent = fmt(fp2x.nearWidth);
+  document.getElementById('oh2xFarW').innerHTML = fp2x.farEdgeInfinite ? '<span style="color:#ef4444">\u221E</span>' : fmt(fp2x.farWidth);
+  document.getElementById('oh2xSpan').innerHTML = fp2x.farEdgeInfinite ? '<span style="color:#ef4444">\u221E</span>' : fmt(fp2x.nsSpan);
+  document.getElementById('oh2xDistortion').textContent = fp2x.farEdgeInfinite ? '\u221E' : fp2x.distortionRatio.toFixed(2) + ':1';
+  const w2 = document.getElementById('oh2xWarning');
+  if (fp2x.farEdgeInfinite) {
+    const maxTilt = (90 - fp2x.beta * 180 / Math.PI).toFixed(1);
+    w2.innerHTML = '\u26A0\uFE0F Far edge past horizontal at 2\u00D7! Tilt ' + fp2x.tiltDeg.toFixed(1) + '\u00B0 exceeds max ' + maxTilt + '\u00B0';
+    w2.classList.remove('hidden');
+  } else { w2.classList.add('hidden'); }
+
+  // Coverage checks
+  const halfMat = state.matSize / 2;
+  const halfAW = state.actionWidth / 2, halfAH = state.actionHeight / 2;
+
+  function coversRect(fp, hw, hh) {
+    if (!fp.corners) return false;
+    // Check if trapezoid covers the rectangle [-hw,hw] × [-hh,hh]
+    const c = fp.corners;
+    const nearY = Math.max(c.nearLeft.y, c.nearRight.y);
+    const farY = Math.min(c.farLeft.y, c.farRight.y);
+    // N-S: near (south) must be >= +hh, far (north) must be <= -hh
+    if (nearY < hh || farY > -hh) return false;
+    // Width at south edge (+hh): interpolate trapezoid width
+    const totalYSpan = nearY - farY;
+    if (totalYSpan < 0.001) return false;
+    const tSouth = (nearY - hh) / totalYSpan;
+    const wAtSouth = fp.nearWidth + tSouth * (fp.farWidth - fp.nearWidth);
+    if (wAtSouth / 2 < hw) return false;
+    // Width at north edge (-hh)
+    const tNorth = (nearY + hh) / totalYSpan;
+    const wAtNorth = fp.nearWidth + tNorth * (fp.farWidth - fp.nearWidth);
+    if (wAtNorth / 2 < hw) return false;
+    return true;
+  }
+
+  function setCheck(id, val) {
+    const el = document.getElementById(id);
+    el.innerHTML = val ? '<span style="color:#22c55e">\u2705 Yes</span>' : '<span style="color:#ef4444">\u274C No</span>';
+  }
+  setCheck('oh1xCoversMat', coversRect(fp1x, halfMat, halfMat));
+  setCheck('oh1xCoversAction', coversRect(fp1x, halfAW, halfAH));
+  setCheck('oh2xCoversMat', coversRect(fp2x, halfMat, halfMat));
+  setCheck('oh2xCoversAction', coversRect(fp2x, halfAW, halfAH));
+}
+
+function updateOhInterpretation(fp1x, fp2x) {
+  const el = document.getElementById('ohInterpretation');
+  let html = '';
+  if (state.ohOffset === 0 && state.ohAimY === 0) {
+    html = 'Camera directly above center, pointing straight down. Footprints are perfect squares. No perspective distortion.';
+  } else {
+    html = `Tilt: ${fp1x.tiltDeg.toFixed(1)}\u00B0 from vertical. `;
+    if (fp1x.farEdgeInfinite) {
+      html += '<span style="color:#ef4444">At 1\u00D7, the far edge extends past the horizon \u2014 the camera sees \u201Cinfinity\u201D on the north side. 1\u00D7 is unusable at this tilt.</span> ';
+      if (!fp2x.farEdgeInfinite) {
+        html += `<span style="color:#22c55e">2\u00D7 zoom is still viable</span> (max tilt ${(90 - fp2x.beta * 180 / Math.PI).toFixed(0)}\u00B0). Distortion: ${fp2x.distortionRatio.toFixed(2)}:1.`;
+      }
+    } else {
+      html += `1\u00D7 distortion: ${fp1x.distortionRatio.toFixed(2)}:1. 2\u00D7 distortion: ${fp2x.distortionRatio.toFixed(2)}:1. `;
+      if (fp1x.distortionRatio > 2.0) {
+        html += '<span style="color:#f59e0b">Significant perspective distortion at 1\u00D7.</span> ';
+      } else if (fp1x.distortionRatio > 1.5) {
+        html += 'Noticeable distortion at 1\u00D7. ';
+      }
+      if (fp2x.distortionRatio < 1.3) {
+        html += '<span style="color:#22c55e">2\u00D7 distortion is minimal.</span>';
+      }
+    }
+  }
+  el.innerHTML = html;
+}
+
+function renderOverhead() {
+  if (!ohCanvas) return;
+  dpr = window.devicePixelRatio || 1;
+
+  setupOhTransform();
+  drawOhFloor();
+  drawOhMat();
+  drawOhActionZone();
+  drawOhFloorPattern();
+
+  const fp1x = computeOverheadFootprint(2.50, state.ohHeight, state.ohOffset, state.ohAimY);
+  const fp2x = computeOverheadFootprint(1.25, state.ohHeight, state.ohOffset, state.ohAimY);
+
+  drawOhFootprint(fp1x, '1x');
+  drawOhFootprint(fp2x, '2x');
+  drawOhCameraIcon();
+  drawOhAimPoint();
+
+  updateOhDataPanel(fp1x, fp2x);
+  drawOhSideView(fp1x, fp2x);
+  updateOhInterpretation(fp1x, fp2x);
+}
+
+function bindOhInputs() {
+  document.getElementById('ohHeight').addEventListener('input', e => {
+    state.ohHeight = parseFloat(e.target.value);
+    document.getElementById('ohHeightDisplay').textContent = state.ohHeight.toFixed(1) + ' m';
+    renderOverhead();
+  });
+  document.getElementById('ohOffset').addEventListener('input', e => {
+    state.ohOffset = parseFloat(e.target.value);
+    document.getElementById('ohOffsetDisplay').textContent = state.ohOffset.toFixed(1) + ' m';
+    renderOverhead();
+  });
+  document.getElementById('ohAimY').addEventListener('input', e => {
+    state.ohAimY = parseFloat(e.target.value);
+    const label = state.ohAimY === 0 ? '0.0 m (center)' : state.ohAimY.toFixed(1) + ' m';
+    document.getElementById('ohAimYDisplay').textContent = label;
+    renderOverhead();
+  });
+  document.getElementById('ohSelectedPoomsae').addEventListener('change', e => {
+    state.ohSelectedPoomsae = e.target.value;
+    renderOverhead();
+  });
+}
+
 // ── TAB SWITCHING ──────────────────────────────────────
 function switchTab(tab) {
-  const plannerEl = document.getElementById('tab-planner');
-  const researchEl = document.getElementById('tab-research');
-  const tabPlannerBtn = document.getElementById('tabPlanner');
-  const tabResearchBtn = document.getElementById('tabResearch');
-  if (tab === 'planner') {
-    plannerEl.style.display = 'flex';
-    researchEl.style.display = 'none';
-    tabPlannerBtn.className = tabPlannerBtn.className.replace('text-gray-500', 'text-green-400').replace('border-transparent', 'border-green-400');
-    tabResearchBtn.className = tabResearchBtn.className.replace('text-green-400', 'text-gray-500').replace('border-green-400', 'border-transparent');
-    resizeCanvas();
-  } else {
-    plannerEl.style.display = 'none';
-    researchEl.style.display = 'block';
-    tabResearchBtn.className = tabResearchBtn.className.replace('text-gray-500', 'text-green-400').replace('border-transparent', 'border-green-400');
-    tabPlannerBtn.className = tabPlannerBtn.className.replace('text-green-400', 'text-gray-500').replace('border-green-400', 'border-transparent');
-  }
+  const tabs = {
+    planner:  { pane: 'tab-planner',  btn: 'tabPlanner',  display: 'flex' },
+    research: { pane: 'tab-research', btn: 'tabResearch', display: 'block' },
+    overhead: { pane: 'tab-overhead', btn: 'tabOverhead', display: 'flex' },
+  };
+  Object.entries(tabs).forEach(([key, cfg]) => {
+    const pane = document.getElementById(cfg.pane);
+    const btn = document.getElementById(cfg.btn);
+    if (key === tab) {
+      pane.style.display = cfg.display;
+      btn.classList.remove('text-gray-500', 'border-transparent');
+      btn.classList.add('text-green-400', 'border-green-400');
+    } else {
+      pane.style.display = 'none';
+      btn.classList.remove('text-green-400', 'border-green-400');
+      btn.classList.add('text-gray-500', 'border-transparent');
+    }
+  });
+  if (tab === 'planner') resizeCanvas();
+  if (tab === 'overhead') resizeOhCanvas();
 }
 
 // ── INIT ───────────────────────────────────────────────
@@ -2335,8 +3046,24 @@ document.addEventListener('DOMContentLoaded', () => {
   const mdSource = document.getElementById('researchMarkdown').textContent;
   document.getElementById('researchContent').innerHTML = marked.parse(mdSource);
 
+  // Initialize overhead tab
+  ohCanvas = document.getElementById('ohCanvas');
+  ohCtx = ohCanvas.getContext('2d');
+  ohContainer = document.getElementById('ohCanvasContainer');
+  ohSideCanvas = document.getElementById('ohSideCanvas');
+  ohSideCtx = ohSideCanvas.getContext('2d');
+  bindOhInputs();
+  const ohPoomsaeSelect = document.getElementById('ohSelectedPoomsae');
+  Object.entries(POOMSAE_FLOOR_PATTERNS).forEach(([name, pattern]) => {
+    const opt = document.createElement('option');
+    opt.value = name;
+    opt.textContent = `${pattern.symbol} ${name}`;
+    ohPoomsaeSelect.appendChild(opt);
+  });
+
   resizeCanvas();
   new ResizeObserver(() => resizeCanvas()).observe(container);
+  new ResizeObserver(() => resizeOhCanvas()).observe(ohContainer);
 });
 </script>
 </body>
