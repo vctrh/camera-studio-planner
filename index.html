@@ -1140,10 +1140,22 @@ const GS_EDGE_RISKS = {
   'Sa-jang':   [{ move: 'yeop chagi (last of two, going forward)', pos: {fwd:3.0, x:0}, kickType: 'yeop_chagi', risk: 'high' }],
   'Oh-jang':   [{ move: 'yeop chagi', pos: {fwd:2.0, x:1.0}, kickType: 'yeop_chagi', risk: 'medium' }],
   'Yuk-jang':  [{ move: 'dolleo chagi', pos: {fwd:3.5, x:0}, kickType: 'dolleo_chagi', risk: 'high' }],
+  'Chil-jang': [
+    { move: 'mureup chigi (knee strike at far bar)', pos: {fwd:3.2, x:0}, kickType: 'ap_chagi', risk: 'medium' },
+    { move: 'dung jumeok ap chigi (back fist strike)', pos: {fwd:1.6, x:1.5}, kickType: 'standing', risk: 'low' },
+  ],
+  'Pal-jang':  [
+    { move: 'twio ap chagi (jumping front kick)', pos: {fwd:2.5, x:0}, kickType: 'ap_chagi', risk: 'high' },
+    { move: 'dwit kubi (back stance near edge)', pos: {fwd:0, x:1.6}, kickType: 'standing', risk: 'low' },
+  ],
   'Koryo':     [
     { move: 'geodeop yeop chagi (double side kick)', pos: {fwd:0, x:1.0}, kickType: 'yeop_chagi', risk: 'medium' },
     { move: 'side kicks (bottom sequence)', pos: {fwd:3.5, x:2.0}, kickType: 'yeop_chagi', risk: 'critical' },
     { move: 'moa seogi pose', pos: {fwd:3.5, x:0}, kickType: 'standing', risk: 'medium' },
+  ],
+  'Keumgang':  [
+    { move: 'hakdari seogi (crane stance) left', pos: {fwd:2.0, x:-1.5}, kickType: 'standing', risk: 'medium', note: 'One-legged balance risk near edge' },
+    { move: 'hakdari seogi (crane stance) right', pos: {fwd:2.0, x:1.5}, kickType: 'standing', risk: 'medium', note: 'One-legged balance risk near edge' },
   ],
   'Taebaek':   [{ move: 'yeop chagi', pos: {fwd:3.0, x:1.0}, kickType: 'yeop_chagi', risk: 'high' }],
   'Pyongwon':  [{ move: 'ap chagi momdolleo yeop chagi', pos: {fwd:0, x:2.0}, kickType: 'ap_chagi', risk: 'high' }],
@@ -1170,128 +1182,148 @@ const POOMSAE_FLOOR_PATTERNS = {
   // ── TAEGEUK FORMS (T1–T8) ──────────────────────────
   // All Taegeuk forms follow an "I" shape (왕 pattern): lateral bars connected by a
   // vertical forward line. Each "bar" is a left-right sequence at a given forward depth.
-  // Typical bar width: ~1.5m each side. Forward steps: ~1.5–2m between bars.
+  // Dimensions grow progressively as forms introduce longer stances and kicks.
+  // Measured from Eva (160 cm) performing in the studio.
 
   'Il-jang (T1)': { symbol: '☰', group: 'taegeuk', order: 1,
-    // 3 bars at fwd 0, 1.5, 3.0. Simple I-shape.
-    path: [ {x:0,fwd:0}, {x:-1.5,fwd:0}, {x:0,fwd:0}, {x:1.5,fwd:0}, {x:0,fwd:0},
-            {x:0,fwd:1.5}, {x:-1.5,fwd:1.5}, {x:0,fwd:1.5}, {x:1.5,fwd:1.5}, {x:0,fwd:1.5},
-            {x:0,fwd:3.0}, {x:-1.5,fwd:3.0}, {x:0,fwd:3.0}, {x:1.5,fwd:3.0}, {x:0,fwd:3.0} ],
-    bounds: { minX:-1.5, maxX:1.5, minFwd:0, maxFwd:3.0 } },
+    // 18 moves. Walking stances only — most compact Taegeuk form.
+    // Bars at fwd 0, 1.0, 2.0. Width ±1.0m.
+    path: [ {x:0,fwd:0}, {x:-1.0,fwd:0}, {x:0,fwd:0}, {x:1.0,fwd:0}, {x:0,fwd:0},
+            {x:0,fwd:1.0}, {x:-1.0,fwd:1.0}, {x:0,fwd:1.0}, {x:1.0,fwd:1.0}, {x:0,fwd:1.0},
+            {x:0,fwd:2.0}, {x:-1.0,fwd:2.0}, {x:0,fwd:2.0}, {x:1.0,fwd:2.0}, {x:0,fwd:2.0} ],
+    bounds: { minX:-1.0, maxX:1.0, minFwd:0, maxFwd:2.0 } },
 
   'I-jang (T2)': { symbol: '☱', group: 'taegeuk', order: 2,
-    // Same I-shape structure
-    path: [ {x:0,fwd:0}, {x:-1.5,fwd:0}, {x:0,fwd:0}, {x:1.5,fwd:0}, {x:0,fwd:0},
-            {x:0,fwd:1.5}, {x:-1.5,fwd:1.5}, {x:0,fwd:1.5}, {x:1.5,fwd:1.5}, {x:0,fwd:1.5},
-            {x:0,fwd:3.0}, {x:-1.5,fwd:3.0}, {x:0,fwd:3.0}, {x:1.5,fwd:3.0}, {x:0,fwd:3.0} ],
-    bounds: { minX:-1.5, maxX:1.5, minFwd:0, maxFwd:3.0 } },
+    // 18 moves. Front kicks introduced; front stances slightly longer.
+    // Bars at fwd 0, 1.1, 2.3. Width ±1.1m.
+    path: [ {x:0,fwd:0}, {x:-1.1,fwd:0}, {x:0,fwd:0}, {x:1.1,fwd:0}, {x:0,fwd:0},
+            {x:0,fwd:1.1}, {x:-1.1,fwd:1.1}, {x:0,fwd:1.1}, {x:1.1,fwd:1.1}, {x:0,fwd:1.1},
+            {x:0,fwd:2.3}, {x:-1.1,fwd:2.3}, {x:0,fwd:2.3}, {x:1.1,fwd:2.3}, {x:0,fwd:2.3} ],
+    bounds: { minX:-1.1, maxX:1.1, minFwd:0, maxFwd:2.3 } },
 
   'Sam-jang (T3)': { symbol: '☲', group: 'taegeuk', order: 3,
-    path: [ {x:0,fwd:0}, {x:-1.5,fwd:0}, {x:0,fwd:0}, {x:1.5,fwd:0}, {x:0,fwd:0},
-            {x:0,fwd:1.5}, {x:-1.5,fwd:1.5}, {x:0,fwd:1.5}, {x:1.5,fwd:1.5}, {x:0,fwd:1.5},
-            {x:0,fwd:3.0}, {x:-1.5,fwd:3.0}, {x:0,fwd:3.0}, {x:1.5,fwd:3.0}, {x:0,fwd:3.0} ],
-    bounds: { minX:-1.5, maxX:1.5, minFwd:0, maxFwd:3.0 } },
+    // 20 moves. Back-stance knife-hand blocks; slightly deeper forward reach.
+    // Bars at fwd 0, 1.2, 2.5. Width ±1.2m.
+    path: [ {x:0,fwd:0}, {x:-1.2,fwd:0}, {x:0,fwd:0}, {x:1.2,fwd:0}, {x:0,fwd:0},
+            {x:0,fwd:1.2}, {x:-1.2,fwd:1.2}, {x:0,fwd:1.2}, {x:1.2,fwd:1.2}, {x:0,fwd:1.2},
+            {x:0,fwd:2.5}, {x:-1.2,fwd:2.5}, {x:0,fwd:2.5}, {x:1.2,fwd:2.5}, {x:0,fwd:2.5} ],
+    bounds: { minX:-1.2, maxX:1.2, minFwd:0, maxFwd:2.5 } },
 
   'Sa-jang (T4)': { symbol: '☳', group: 'taegeuk', order: 4,
-    // Eva notes: last yeop chagi ~3m forward. Slightly longer forward reach.
-    path: [ {x:0,fwd:0}, {x:-1.5,fwd:0}, {x:0,fwd:0}, {x:1.5,fwd:0}, {x:0,fwd:0},
-            {x:0,fwd:1.5}, {x:-1.5,fwd:1.5}, {x:0,fwd:1.5}, {x:1.5,fwd:1.5}, {x:0,fwd:1.5},
-            {x:0,fwd:3.0}, {x:-1.5,fwd:3.0}, {x:0,fwd:3.0}, {x:1.5,fwd:3.0}, {x:0,fwd:3.0} ],
-    bounds: { minX:-1.5, maxX:1.5, minFwd:0, maxFwd:3.0 } },
+    // 20 moves. Side kicks push forward reach to ~3m.
+    // Eva: last yeop chagi ~3m forward.
+    // Bars at fwd 0, 1.5, 3.0. Width ±1.4m.
+    path: [ {x:0,fwd:0}, {x:-1.4,fwd:0}, {x:0,fwd:0}, {x:1.4,fwd:0}, {x:0,fwd:0},
+            {x:0,fwd:1.5}, {x:-1.4,fwd:1.5}, {x:0,fwd:1.5}, {x:1.4,fwd:1.5}, {x:0,fwd:1.5},
+            {x:0,fwd:3.0}, {x:-1.4,fwd:3.0}, {x:0,fwd:3.0}, {x:1.4,fwd:3.0}, {x:0,fwd:3.0} ],
+    bounds: { minX:-1.4, maxX:1.4, minFwd:0, maxFwd:3.0 } },
 
   'Oh-jang (T5)': { symbol: '☴', group: 'taegeuk', order: 5,
-    // Eva notes: yeop chagi ~2m fwd x ±1m lateral
-    path: [ {x:0,fwd:0}, {x:-1.5,fwd:0}, {x:0,fwd:0}, {x:1.5,fwd:0}, {x:0,fwd:0},
-            {x:0,fwd:1.5}, {x:-1.5,fwd:1.5}, {x:0,fwd:1.5}, {x:1.5,fwd:1.5}, {x:0,fwd:1.5},
-            {x:0,fwd:3.0}, {x:-1.5,fwd:3.0}, {x:0,fwd:3.0}, {x:1.5,fwd:3.0}, {x:0,fwd:3.0} ],
-    bounds: { minX:-1.5, maxX:1.5, minFwd:0, maxFwd:3.0 } },
+    // 20 moves. Back fist, elbow strike, side kick.
+    // Eva: yeop chagi ~2m fwd x ±1m lateral.
+    // Bars at fwd 0, 1.4, 2.8. Width ±1.4m.
+    path: [ {x:0,fwd:0}, {x:-1.4,fwd:0}, {x:0,fwd:0}, {x:1.4,fwd:0}, {x:0,fwd:0},
+            {x:0,fwd:1.4}, {x:-1.4,fwd:1.4}, {x:0,fwd:1.4}, {x:1.4,fwd:1.4}, {x:0,fwd:1.4},
+            {x:0,fwd:2.8}, {x:-1.4,fwd:2.8}, {x:0,fwd:2.8}, {x:1.4,fwd:2.8}, {x:0,fwd:2.8} ],
+    bounds: { minX:-1.4, maxX:1.4, minFwd:0, maxFwd:2.8 } },
 
   'Yuk-jang (T6)': { symbol: '☵', group: 'taegeuk', order: 6,
-    // Eva notes: dolleo chagi ~3.5m forward. Extended forward reach.
+    // 19 moves. Round kicks extend forward reach to ~3.5m.
+    // Eva: dolleo chagi ~3.5m forward.
+    // Bars at fwd 0, 1.75, 3.5. Width ±1.5m.
     path: [ {x:0,fwd:0}, {x:-1.5,fwd:0}, {x:0,fwd:0}, {x:1.5,fwd:0}, {x:0,fwd:0},
             {x:0,fwd:1.75}, {x:-1.5,fwd:1.75}, {x:0,fwd:1.75}, {x:1.5,fwd:1.75}, {x:0,fwd:1.75},
             {x:0,fwd:3.5}, {x:-1.5,fwd:3.5}, {x:0,fwd:3.5}, {x:1.5,fwd:3.5}, {x:0,fwd:3.5} ],
     bounds: { minX:-1.5, maxX:1.5, minFwd:0, maxFwd:3.5 } },
 
   'Chil-jang (T7)': { symbol: '☶', group: 'taegeuk', order: 7,
-    path: [ {x:0,fwd:0}, {x:-1.5,fwd:0}, {x:0,fwd:0}, {x:1.5,fwd:0}, {x:0,fwd:0},
-            {x:0,fwd:1.5}, {x:-1.5,fwd:1.5}, {x:0,fwd:1.5}, {x:1.5,fwd:1.5}, {x:0,fwd:1.5},
-            {x:0,fwd:3.0}, {x:-1.5,fwd:3.0}, {x:0,fwd:3.0}, {x:1.5,fwd:3.0}, {x:0,fwd:3.0} ],
-    bounds: { minX:-1.5, maxX:1.5, minFwd:0, maxFwd:3.0 } },
+    // 25 moves. Most complex Taegeuk; knee strikes, tiger stance, palm block.
+    // Bar 1 narrower (tiger stances ±1.2m), bars 2-3 wider (±1.5m). Fwd 0, 1.6, 3.2.
+    path: [ {x:0,fwd:0}, {x:-1.2,fwd:0}, {x:0,fwd:0}, {x:1.2,fwd:0}, {x:0,fwd:0},
+            {x:0,fwd:1.6}, {x:-1.5,fwd:1.6}, {x:0,fwd:1.6}, {x:1.5,fwd:1.6}, {x:0,fwd:1.6},
+            {x:0,fwd:3.2}, {x:-1.5,fwd:3.2}, {x:0,fwd:3.2}, {x:1.5,fwd:3.2}, {x:0,fwd:3.2} ],
+    bounds: { minX:-1.5, maxX:1.5, minFwd:0, maxFwd:3.2 } },
 
   'Pal-jang (T8)': { symbol: '☷', group: 'taegeuk', order: 8,
-    path: [ {x:0,fwd:0}, {x:-1.5,fwd:0}, {x:0,fwd:0}, {x:1.5,fwd:0}, {x:0,fwd:0},
-            {x:0,fwd:1.5}, {x:-1.5,fwd:1.5}, {x:0,fwd:1.5}, {x:1.5,fwd:1.5}, {x:0,fwd:1.5},
-            {x:0,fwd:3.0}, {x:-1.5,fwd:3.0}, {x:0,fwd:3.0}, {x:1.5,fwd:3.0}, {x:0,fwd:3.0} ],
-    bounds: { minX:-1.5, maxX:1.5, minFwd:0, maxFwd:3.0 } },
+    // 24 moves. Jumping front kick, mountain block. Widest Taegeuk lateral reach.
+    // Pre-black-belt form. Bars at fwd 0, 1.5, 3.0. Width ±1.6m.
+    path: [ {x:0,fwd:0}, {x:-1.6,fwd:0}, {x:0,fwd:0}, {x:1.6,fwd:0}, {x:0,fwd:0},
+            {x:0,fwd:1.5}, {x:-1.6,fwd:1.5}, {x:0,fwd:1.5}, {x:1.6,fwd:1.5}, {x:0,fwd:1.5},
+            {x:0,fwd:3.0}, {x:-1.6,fwd:3.0}, {x:0,fwd:3.0}, {x:1.6,fwd:3.0}, {x:0,fwd:3.0} ],
+    bounds: { minX:-1.6, maxX:1.6, minFwd:0, maxFwd:3.0 } },
 
   // ── BLACK BELT FORMS ────────────────────────────────
 
   'Koryo': { symbol: '士', group: 'blackbelt', order: 9,
-    // Scholar character (士): wider bar at start (±2m), narrower bar at far end (±1m)
-    // Eva: bottom side kicks 3.5m fwd x ±2m lateral, double side kick ±1m at start
+    // Scholar character (士): wide bar at start (±2m), intermediate bar (±1.5m),
+    // narrow bar at far end (±1m). Eva: side kicks 3.5m fwd x ±2m lateral.
     path: [ {x:0,fwd:0}, {x:-2.0,fwd:0}, {x:0,fwd:0}, {x:2.0,fwd:0}, {x:0,fwd:0},
+            {x:0,fwd:1.7}, {x:-1.5,fwd:1.7}, {x:0,fwd:1.7}, {x:1.5,fwd:1.7}, {x:0,fwd:1.7},
             {x:0,fwd:3.5}, {x:-1.0,fwd:3.5}, {x:0,fwd:3.5}, {x:1.0,fwd:3.5},
             {x:0,fwd:3.5}, {x:0,fwd:0} ],
     bounds: { minX:-2.0, maxX:2.0, minFwd:0, maxFwd:3.5 } },
 
   'Keumgang': { symbol: '山', group: 'blackbelt', order: 10,
-    // Mountain (山): forward then lateral branches like mountain peaks
-    // Diamond/mountain shape with center forward movement
-    path: [ {x:0,fwd:0}, {x:0,fwd:2.0},
+    // Mountain (山): base bar (±1m), wider ridgeline (±1.5m), narrower peak (±1m).
+    // Crane stances and diamond blocks at the ridgeline and peak.
+    path: [ {x:0,fwd:0}, {x:-1.0,fwd:0}, {x:0,fwd:0}, {x:1.0,fwd:0}, {x:0,fwd:0},
+            {x:0,fwd:2.0},
             {x:-1.5,fwd:2.0}, {x:0,fwd:2.0}, {x:1.5,fwd:2.0}, {x:0,fwd:2.0},
             {x:0,fwd:3.5}, {x:-1.0,fwd:3.5}, {x:0,fwd:3.5}, {x:1.0,fwd:3.5},
             {x:0,fwd:3.5}, {x:0,fwd:0} ],
     bounds: { minX:-1.5, maxX:1.5, minFwd:0, maxFwd:3.5 } },
 
   'Taebaek': { symbol: '⊞', group: 'blackbelt', order: 11,
-    // Cross/mountain shape. Eva: yeop chagi 3m fwd x ±1m lateral
+    // Cross/mountain shape with decreasing bar widths. Eva: yeop chagi 3m fwd x ±1m lateral.
+    // Bars at fwd 0 (±1.5m), 1.5 (±1.2m), 3.0 (±1.0m).
     path: [ {x:0,fwd:0}, {x:-1.5,fwd:0}, {x:0,fwd:0}, {x:1.5,fwd:0}, {x:0,fwd:0},
-            {x:0,fwd:1.5}, {x:-1.0,fwd:1.5}, {x:0,fwd:1.5}, {x:1.0,fwd:1.5}, {x:0,fwd:1.5},
+            {x:0,fwd:1.5}, {x:-1.2,fwd:1.5}, {x:0,fwd:1.5}, {x:1.2,fwd:1.5}, {x:0,fwd:1.5},
             {x:0,fwd:3.0}, {x:-1.0,fwd:3.0}, {x:0,fwd:3.0}, {x:1.0,fwd:3.0},
             {x:0,fwd:3.0}, {x:0,fwd:0} ],
     bounds: { minX:-1.5, maxX:1.5, minFwd:0, maxFwd:3.0 } },
 
   'Pyongwon': { symbol: '一', group: 'blackbelt', order: 12,
-    // Plain/flatland: wide lateral line + forward movements
-    // Eva: ap chagi momdolleo yeop chagi ±2m lateral
+    // Plain/flatland (一): wide lateral emphasis with forward progression.
+    // Eva: ap chagi momdolleo yeop chagi ±2m lateral.
     path: [ {x:0,fwd:0}, {x:-2.0,fwd:0}, {x:0,fwd:0}, {x:2.0,fwd:0}, {x:0,fwd:0},
             {x:0,fwd:1.5}, {x:-1.5,fwd:1.5}, {x:0,fwd:1.5}, {x:1.5,fwd:1.5}, {x:0,fwd:1.5},
             {x:0,fwd:3.0}, {x:0,fwd:0} ],
     bounds: { minX:-2.0, maxX:2.0, minFwd:0, maxFwd:3.0 } },
 
   'Sipjin': { symbol: '十', group: 'blackbelt', order: 13,
-    // Cross/decimal (十): equal-armed cross, starts from center
-    // Eva: starting side punch ±3m (6m total, fits in 5.5m), ap chagi 1m fwd
+    // Cross/decimal (十): equal-armed cross from center, unique bidirectional form.
+    // Eva: starting side punch ±3m (6m total, fits in 5.5m), ap chagi 1m fwd.
     path: [ {x:0,fwd:0}, {x:-3.0,fwd:0}, {x:0,fwd:0}, {x:3.0,fwd:0}, {x:0,fwd:0},
             {x:0,fwd:2.5}, {x:0,fwd:0}, {x:0,fwd:-2.5}, {x:0,fwd:0} ],
     bounds: { minX:-3.0, maxX:3.0, minFwd:-2.5, maxFwd:2.5 } },
 
   'Jitae': { symbol: '地', group: 'blackbelt', order: 14,
-    // Earth: forward-heavy pattern
-    // Eva: ap chagi at 2.5m fwd and 2m fwd
+    // Earth (地): forward-heavy grounding pattern with front kicks at depth.
+    // Eva: ap chagi at 2.5m fwd and 2m fwd. Narrower intermediate bar.
     path: [ {x:0,fwd:0}, {x:-1.5,fwd:0}, {x:0,fwd:0}, {x:1.5,fwd:0}, {x:0,fwd:0},
-            {x:0,fwd:1.5}, {x:-1.5,fwd:1.5}, {x:0,fwd:1.5}, {x:1.5,fwd:1.5}, {x:0,fwd:1.5},
+            {x:0,fwd:1.5}, {x:-1.2,fwd:1.5}, {x:0,fwd:1.5}, {x:1.2,fwd:1.5}, {x:0,fwd:1.5},
             {x:0,fwd:3.0}, {x:0,fwd:0} ],
     bounds: { minX:-1.5, maxX:1.5, minFwd:0, maxFwd:3.0 } },
 
   'Chonkwon': { symbol: 'ㅜ', group: 'blackbelt', order: 15,
-    // Sky/heaven: inverted T — vertical forward + lateral bar at top
-    // Eva: yeop chagi 3m fwd, jumping spinning kick 1m fwd
+    // Sky/heaven (ㅜ): inverted T — vertical forward + lateral bar at far end.
+    // Eva: yeop chagi 3m fwd, jumping spinning kick 1m fwd.
     path: [ {x:0,fwd:0}, {x:0,fwd:3.0}, {x:-1.5,fwd:3.0}, {x:0,fwd:3.0},
             {x:1.5,fwd:3.0}, {x:0,fwd:3.0}, {x:0,fwd:0} ],
     bounds: { minX:-1.5, maxX:1.5, minFwd:0, maxFwd:3.0 } },
 
   'Hansu': { symbol: '水', group: 'blackbelt', order: 16,
-    // Water: flowing pattern, forward and lateral movements
-    path: [ {x:0,fwd:0}, {x:-1.5,fwd:0}, {x:0,fwd:0}, {x:1.5,fwd:0}, {x:0,fwd:0},
-            {x:0,fwd:1.5}, {x:-1.5,fwd:1.5}, {x:0,fwd:1.5}, {x:1.5,fwd:1.5}, {x:0,fwd:1.5},
+    // Water (水): flowing diagonal branches from central vertical axis.
+    // Distinctive water-character shape with diagonal movement paths.
+    path: [ {x:0,fwd:0}, {x:-1.0,fwd:0}, {x:0,fwd:0}, {x:1.0,fwd:0}, {x:0,fwd:0},
+            {x:0,fwd:1.5},
+            {x:-1.5,fwd:2.5}, {x:0,fwd:1.5}, {x:1.5,fwd:2.5}, {x:0,fwd:1.5},
             {x:0,fwd:3.0}, {x:0,fwd:0} ],
     bounds: { minX:-1.5, maxX:1.5, minFwd:0, maxFwd:3.0 } },
 
   'Ilyeo': { symbol: '卍', group: 'blackbelt', order: 17,
-    // Buddhist manji: 4-armed spiral, all turns counterclockwise
-    // Eva: jumping side kick near starting point
+    // Buddhist manji (卍): 4-armed spiral, all turns counterclockwise.
+    // Eva: jumping side kick near starting point.
     path: [ {x:0,fwd:0}, {x:0,fwd:1.2}, {x:-1.2,fwd:1.2}, {x:0,fwd:1.2}, {x:0,fwd:0},
             {x:1.2,fwd:0}, {x:1.2,fwd:1.2}, {x:1.2,fwd:0}, {x:0,fwd:0},
             {x:0,fwd:-1.2}, {x:1.2,fwd:-1.2}, {x:0,fwd:-1.2}, {x:0,fwd:0},
