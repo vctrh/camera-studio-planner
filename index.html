@@ -2519,7 +2519,7 @@ function drawPOVOverlay(cam, derived) {
   const athX = toX(kickX);
   const athFloor = toY(0);
   const athHead = toY(ATHLETE_HEIGHT);
-  const athKick = toY(state.kickHeight);
+  const athKick = toY(kickY);
   const figH = athFloor - athHead;
   // Body
   p.strokeStyle = '#f59e0b';
@@ -2571,7 +2571,7 @@ function drawPOVOverlay(cam, derived) {
   p.fillStyle = '#f59e0b';
   p.font = `bold ${Math.round(9 * pdpr)}px monospace`;
   p.textAlign = 'left';
-  p.fillText(state.kickHeight.toFixed(2) + 'm', athX + 8 * pdpr, athKick + 3 * pdpr);
+  p.fillText(kickY.toFixed(2) + 'm', athX + 8 * pdpr, athKick + 3 * pdpr);
 
   // ── Green screen (tall green bar) ──
   const gsX = toX(gsWallX);
