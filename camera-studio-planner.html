@@ -1787,9 +1787,12 @@ function getClosestKickToCamera(camX, camY, poomsaeName, camId) {
     }
     const wx = tx + r.pos.x;
     const wy = ty - r.pos.fwd;
-    const dx = camX - wx;
-    const dy = camY - wy;
-    const dist = Math.sqrt(dx * dx + dy * dy);
+    // Project kick position onto camera's viewing axis (toward center)
+    // to get the correct distance for the side-view cross-section
+    const camLen = Math.sqrt(camX * camX + camY * camY);
+    const vx = -camX / camLen, vy = -camY / camLen;
+    const dist = (wx - camX) * vx + (wy - camY) * vy;
+    if (dist <= 0) continue; // behind the camera
     if (!best || dist < best.dist) {
       best = { dist, height: kickHeight, label: r.move, kickType: r.kickType };
     }
