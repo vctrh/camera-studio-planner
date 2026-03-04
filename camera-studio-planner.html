@@ -1283,12 +1283,12 @@ const POOMSAE_FLOOR_PATTERNS = {
     bounds: { minX:-1.5, maxX:1.5, minFwd:0, maxFwd:3.0 } },
 
   'Pyongwon': { symbol: '一', group: 'blackbelt', order: 12,
-    // Plain/flatland (一): wide lateral emphasis with forward progression.
+    // Plain/flatland (一): primarily lateral along a horizontal line.
+    // Minimal forward depth; kicks create brief forward excursions (~1m).
     // Eva: ap chagi momdolleo yeop chagi ±2m lateral.
     path: [ {x:0,fwd:0}, {x:-2.0,fwd:0}, {x:0,fwd:0}, {x:2.0,fwd:0}, {x:0,fwd:0},
-            {x:0,fwd:1.5}, {x:-1.5,fwd:1.5}, {x:0,fwd:1.5}, {x:1.5,fwd:1.5}, {x:0,fwd:1.5},
-            {x:0,fwd:3.0}, {x:0,fwd:0} ],
-    bounds: { minX:-2.0, maxX:2.0, minFwd:0, maxFwd:3.0 } },
+            {x:0,fwd:1.0}, {x:0,fwd:0} ],
+    bounds: { minX:-2.0, maxX:2.0, minFwd:0, maxFwd:1.0 } },
 
   'Sipjin': { symbol: '十', group: 'blackbelt', order: 13,
     // Cross/decimal (十): equal-armed cross from center, unique bidirectional form.
@@ -1298,12 +1298,12 @@ const POOMSAE_FLOOR_PATTERNS = {
     bounds: { minX:-3.0, maxX:3.0, minFwd:-2.5, maxFwd:2.5 } },
 
   'Jitae': { symbol: '地', group: 'blackbelt', order: 14,
-    // Earth (地): forward-heavy grounding pattern with front kicks at depth.
-    // Eva: ap chagi at 2.5m fwd and 2m fwd. Narrower intermediate bar.
-    path: [ {x:0,fwd:0}, {x:-1.5,fwd:0}, {x:0,fwd:0}, {x:1.5,fwd:0}, {x:0,fwd:0},
-            {x:0,fwd:1.5}, {x:-1.2,fwd:1.5}, {x:0,fwd:1.5}, {x:1.2,fwd:1.5}, {x:0,fwd:1.5},
-            {x:0,fwd:3.0}, {x:0,fwd:0} ],
-    bounds: { minX:-1.5, maxX:1.5, minFwd:0, maxFwd:3.0 } },
+    // Earth (地), floor pattern ㅗ: forward along vertical stroke to lateral bar.
+    // Eva: ap chagi at 2.5m fwd and 2m fwd. Ends ~0.5m behind start.
+    path: [ {x:0,fwd:0}, {x:0,fwd:2.5},
+            {x:-1.5,fwd:2.5}, {x:0,fwd:2.5}, {x:1.5,fwd:2.5}, {x:0,fwd:2.5},
+            {x:0,fwd:-0.5} ],
+    bounds: { minX:-1.5, maxX:1.5, minFwd:-0.5, maxFwd:2.5 } },
 
   'Chonkwon': { symbol: 'ㅜ', group: 'blackbelt', order: 15,
     // Sky/heaven (ㅜ): inverted T — vertical forward + lateral bar at far end.
@@ -1313,13 +1313,13 @@ const POOMSAE_FLOOR_PATTERNS = {
     bounds: { minX:-1.5, maxX:1.5, minFwd:0, maxFwd:3.0 } },
 
   'Hansu': { symbol: '水', group: 'blackbelt', order: 16,
-    // Water (水): flowing diagonal branches from central vertical axis.
-    // Distinctive water-character shape with diagonal movement paths.
-    path: [ {x:0,fwd:0}, {x:-1.0,fwd:0}, {x:0,fwd:0}, {x:1.0,fwd:0}, {x:0,fwd:0},
-            {x:0,fwd:1.5},
-            {x:-1.5,fwd:2.5}, {x:0,fwd:1.5}, {x:1.5,fwd:2.5}, {x:0,fwd:1.5},
-            {x:0,fwd:3.0}, {x:0,fwd:0} ],
-    bounds: { minX:-1.5, maxX:1.5, minFwd:0, maxFwd:3.0 } },
+    // Water (水): central vertical stroke + diagonal branches to all four corners.
+    // Starts from center; distinctive 45° diagonal movements (NW, NE, SW, SE).
+    path: [ {x:0,fwd:0},
+            {x:0,fwd:1.5}, {x:0,fwd:0},
+            {x:-1.2,fwd:1.2}, {x:0,fwd:0}, {x:1.2,fwd:1.2}, {x:0,fwd:0},
+            {x:-1.2,fwd:-1.2}, {x:0,fwd:0}, {x:1.2,fwd:-1.2}, {x:0,fwd:0} ],
+    bounds: { minX:-1.2, maxX:1.2, minFwd:-1.2, maxFwd:1.5 } },
 
   'Ilyeo': { symbol: '卍', group: 'blackbelt', order: 17,
     // Buddhist manji (卍): 4-armed spiral, all turns counterclockwise.
