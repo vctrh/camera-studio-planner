@@ -1171,7 +1171,311 @@ const GS_EDGE_RISKS = {
     { move: 'yeop chagi', pos: {fwd:3.0, x:0}, kickType: 'yeop_chagi', risk: 'high' },
     { move: 'jumping spinning target kick', pos: {fwd:1.0, x:0}, kickType: 'jumping_spin', risk: 'medium' },
   ],
-  'Ilyeo':     [{ move: 'jumping side kick', pos: {fwd:0, x:0}, kickType: 'jumping_side', risk: 'low' }],
+  'Hansu':     [
+    { move: 'hakdari seogi (crane stance) SW diagonal', pos: {fwd:-1.0, x:-1.0}, kickType: 'standing', risk: 'medium', note: 'One-legged balance on diagonal arm' },
+    { move: 'hakdari seogi (crane stance) SE diagonal', pos: {fwd:-1.0, x:1.0}, kickType: 'standing', risk: 'medium', note: 'One-legged balance on diagonal arm' },
+  ],
+  'Ilyeo':     [
+    { move: 'slow side kick from crane stance (most balance-critical)', pos: {fwd:1.0, x:-1.0}, kickType: 'yeop_chagi', risk: 'high', note: 'Held side kick on one leg — peak balance risk' },
+    { move: 'jump to crane stance', pos: {fwd:1.0, x:-1.0}, kickType: 'standing', risk: 'medium' },
+    { move: 'jumping side kick (NE arm)', pos: {fwd:0.6, x:0.6}, kickType: 'jumping_side', risk: 'medium' },
+    { move: 'jumping side kick (SW arm)', pos: {fwd:-0.6, x:-0.6}, kickType: 'jumping_side', risk: 'medium' },
+  ],
+};
+
+// ── POOMSAE STEP-BY-STEP DATA ────────────────────────────
+// Verified step-by-step movement lists for all 17 poomsae.
+// Researched from multiple sources: Taekwondo Wiki/Fandom, Black Belt Wiki,
+// MartialYou, Phoenix TKD, Miami TKD, Wikipedia, Tae Kwon Do Nation,
+// Cheongnyong-yu TKD, Taekwondo Animals, North Battleford TKD, and others.
+//
+// Each form's data:
+//   moves:    total Kukkiwon movement count
+//   techs:    total technique count (some movements contain multiple techniques)
+//   stances:  stance types used [ap_seogi, ap_kubi, dwit_kubi, beom_seogi, juchum_seogi, ...]
+//   kicks:    kick types used [ap_chagi, yeop_chagi, dolleo_chagi, twio_ap_chagi, ...]
+//   bars:     per-bar breakdown { fwd, stepsPerSide, stanceType, width }
+//   fwdTransitions: forward transition steps between bars { stance, count }
+//   notes:    additional structural notes
+//
+// Stance advance lengths (Eva, 160 cm, ~24 cm foot):
+//   ap_seogi (walking):  ~0.50 m    ap_kubi (front):   ~1.0 m
+//   dwit_kubi (back):    ~0.55 m    beom_seogi (tiger): ~0.25 m
+//   juchum_seogi (horse): ~0.50 m lateral
+//   ap_chagi (front kick landing): ~0.75 m
+//   yeop_chagi (side kick reach):  ~0.85 m beyond stance
+//   dolleo_chagi (round kick arc): ~0.90 m sweep
+const POOMSAE_STEPS = {
+  // ── TAEGEUK FORMS ──────────────────────────────────────
+  'Il-jang (T1)': {
+    moves: 18, techs: 18,
+    stances: ['ap_seogi', 'ap_kubi'],
+    kicks: ['ap_chagi'],
+    bars: [
+      { fwd: 0,   stepsPerSide: 2, stanceType: 'ap_seogi', width: 1.0 },
+      { fwd: 1.0, stepsPerSide: 2, stanceType: 'ap_seogi', width: 1.0 },
+      { fwd: 2.0, stepsPerSide: 2, stanceType: 'ap_seogi', width: 1.0 },
+    ],
+    fwdTransitions: [
+      { from: 0, to: 1, stance: 'ap_kubi', steps: 1 },
+      { from: 1, to: 2, stance: 'ap_kubi', steps: 1 },
+    ],
+    notes: 'Walking stances only. Front kicks on Bar 3 (steps 14, 16). All turns 90°/180°.',
+    barStructure: [
+      // Bar 1: steps 1-4 (turn left+walk, step; turn right 180°+walk, step)
+      { steps: [1,2,3,4], left: [{dir:'turn left 90°', stance:'ap_seogi', tech:'arae makki'}, {dir:'step fwd', stance:'ap_seogi', tech:'momtong jireugi'}],
+                           right: [{dir:'turn right 180°', stance:'ap_seogi', tech:'arae makki'}, {dir:'step fwd', stance:'ap_seogi', tech:'momtong jireugi'}] },
+      // Transition: steps 5-6
+      { steps: [5,6], fwd: [{dir:'turn left 90°', stance:'ap_kubi', tech:'arae makki'}, {dir:'no step', stance:'ap_kubi', tech:'momtong jireugi'}] },
+      // Bar 2: steps 7-10
+      { steps: [7,8,9,10], right: [{dir:'turn right 90°', stance:'ap_seogi', tech:'momtong makki'}, {dir:'step fwd', stance:'ap_seogi', tech:'momtong jireugi'}],
+                            left: [{dir:'turn left 180°', stance:'ap_seogi', tech:'momtong makki'}, {dir:'step fwd', stance:'ap_seogi', tech:'momtong jireugi'}] },
+      // Transition: steps 11-12
+      { steps: [11,12], fwd: [{dir:'turn right 90°', stance:'ap_kubi', tech:'arae makki'}, {dir:'no step', stance:'ap_kubi', tech:'momtong jireugi'}] },
+      // Bar 3: steps 13-16
+      { steps: [13,14,15,16], left: [{dir:'turn left 90°', stance:'ap_seogi', tech:'eolgool makki'}, {dir:'ap chagi + step', stance:'ap_seogi', tech:'momtong jireugi'}],
+                               right: [{dir:'turn right 180°', stance:'ap_seogi', tech:'eolgool makki'}, {dir:'ap chagi + step', stance:'ap_seogi', tech:'momtong jireugi'}] },
+      // Return: steps 17-18
+      { steps: [17,18], fwd: [{dir:'turn right 90°', stance:'ap_kubi', tech:'arae makki'}, {dir:'step fwd', stance:'ap_kubi', tech:'momtong jireugi — KIHAP'}] },
+    ],
+  },
+
+  'I-jang (T2)': {
+    moves: 18, techs: 20,
+    stances: ['ap_seogi', 'ap_kubi'],
+    kicks: ['ap_chagi'],
+    bars: [
+      { fwd: 0,   stepsPerSide: 2, stanceType: 'ap_kubi/ap_seogi', width: 1.1 },
+      { fwd: 1.1, stepsPerSide: 2, stanceType: 'ap_seogi', width: 1.1 },
+      { fwd: 2.3, stepsPerSide: 2, stanceType: 'ap_seogi', width: 1.1 },
+    ],
+    fwdTransitions: [
+      { from: 0, to: 1, stance: 'ap_seogi', steps: 2 },
+      { from: 1, to: 2, stance: 'ap_seogi', steps: 2 },
+    ],
+    notes: 'Front kicks introduced on Bars 2-3. Bar 1 uses front stance for step 2 (wider). Forward transitions use 2 walking stances (1.1m each).',
+  },
+
+  'Sam-jang (T3)': {
+    moves: 20, techs: 22,
+    stances: ['ap_seogi', 'ap_kubi', 'dwit_kubi'],
+    kicks: ['ap_chagi'],
+    bars: [
+      { fwd: 0,   stepsPerSide: 2, stanceType: 'ap_seogi', width: 1.2 },
+      { fwd: 1.2, stepsPerSide: 2, stanceType: 'dwit_kubi/ap_seogi', width: 1.2 },
+      { fwd: 2.5, stepsPerSide: 2, stanceType: 'ap_seogi', width: 1.2 },
+    ],
+    fwdTransitions: [
+      { from: 0, to: 1, stance: 'ap_kubi', steps: 1 },
+      { from: 1, to: 2, stance: 'ap_kubi', steps: 1 },
+    ],
+    notes: 'Back stance (dwit kubi) knife-hand blocks introduced on Bar 2. Front kicks on Bars 1, 3, and final section. Double-punches within single beats.',
+  },
+
+  'Sa-jang (T4)': {
+    moves: 20, techs: 24,
+    stances: ['ap_seogi', 'ap_kubi', 'dwit_kubi'],
+    kicks: ['ap_chagi', 'yeop_chagi'],
+    bars: [
+      { fwd: 0,   stepsPerSide: 2, stanceType: 'dwit_kubi/ap_kubi', width: 1.4 },
+      { fwd: 1.5, stepsPerSide: 2, stanceType: 'ap_kubi/ap_seogi', width: 1.4 },
+      { fwd: 3.0, stepsPerSide: 2, stanceType: 'ap_seogi', width: 1.4 },
+    ],
+    fwdTransitions: [
+      { from: 0, to: 1, stance: 'ap_kubi', steps: 2, note: 'swallowform knifehand + front kick landing' },
+      { from: 1, to: 2, stance: 'ap_kubi', steps: 2, note: 'includes 2 side kicks advancing forward' },
+    ],
+    notes: 'Side kicks (yeop chagi) introduced — 2 kicks advancing forward to ~3m (Eva measured). Back stance on Bar 1. Swallowform knifehand block (sonnal momtong makki) in transitions.',
+  },
+
+  'Oh-jang (T5)': {
+    moves: 20, techs: 28,
+    stances: ['ap_seogi', 'ap_kubi', 'dwit_kubi'],
+    kicks: ['ap_chagi', 'yeop_chagi'],
+    bars: [
+      { fwd: 0,   stepsPerSide: 2, stanceType: 'ap_kubi/ap_seogi', width: 1.4 },
+      { fwd: 1.4, stepsPerSide: 2, stanceType: 'ap_seogi', width: 1.4 },
+      { fwd: 2.8, stepsPerSide: 2, stanceType: 'ap_seogi', width: 1.4 },
+    ],
+    fwdTransitions: [
+      { from: 0, to: 1, stance: 'ap_kubi', steps: 3, note: 'front kicks + backfist strikes advancing' },
+      { from: 1, to: 2, stance: 'ap_kubi', steps: 2 },
+    ],
+    notes: 'Back fist (dung jumeok ap chigi), elbow strike (palkup chigi), side kicks introduced. Side kicks on Bar 3 go lateral (Eva: ~2m fwd × ±1m lat). Stem structure with forward-advancing kicks between bars.',
+  },
+
+  'Yuk-jang (T6)': {
+    moves: 23, techs: 31,
+    stances: ['ap_seogi', 'ap_kubi', 'dwit_kubi'],
+    kicks: ['ap_chagi', 'dolleo_chagi'],
+    bars: [
+      { fwd: 0,    stepsPerSide: 2, stanceType: 'ap_kubi/dwit_kubi', width: 1.5 },
+      { fwd: 1.75, stepsPerSide: 2, stanceType: 'ap_seogi/ap_kubi', width: 1.5 },
+      { fwd: 3.5,  stepsPerSide: 2, stanceType: 'ap_seogi', width: 1.5 },
+    ],
+    fwdTransitions: [
+      { from: 0, to: 1, stance: 'ap_kubi', steps: 2, note: 'includes dolleo chagi (round kick) + landing' },
+      { from: 1, to: 2, stance: 'ap_kubi', steps: 2, note: 'includes dolleo chagi + landing' },
+    ],
+    notes: '23 moves / 31 techniques (NOT 19 — common miscount). Round kicks (dolleo chagi) introduced in forward transitions — extend reach to ~3.5m (Eva measured). Back stance blocks on Bars 1-2.',
+  },
+
+  'Chil-jang (T7)': {
+    moves: 25, techs: 33,
+    stances: ['ap_seogi', 'ap_kubi', 'dwit_kubi', 'beom_seogi'],
+    kicks: ['ap_chagi', 'yeop_chagi', 'mureup_chigi'],
+    bars: [
+      { fwd: 0,   stepsPerSide: 2, stanceType: 'beom_seogi/ap_seogi', width: 1.2 },
+      { fwd: 1.6, stepsPerSide: 2, stanceType: 'ap_seogi/beom_seogi', width: 1.5 },
+      { fwd: 3.2, stepsPerSide: 2, stanceType: 'ap_seogi/ap_kubi', width: 1.5 },
+    ],
+    fwdTransitions: [
+      { from: 0, to: 1, stance: 'ap_kubi', steps: 2 },
+      { from: 1, to: 2, stance: 'ap_kubi', steps: 2, note: 'includes crescent kick' },
+    ],
+    notes: 'Most complex Taegeuk. Tiger stance (beom seogi) on Bars 1-2 → narrower width (±1.2m). Knee strikes (mureup chigi) on Bar 3. Palm block (batangson makki). Horse stance double punch.',
+  },
+
+  'Pal-jang (T8)': {
+    moves: 24, techs: 39,
+    stances: ['ap_seogi', 'ap_kubi', 'dwit_kubi', 'beom_seogi'],
+    kicks: ['ap_chagi', 'twio_ap_chagi', 'dolleo_chagi'],
+    bars: [
+      { fwd: 0,   stepsPerSide: 2, stanceType: 'ap_kubi/dwit_kubi', width: 1.6 },
+      { fwd: 1.5, stepsPerSide: 2, stanceType: 'beom_seogi/ap_seogi', width: 1.6 },
+      { fwd: 3.0, stepsPerSide: 2, stanceType: 'ap_seogi/ap_kubi', width: 1.6 },
+    ],
+    fwdTransitions: [
+      { from: 0, to: 1, stance: 'ap_kubi', steps: 2, note: 'includes jumping front kick (twio ap chagi)' },
+      { from: 1, to: 2, stance: 'ap_kubi', steps: 2 },
+    ],
+    notes: 'Pre-black-belt form. UNIQUE REVERSE EXECUTION: starts forward to Bar 3, works back to Bar 1. Jumping front kick (twio ap chagi) at steps 3, 19. Mountain block (santul makki) on Bar 3. Widest Taegeuk lateral reach (±1.6m).',
+  },
+
+  // ── BLACK BELT FORMS ────────────────────────────────────
+  'Koryo': {
+    moves: 30, techs: 50,
+    stances: ['ap_kubi', 'dwit_kubi', 'ap_seogi', 'kkoa_seogi'],
+    kicks: ['ap_chagi', 'yeop_chagi', 'geodeop_yeop_chagi'],
+    shape: '士 (scholar) — wide bottom bar, intermediate middle, narrow top',
+    bars: [
+      { fwd: 0,   stepsPerSide: 3, stanceType: 'ap_kubi/dwit_kubi', width: 2.0, note: 'widest bar — side kicks extend to ±2m' },
+      { fwd: 1.7, stepsPerSide: 2, stanceType: 'ap_kubi/ap_seogi', width: 1.5 },
+      { fwd: 3.5, stepsPerSide: 2, stanceType: 'ap_kubi/kkoa_seogi', width: 1.0, note: 'cross-stance side kick extends beyond bar' },
+    ],
+    notes: 'Scholar character 士 with decreasing bar widths (2.0 → 1.5 → 1.0m per side). Double side kicks (geodeop yeop chagi) on bottom bar. Cross-stance side kick on top bar extends to ~2m lateral. Moa seogi (closed stance) pose at far end. Returns to start.',
+  },
+
+  'Keumgang': {
+    moves: 27, techs: 38,
+    stances: ['ap_kubi', 'dwit_kubi', 'hakdari_seogi', 'ap_seogi'],
+    kicks: [],
+    shape: '山 (mountain) — base, ridgeline, peak',
+    bars: [
+      { fwd: 0,   stepsPerSide: 2, stanceType: 'ap_kubi', width: 1.0, note: 'base of mountain' },
+      { fwd: 2.0, stepsPerSide: 2, stanceType: 'ap_kubi/hakdari_seogi', width: 1.5, note: 'widest — ridgeline with crane stances at ±1.5m' },
+      { fwd: 3.5, stepsPerSide: 2, stanceType: 'ap_kubi', width: 1.0, note: 'peak — diamond blocks' },
+    ],
+    notes: 'Mountain shape 山. Crane stances (hakdari seogi) at ridgeline (fwd 2.0, x ±1.5m) — one-legged balance risk. Four 360° spinning turns. Diamond block (keumgang makki) at peak. Returns to start.',
+  },
+
+  'Taebaek': {
+    moves: 26, techs: 36,
+    stances: ['ap_kubi', 'dwit_kubi', 'beom_seogi', 'ap_seogi'],
+    kicks: ['ap_chagi', 'yeop_chagi'],
+    shape: '⊞ cross/mountain — decreasing bar widths',
+    bars: [
+      { fwd: 0,   stepsPerSide: 2, stanceType: 'ap_kubi/beom_seogi', width: 1.5, note: 'tiger stances at bar ends' },
+      { fwd: 1.5, stepsPerSide: 2, stanceType: 'ap_kubi/dwit_kubi', width: 1.2 },
+      { fwd: 3.0, stepsPerSide: 2, stanceType: 'ap_kubi', width: 1.0, note: 'side kicks at fwd 3m, ±1m (Eva)' },
+    ],
+    notes: 'Decreasing bar widths (1.5 → 1.2 → 1.0m per side). Tiger stances at bottom bar ends. Side kick (yeop chagi) at top bar — Eva: 3m fwd × ±1m lateral. Returns to start.',
+  },
+
+  'Pyongwon': {
+    moves: 25, techs: 32,
+    stances: ['ap_kubi', 'ap_seogi', 'hakdari_seogi', 'juchum_seogi'],
+    kicks: ['ap_chagi', 'yeop_chagi'],
+    shape: '一 (plain/flatland) — primarily lateral line',
+    bars: [
+      { fwd: 0, stepsPerSide: 4, stanceType: 'ap_kubi/juchum_seogi', width: 2.0, note: 'main lateral line — crane stances near ends' },
+    ],
+    fwdTransitions: [
+      { from: 'main', to: 'excursion', stance: 'ap_kubi', steps: 1, note: 'brief forward excursion ~1m for kicks' },
+    ],
+    notes: 'Unique single-line form — primarily lateral movement along one bar (±2m). Brief forward excursion (~1m) for ap chagi momdolleo yeop chagi (front kick + spin + side kick). Eva: ±2m lateral. Crane stances near bar ends.',
+  },
+
+  'Sipjin': {
+    moves: 28, techs: 38,
+    stances: ['ap_kubi', 'dwit_kubi', 'ap_seogi', 'juchum_seogi'],
+    kicks: ['ap_chagi', 'yeop_chagi'],
+    shape: '十 (cross/decimal) — equal-armed cross, bidirectional',
+    bars: [
+      { fwd: 0,    stepsPerSide: 4, stanceType: 'ap_kubi/juchum_seogi', width: 3.0, note: 'main lateral bar — Eva: ±3m (6m total span, fits in 5.5m)' },
+      { fwd: 2.5,  stepsPerSide: 0, stanceType: 'ap_kubi', width: 0, note: 'forward arm of cross' },
+      { fwd: -2.5, stepsPerSide: 0, stanceType: 'ap_kubi', width: 0, note: 'backward arm of cross' },
+    ],
+    notes: 'Unique bidirectional form — goes forward AND backward from center. Equal-armed cross 十. Starting side punches span ±3m lateral (Eva). Ap chagi 1m forward. Widest lateral span of all forms.',
+  },
+
+  'Jitae': {
+    moves: 28, techs: 36,
+    stances: ['ap_kubi', 'dwit_kubi', 'ap_seogi', 'juchum_seogi'],
+    kicks: ['ap_chagi'],
+    shape: 'ㅗ (earth) — forward vertical stroke to lateral bar at far end',
+    bars: [
+      { fwd: 2.5, stepsPerSide: 2, stanceType: 'ap_kubi/juchum_seogi', width: 1.5, note: 'lateral bar at far end of vertical stroke' },
+    ],
+    fwdTransitions: [
+      { from: 'start', to: 'bar', stance: 'ap_kubi', steps: 3, note: 'vertical stroke — ap chagi at 2.5m and 2m fwd (Eva)' },
+    ],
+    notes: 'T-shape ㅗ — forward along vertical stroke (0 to 2.5m) then lateral bar (±1.5m) at far end. Ap chagi in upper and lower sequences (Eva: 2.5m and 2.0m fwd). Ends ~0.5m behind start.',
+  },
+
+  'Chonkwon': {
+    moves: 27, techs: 35,
+    stances: ['ap_kubi', 'dwit_kubi', 'ap_seogi'],
+    kicks: ['ap_chagi', 'yeop_chagi', 'twio_dolleo_chagi'],
+    shape: 'ㅜ (sky/heaven) — inverted T, vertical forward + lateral bar at far end',
+    bars: [
+      { fwd: 3.0, stepsPerSide: 2, stanceType: 'ap_kubi/dwit_kubi', width: 1.5, note: 'lateral bar at far end' },
+    ],
+    fwdTransitions: [
+      { from: 'start', to: 'bar', stance: 'ap_kubi', steps: 3, note: 'yeop chagi at 3m fwd (Eva), jumping spinning kick at 1m fwd' },
+    ],
+    notes: 'Inverted T ㅜ. Forward vertical stroke to lateral bar at 3m. 360° jumping spinning kick (twio dolleo chagi) on stem. Yeop chagi at 3m fwd (Eva). Returns to start.',
+  },
+
+  'Hansu': {
+    moves: 27, techs: 34,
+    stances: ['ap_kubi', 'dwit_kubi', 'ap_seogi', 'hakdari_seogi'],
+    kicks: ['ap_chagi'],
+    shape: '水 (water) — central vertical stroke + diagonal branches to four corners',
+    bars: [],
+    diagonals: [
+      { dir: 'N',  extent: { x: 0, fwd: 1.5 }, note: 'vertical stroke upward' },
+      { dir: 'NW', extent: { x: -1.2, fwd: 1.2 }, note: '45° diagonal to upper-left' },
+      { dir: 'NE', extent: { x: 1.2, fwd: 1.2 }, note: '45° diagonal to upper-right' },
+      { dir: 'SW', extent: { x: -1.2, fwd: -1.2 }, note: '45° diagonal to lower-left — crane stance' },
+      { dir: 'SE', extent: { x: 1.2, fwd: -1.2 }, note: '45° diagonal to lower-right — crane stance' },
+    ],
+    notes: 'Water character 水. Central vertical stroke (0 to 1.5m fwd) + four 45° diagonal branches. Crane stances on SW and SE diagonals — one-legged balance risk. Distinctive non-bar structure.',
+  },
+
+  'Ilyeo': {
+    moves: 24, techs: 30,
+    stances: ['ap_kubi', 'dwit_kubi', 'hakdari_seogi', 'ap_seogi'],
+    kicks: ['yeop_chagi', 'twio_yeop_chagi'],
+    shape: '卍 (Buddhist manji) — 4-armed spiral, counterclockwise turns',
+    arms: [
+      { dir: 'N',  extent: { x: 0, fwd: 1.2 }, turn: 'left to W arm' },
+      { dir: 'E',  extent: { x: 1.2, fwd: 0 }, turn: 'left to N arm' },
+      { dir: 'S',  extent: { x: 0, fwd: -1.2 }, turn: 'left to E arm' },
+      { dir: 'W',  extent: { x: -1.2, fwd: 0 }, turn: 'left to S arm' },
+    ],
+    notes: 'Buddhist manji 卍 — 4-armed counterclockwise spiral. Each arm: advance, elbow hook, return to center. Slow side kick from crane stance (move 14) is the most balance-critical moment in all poomsae. Jump-to-crane-stance (move 13). Jumping side kicks on NE and SW arms. ±1.2m in all directions.',
+  },
 };
 
 // ── POOMSAE FLOOR PATTERNS ─────────────────────────────
@@ -1228,7 +1532,7 @@ const POOMSAE_FLOOR_PATTERNS = {
     bounds: { minX:-1.4, maxX:1.4, minFwd:0, maxFwd:2.8 } },
 
   'Yuk-jang (T6)': { symbol: '☵', group: 'taegeuk', order: 6,
-    // 19 moves. Round kicks extend forward reach to ~3.5m.
+    // 23 moves (31 techniques). Round kicks extend forward reach to ~3.5m.
     // Eva: dolleo chagi ~3.5m forward.
     // Bars at fwd 0, 1.75, 3.5. Width ±1.5m.
     path: [ {x:0,fwd:0}, {x:-1.5,fwd:0}, {x:0,fwd:0}, {x:1.5,fwd:0}, {x:0,fwd:0},
@@ -1245,8 +1549,9 @@ const POOMSAE_FLOOR_PATTERNS = {
     bounds: { minX:-1.5, maxX:1.5, minFwd:0, maxFwd:3.2 } },
 
   'Pal-jang (T8)': { symbol: '☷', group: 'taegeuk', order: 8,
-    // 24 moves. Jumping front kick, mountain block. Widest Taegeuk lateral reach.
-    // Pre-black-belt form. Bars at fwd 0, 1.5, 3.0. Width ±1.6m.
+    // 24 moves (39 techniques). Jumping front kick, mountain block.
+    // Unique reverse execution: starts forward to Bar 3, works back to Bar 1.
+    // Widest Taegeuk lateral reach. Bars at fwd 0, 1.5, 3.0. Width ±1.6m.
     path: [ {x:0,fwd:0}, {x:-1.6,fwd:0}, {x:0,fwd:0}, {x:1.6,fwd:0}, {x:0,fwd:0},
             {x:0,fwd:1.5}, {x:-1.6,fwd:1.5}, {x:0,fwd:1.5}, {x:1.6,fwd:1.5}, {x:0,fwd:1.5},
             {x:0,fwd:3.0}, {x:-1.6,fwd:3.0}, {x:0,fwd:3.0}, {x:1.6,fwd:3.0}, {x:0,fwd:3.0} ],
