@@ -1150,7 +1150,7 @@ const GS_EDGE_RISKS = {
   ],
   'Koryo':     [
     { move: 'geodeop yeop chagi (double side kick)', pos: {fwd:0, x:1.0}, kickType: 'yeop_chagi', risk: 'medium' },
-    { move: 'side kicks (bottom sequence)', pos: {fwd:3.5, x:2.0}, kickType: 'yeop_chagi', risk: 'critical' },
+    { move: 'cross-stance side kicks (top bar)', pos: {fwd:3.5, x:2.0}, kickType: 'yeop_chagi', risk: 'critical' },
     { move: 'moa seogi pose', pos: {fwd:3.5, x:0}, kickType: 'standing', risk: 'medium' },
   ],
   'Keumgang':  [
@@ -1355,41 +1355,39 @@ const POOMSAE_STEPS = {
   // ── BLACK BELT FORMS ────────────────────────────────────
   'Koryo': {
     moves: 30, techs: 50,
-    stances: ['ap_kubi', 'dwit_kubi', 'ap_seogi', 'kkoa_seogi'],
+    stances: ['ap_kubi', 'dwit_kubi', 'ap_seogi', 'kkoa_seogi', 'juchum_seogi'],
     kicks: ['ap_chagi', 'yeop_chagi', 'geodeop_yeop_chagi'],
-    shape: '士 (scholar) — wide bottom bar, intermediate middle, narrow top',
+    shape: '士 (scholar) — two bars connected by vertical stroke, top bar wider',
     bars: [
-      { fwd: 0,   stepsPerSide: 3, stanceType: 'ap_kubi/dwit_kubi', width: 2.0, note: 'widest bar — side kicks extend to ±2m' },
-      { fwd: 1.7, stepsPerSide: 2, stanceType: 'ap_kubi/ap_seogi', width: 1.5 },
-      { fwd: 3.5, stepsPerSide: 2, stanceType: 'ap_kubi/kkoa_seogi', width: 1.0, note: 'cross-stance side kick extends beyond bar' },
+      { fwd: 0,   stepsPerSide: 2, stanceType: 'dwit_kubi/ap_kubi', width: 1.5, note: 'bottom bar — double side kicks (geodeop yeop chagi) each side' },
+      { fwd: 3.5, stepsPerSide: 6, stanceType: 'juchum_seogi/kkoa_seogi/ap_kubi/ap_seogi', width: 2.5, note: 'top bar — cross-stance side kicks + walking/horse stances extend further' },
     ],
-    notes: 'Scholar character 士 with decreasing bar widths (2.0 → 1.5 → 1.0m per side). Double side kicks (geodeop yeop chagi) on bottom bar. Cross-stance side kick on top bar extends to ~2m lateral. Moa seogi (closed stance) pose at far end. Returns to start.',
+    notes: 'Scholar character 士 — two horizontal bars (bottom ±1.5m, top ±2.5m) connected by vertical stroke. Top bar wider: 6 moves per side including cross-stance side kick, groin strike, walking stances, elbow strike. Bottom bar: double side kicks (geodeop yeop chagi). Moa seogi (closed stance) pose at far end. Returns to start.',
   },
 
   'Keumgang': {
     moves: 27, techs: 38,
     stances: ['ap_kubi', 'dwit_kubi', 'hakdari_seogi', 'ap_seogi'],
     kicks: [],
-    shape: '山 (mountain) — base, ridgeline, peak',
-    bars: [
-      { fwd: 0,   stepsPerSide: 2, stanceType: 'ap_kubi', width: 1.0, note: 'base of mountain' },
-      { fwd: 2.0, stepsPerSide: 2, stanceType: 'ap_kubi/hakdari_seogi', width: 1.5, note: 'widest — ridgeline with crane stances at ±1.5m' },
-      { fwd: 3.5, stepsPerSide: 2, stanceType: 'ap_kubi', width: 1.0, note: 'peak — diamond blocks' },
+    shape: '山 (mountain) — trident: 3 vertical prongs from base, center tallest',
+    prongs: [
+      { x: 0,    fwd: 3.5, stanceType: 'ap_kubi', note: 'center prong (tallest) — diamond blocks (keumgang makki) at peak' },
+      { x: -1.5, fwd: 2.0, stanceType: 'ap_kubi/hakdari_seogi', note: 'left prong — crane stance at tip (one-legged balance risk)' },
+      { x: 1.5,  fwd: 2.0, stanceType: 'ap_kubi/hakdari_seogi', note: 'right prong — crane stance at tip (one-legged balance risk)' },
     ],
-    notes: 'Mountain shape 山. Crane stances (hakdari seogi) at ridgeline (fwd 2.0, x ±1.5m) — one-legged balance risk. Four 360° spinning turns. Diamond block (keumgang makki) at peak. Returns to start.',
+    notes: 'Mountain character 山 — trident shape with 3 vertical prongs rising from base. Center prong tallest (3.5m fwd), side prongs shorter (2.0m fwd, ±1.5m lateral). Crane stances (hakdari seogi) at side prong tips — one-legged balance risk. Four 360° spinning turns. Returns to start.',
   },
 
   'Taebaek': {
     moves: 26, techs: 36,
     stances: ['ap_kubi', 'dwit_kubi', 'beom_seogi', 'ap_seogi'],
     kicks: ['ap_chagi', 'yeop_chagi'],
-    shape: '⊞ cross/mountain — decreasing bar widths',
+    shape: '工 (artisan/work) — I-shape: two bars connected by vertical stroke',
     bars: [
-      { fwd: 0,   stepsPerSide: 2, stanceType: 'ap_kubi/beom_seogi', width: 1.5, note: 'tiger stances at bar ends' },
-      { fwd: 1.5, stepsPerSide: 2, stanceType: 'ap_kubi/dwit_kubi', width: 1.2 },
-      { fwd: 3.0, stepsPerSide: 2, stanceType: 'ap_kubi', width: 1.0, note: 'side kicks at fwd 3m, ±1m (Eva)' },
+      { fwd: 0,   stepsPerSide: 2, stanceType: 'ap_kubi/beom_seogi', width: 1.5, note: 'bottom bar — tiger stances at bar ends' },
+      { fwd: 3.0, stepsPerSide: 2, stanceType: 'ap_kubi', width: 1.5, note: 'top bar — side kicks at ±1m, wider stances to ±1.5m (Eva)' },
     ],
-    notes: 'Decreasing bar widths (1.5 → 1.2 → 1.0m per side). Tiger stances at bottom bar ends. Side kick (yeop chagi) at top bar — Eva: 3m fwd × ±1m lateral. Returns to start.',
+    notes: 'Artisan character 工 (I-shape) — two horizontal bars (±1.5m each) connected by vertical stroke. Bottom bar: tiger stances (beom seogi) at ends. Top bar: side kick (yeop chagi) at 3m fwd. Bridge between heaven and earth. Returns to start.',
   },
 
   'Pyongwon': {
@@ -1560,30 +1558,29 @@ const POOMSAE_FLOOR_PATTERNS = {
   // ── BLACK BELT FORMS ────────────────────────────────
 
   'Koryo': { symbol: '士', group: 'blackbelt', order: 9,
-    // Scholar character (士): wide bar at start (±2m), intermediate bar (±1.5m),
-    // narrow bar at far end (±1m). Eva: side kicks 3.5m fwd x ±2m lateral.
-    path: [ {x:0,fwd:0}, {x:-2.0,fwd:0}, {x:0,fwd:0}, {x:2.0,fwd:0}, {x:0,fwd:0},
-            {x:0,fwd:1.7}, {x:-1.5,fwd:1.7}, {x:0,fwd:1.7}, {x:1.5,fwd:1.7}, {x:0,fwd:1.7},
-            {x:0,fwd:3.5}, {x:-1.0,fwd:3.5}, {x:0,fwd:3.5}, {x:1.0,fwd:3.5},
+    // Scholar character (士): two bars connected by vertical. Bottom bar narrower (±1.5m),
+    // top bar wider (±2.5m). Eva: double side kicks at bottom, cross-stance side kicks + stances at top.
+    path: [ {x:0,fwd:0}, {x:-1.5,fwd:0}, {x:0,fwd:0}, {x:1.5,fwd:0}, {x:0,fwd:0},
+            {x:0,fwd:3.5},
+            {x:-2.5,fwd:3.5}, {x:0,fwd:3.5}, {x:2.5,fwd:3.5},
             {x:0,fwd:3.5}, {x:0,fwd:0} ],
-    bounds: { minX:-2.0, maxX:2.0, minFwd:0, maxFwd:3.5 } },
+    bounds: { minX:-2.5, maxX:2.5, minFwd:0, maxFwd:3.5 } },
 
   'Keumgang': { symbol: '山', group: 'blackbelt', order: 10,
-    // Mountain (山): base bar (±1m), wider ridgeline (±1.5m), narrower peak (±1m).
-    // Crane stances and diamond blocks at the ridgeline and peak.
-    path: [ {x:0,fwd:0}, {x:-1.0,fwd:0}, {x:0,fwd:0}, {x:1.0,fwd:0}, {x:0,fwd:0},
-            {x:0,fwd:2.0},
-            {x:-1.5,fwd:2.0}, {x:0,fwd:2.0}, {x:1.5,fwd:2.0}, {x:0,fwd:2.0},
-            {x:0,fwd:3.5}, {x:-1.0,fwd:3.5}, {x:0,fwd:3.5}, {x:1.0,fwd:3.5},
-            {x:0,fwd:3.5}, {x:0,fwd:0} ],
+    // Mountain (山): trident — 3 vertical prongs from base. Center prong tallest (3.5m),
+    // side prongs shorter (2.0m, ±1.5m lateral). Crane stances at side prong tips.
+    path: [ {x:0,fwd:0},
+            {x:0,fwd:3.5}, {x:0,fwd:0},                                             // center prong (tallest)
+            {x:-1.5,fwd:0}, {x:-1.5,fwd:2.0}, {x:-1.5,fwd:0}, {x:0,fwd:0},         // left prong
+            {x:1.5,fwd:0}, {x:1.5,fwd:2.0}, {x:1.5,fwd:0}, {x:0,fwd:0} ],          // right prong
     bounds: { minX:-1.5, maxX:1.5, minFwd:0, maxFwd:3.5 } },
 
-  'Taebaek': { symbol: '⊞', group: 'blackbelt', order: 11,
-    // Cross/mountain shape with decreasing bar widths. Eva: yeop chagi 3m fwd x ±1m lateral.
-    // Bars at fwd 0 (±1.5m), 1.5 (±1.2m), 3.0 (±1.0m).
+  'Taebaek': { symbol: '工', group: 'blackbelt', order: 11,
+    // Artisan/work (工): I-shape — two bars (±1.5m each) connected by vertical stroke.
+    // Bottom bar: tiger stances. Top bar: side kicks. Eva: yeop chagi 3m fwd x ±1m lateral.
     path: [ {x:0,fwd:0}, {x:-1.5,fwd:0}, {x:0,fwd:0}, {x:1.5,fwd:0}, {x:0,fwd:0},
-            {x:0,fwd:1.5}, {x:-1.2,fwd:1.5}, {x:0,fwd:1.5}, {x:1.2,fwd:1.5}, {x:0,fwd:1.5},
-            {x:0,fwd:3.0}, {x:-1.0,fwd:3.0}, {x:0,fwd:3.0}, {x:1.0,fwd:3.0},
+            {x:0,fwd:3.0},
+            {x:-1.5,fwd:3.0}, {x:0,fwd:3.0}, {x:1.5,fwd:3.0},
             {x:0,fwd:3.0}, {x:0,fwd:0} ],
     bounds: { minX:-1.5, maxX:1.5, minFwd:0, maxFwd:3.0 } },
 
@@ -1756,6 +1753,35 @@ function getCameras(derived) {
     { id: 'SE', x:  c, y:  c, type: 'corner' },
     { id: 'SW', x: -c, y:  c, type: 'corner' },
   ];
+}
+
+// ── CLOSEST KICK TO CAMERA ──────────────────────────────
+// Finds the closest high kick/stance from the selected poomsae to a given camera.
+// Returns { dist, height, label } or null if no poomsae/risks.
+function getClosestKickToCamera(camX, camY, poomsaeName) {
+  if (!poomsaeName || poomsaeName === 'none') return null;
+  const risks = GS_EDGE_RISKS[poomsaeName];
+  if (!risks || risks.length === 0) return null;
+  const pattern = POOMSAE_FLOOR_PATTERNS[poomsaeName];
+  if (!pattern) return null;
+  const placement = computePatternPlacement(pattern);
+  const { tx, ty } = placement;
+
+  let best = null;
+  for (const r of risks) {
+    const kickHeight = EVA_KICK_HEIGHTS[r.kickType] || ATHLETE_HEIGHT;
+    // Only consider kicks/stances that are above tripod height (meaningful for GS check)
+    if (kickHeight <= state.tripodHeight) continue;
+    const wx = tx + r.pos.x;
+    const wy = ty - r.pos.fwd;
+    const dx = camX - wx;
+    const dy = camY - wy;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (!best || dist < best.dist) {
+      best = { dist, height: kickHeight, label: r.move, kickType: r.kickType };
+    }
+  }
+  return best;
 }
 
 // ── FLOOR PATTERN PLACEMENT ─────────────────────────────
@@ -2352,8 +2378,10 @@ function drawPOVOverlay(cam, derived) {
   const farMatX = nearMatX + matLen;
 
   // ── Sight line: camera through kick apex to green screen ──
-  const kickX = nearActionX;
-  const kickY = state.kickHeight;
+  // Use poomsae-specific closest kick if available, else fall back to action edge
+  const closestKick = getClosestKickToCamera(cam.x, cam.y, state.selectedPoomsae);
+  const kickX = closestKick ? closestKick.dist : nearActionX;
+  const kickY = closestKick ? closestKick.height : state.kickHeight;
   const slope = (kickY - hCam) / kickX;
   const gsIntersectHeight = hCam + slope * gsWallX;
   const gsClearance = state.greenScreenHeight - gsIntersectHeight;
@@ -2361,12 +2389,13 @@ function drawPOVOverlay(cam, derived) {
   // ── Kick as percentage of frame ──
   const ratioV = isSide ? state.fovRatioV : derived.cornerFovRatioV;
   const frameSize = distToZone * ratioV;
-  const kickPct = (state.kickHeight / frameSize) * 100;
+  const kickPct = (kickY / frameSize) * 100;
 
   // ── Update text stats ──
   document.getElementById('povCamLabel').textContent = cam.id;
   document.getElementById('povCamType').textContent = isSide ? 'Side Camera' : 'Corner Camera';
-  document.getElementById('povDist').textContent = distToZone.toFixed(2) + ' m';
+  const kickLabel = closestKick ? closestKick.dist.toFixed(2) + ' m (' + closestKick.label + ')' : distToZone.toFixed(2) + ' m';
+  document.getElementById('povDist').textContent = kickLabel;
   document.getElementById('povGsRequired').textContent = gsIntersectHeight.toFixed(2) + ' m';
   const clEl = document.getElementById('povGsClearance');
   clEl.textContent = (gsClearance >= 0 ? '+' : '') + gsClearance.toFixed(2) + ' m';
@@ -2686,14 +2715,29 @@ function updateDataPanel(derived, coverage) {
   document.getElementById('kickHeightDisplay').textContent = state.kickHeight.toFixed(2) + ' m';
   document.getElementById('greenScreenHeightDisplay').textContent = state.greenScreenHeight.toFixed(1) + ' m';
 
-  // Green screen calculations
+  // Green screen calculations — use poomsae-specific kick positions when available
   const sideGsWall = 2 * derived.sideOffset;
-  const sideSlope = (state.kickHeight - state.tripodHeight) / sideDistToZone;
-  const sideGsIntersect = state.tripodHeight + sideSlope * sideGsWall;
-
   const cornerGsWall = 2 * derived.cornerOffset * Math.SQRT2;
-  const cornerSlope = (state.kickHeight - state.tripodHeight) / cornerDistToZone;
-  const cornerGsIntersect = state.tripodHeight + cornerSlope * cornerGsWall;
+
+  // Find worst-case GS intersect across all cameras of each type
+  const cameras = getCameras(derived);
+  let sideGsIntersect = 0, cornerGsIntersect = 0;
+  let sideKickLabel = '', cornerKickLabel = '';
+  for (const cam of cameras) {
+    const closest = getClosestKickToCamera(cam.x, cam.y, state.selectedPoomsae);
+    const kDist = closest ? closest.dist : (cam.type === 'side' ? sideDistToZone : cornerDistToZone);
+    const kHeight = closest ? closest.height : state.kickHeight;
+    const wall = cam.type === 'side' ? sideGsWall : cornerGsWall;
+    const sl = (kHeight - state.tripodHeight) / kDist;
+    const gsInt = state.tripodHeight + sl * wall;
+    if (cam.type === 'side' && gsInt > sideGsIntersect) {
+      sideGsIntersect = gsInt;
+      sideKickLabel = closest ? closest.label : '';
+    } else if (cam.type === 'corner' && gsInt > cornerGsIntersect) {
+      cornerGsIntersect = gsInt;
+      cornerKickLabel = closest ? closest.label : '';
+    }
+  }
 
   document.getElementById('dataGsSide').textContent = sideGsIntersect.toFixed(2) + ' m';
   document.getElementById('dataGsCorner').textContent = cornerGsIntersect.toFixed(2) + ' m';
