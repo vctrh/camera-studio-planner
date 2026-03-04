@@ -1560,6 +1560,8 @@ const POOMSAE_FLOOR_PATTERNS = {
   'Koryo': { symbol: '士', group: 'blackbelt', order: 9,
     // Scholar character (士): two bars connected by vertical. Bottom bar narrower (±1.5m),
     // top bar wider (±2.5m). Eva: double side kicks at bottom, cross-stance side kicks + stances at top.
+    // tyOffset shifts pattern 0.5m southward so top bar sits further within camera FOV.
+    tyOffset: 0.5,
     path: [ {x:0,fwd:0}, {x:-1.5,fwd:0}, {x:0,fwd:0}, {x:1.5,fwd:0}, {x:0,fwd:0},
             {x:0,fwd:3.5},
             {x:-2.5,fwd:3.5}, {x:0,fwd:3.5}, {x:2.5,fwd:3.5},
@@ -1758,7 +1760,7 @@ function getCameras(derived) {
 // ── CLOSEST KICK TO CAMERA ──────────────────────────────
 // Finds the closest high kick/stance from the selected poomsae to a given camera.
 // Returns { dist, height, label } or null if no poomsae/risks.
-function getClosestKickToCamera(camX, camY, poomsaeName) {
+function getClosestKickToCamera(camX, camY, poomsaeName, camId) {
   if (!poomsaeName || poomsaeName === 'none') return null;
   const risks = GS_EDGE_RISKS[poomsaeName];
   if (!risks || risks.length === 0) return null;
@@ -1767,11 +1769,22 @@ function getClosestKickToCamera(camX, camY, poomsaeName) {
   const placement = computePatternPlacement(pattern);
   const { tx, ty } = placement;
 
+  // Koryo-specific: filter kicks by bar based on camera direction
+  // W, NW, N, NE, E → top bar kicks (fwd >= 2.0)
+  // SW, S, SE → bottom bar kicks (fwd <= 1.0)
+  const koryoTopCams = ['W', 'NW', 'N', 'NE', 'E'];
+  const koryoBottomCams = ['SW', 'S', 'SE'];
+
   let best = null;
   for (const r of risks) {
     const kickHeight = EVA_KICK_HEIGHTS[r.kickType] || ATHLETE_HEIGHT;
     // Only consider kicks/stances that are above tripod height (meaningful for GS check)
     if (kickHeight <= state.tripodHeight) continue;
+    // Koryo bar filtering
+    if (poomsaeName === 'Koryo' && camId) {
+      if (koryoTopCams.includes(camId) && r.pos.fwd < 2.0) continue;
+      if (koryoBottomCams.includes(camId) && r.pos.fwd > 1.0) continue;
+    }
     const wx = tx + r.pos.x;
     const wy = ty - r.pos.fwd;
     const dx = camX - wx;
@@ -1798,6 +1811,8 @@ function computePatternPlacement(pattern) {
   tx = (txLo > txHi) ? (txLo + txHi) / 2 : Math.max(txLo, Math.min(txHi, tx));
   const tyLo = b.maxFwd - hh, tyHi = hh + b.minFwd;
   ty = (tyLo > tyHi) ? (tyLo + tyHi) / 2 : Math.max(tyLo, Math.min(tyHi, ty));
+  // Apply per-pattern vertical offset (e.g. Koryo shifted southward)
+  ty += (pattern.tyOffset || 0);
   // Compute margins (distance from pattern edges to action zone edges)
   const mL = tx + b.minX + hw;   // left margin
   const mR = hw - tx - b.maxX;   // right margin
@@ -2379,7 +2394,7 @@ function drawPOVOverlay(cam, derived) {
 
   // ── Sight line: camera through kick apex to green screen ──
   // Use poomsae-specific closest kick if available, else fall back to action edge
-  const closestKick = getClosestKickToCamera(cam.x, cam.y, state.selectedPoomsae);
+  const closestKick = getClosestKickToCamera(cam.x, cam.y, state.selectedPoomsae, cam.id);
   const kickX = closestKick ? closestKick.dist : nearActionX;
   const kickY = closestKick ? closestKick.height : state.kickHeight;
   const slope = (kickY - hCam) / kickX;
@@ -2501,7 +2516,7 @@ function drawPOVOverlay(cam, derived) {
   p.fillText(hCam.toFixed(2) + 'm', camPxX, camPxY - cbH / 2 - 4 * pdpr);
 
   // ── Athlete stick figure with sidekick ──
-  const athX = toX(nearActionX);
+  const athX = toX(kickX);
   const athFloor = toY(0);
   const athHead = toY(ATHLETE_HEIGHT);
   const athKick = toY(state.kickHeight);
@@ -2724,7 +2739,7 @@ function updateDataPanel(derived, coverage) {
   let sideGsIntersect = 0, cornerGsIntersect = 0;
   let sideKickLabel = '', cornerKickLabel = '';
   for (const cam of cameras) {
-    const closest = getClosestKickToCamera(cam.x, cam.y, state.selectedPoomsae);
+    const closest = getClosestKickToCamera(cam.x, cam.y, state.selectedPoomsae, cam.id);
     const kDist = closest ? closest.dist : (cam.type === 'side' ? sideDistToZone : cornerDistToZone);
     const kHeight = closest ? closest.height : state.kickHeight;
     const wall = cam.type === 'side' ? sideGsWall : cornerGsWall;
