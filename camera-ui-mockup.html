@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera UI Mock-up - iPhone 17 Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+            background: #1a1a1a;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px 20px;
+            gap: 60px;
+            flex-wrap: wrap;
+        }
+
+        .mockup-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .mockup-label {
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            opacity: 0.8;
+        }
+
+        /* iPhone 17 Pro: 2622x1206 @ 460ppi
+           Physical: 150mm x 71.9mm
+           Screen: 6.3" diagonal
+           Scaled to ~40% for mockup: 393 x 852 logical points -> using 390x844 (standard)
+           For display: width 280px maintaining aspect ratio */
+        .phone-frame {
+            width: 310px;
+            height: 634px;
+            background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+            border-radius: 54px;
+            padding: 12px;
+            border: 2px solid #3a3a3a;
+            box-shadow:
+                0 0 0 1px rgba(255,255,255,0.05),
+                0 25px 50px rgba(0,0,0,0.5),
+                inset 0 1px 1px rgba(255,255,255,0.05);
+            position: relative;
+        }
+
+        /* Side button - power */
+        .phone-frame::before {
+            content: '';
+            position: absolute;
+            right: -3px;
+            top: 140px;
+            width: 3px;
+            height: 70px;
+            background: linear-gradient(to bottom, #3a3a3a, #2a2a2a);
+            border-radius: 0 2px 2px 0;
+        }
+
+        /* Side buttons - volume */
+        .phone-frame::after {
+            content: '';
+            position: absolute;
+            left: -3px;
+            top: 120px;
+            width: 3px;
+            height: 40px;
+            background: linear-gradient(to bottom, #3a3a3a, #2a2a2a);
+            border-radius: 2px 0 0 2px;
+            box-shadow: 0 55px 0 #2a2a2a;
+        }
+
+        .screen {
+            width: 286px;
+            height: 610px;
+            background: #000;
+            border-radius: 44px;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Dynamic Island */
+        .dynamic-island {
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 28px;
+            background: #000;
+            border-radius: 20px;
+            z-index: 100;
+        }
+
+        /* Top bar with camera controls */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 50px 18px 12px;
+            background: #000;
+            flex-shrink: 0;
+        }
+
+        .flash-off-icon {
+            width: 22px;
+            height: 22px;
+        }
+
+        .recording-indicator {
+            width: 8px;
+            height: 8px;
+            background: #32D74B;
+            border-radius: 50%;
+        }
+
+        .format-badge {
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* Viewfinder */
+        .viewfinder {
+            flex: 1;
+            position: relative;
+            background: linear-gradient(135deg, #3d5a3d 0%, #2a4a2a 30%, #1f3a1f 60%, #2d3d28 100%);
+            overflow: hidden;
+            min-height: 0;
+        }
+
+        /* Rule of thirds grid overlay */
+        .grid-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70%;
+            height: 75%;
+            border: 1px dashed rgba(255,255,255,0.4);
+            pointer-events: none;
+        }
+
+        .grid-overlay::before,
+        .grid-overlay::after {
+            content: '';
+            position: absolute;
+            background: rgba(255,255,255,0.4);
+        }
+
+        .grid-overlay::before {
+            left: 33.33%;
+            top: 0;
+            width: 1px;
+            height: 100%;
+            box-shadow: calc(33.33% * 2 - 1px) 0 0 rgba(255,255,255,0.4);
+        }
+
+        .grid-overlay::after {
+            top: 33.33%;
+            left: 0;
+            height: 1px;
+            width: 100%;
+            box-shadow: 0 calc(33.33% * 2 - 1px) 0 rgba(255,255,255,0.4);
+        }
+
+        /* Plant scene placeholder */
+        .plant-scene {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(ellipse 30% 25% at 30% 70%, rgba(255, 180, 50, 0.4) 0%, transparent 70%),
+                radial-gradient(ellipse 25% 20% at 70% 75%, rgba(255, 160, 40, 0.3) 0%, transparent 70%);
+        }
+
+        .leaf {
+            position: absolute;
+            background: linear-gradient(135deg, #5a8a4a 0%, #4a7a3a 50%, #3a6a2a 100%);
+            border-radius: 0 80% 0 80%;
+            box-shadow: inset -2px -2px 4px rgba(0,0,0,0.2), inset 2px 2px 4px rgba(255,255,255,0.1);
+        }
+
+        .leaf-1 { width: 50px; height: 25px; top: 8%; left: 2%; transform: rotate(-25deg); }
+        .leaf-2 { width: 65px; height: 32px; top: 15%; left: 15%; transform: rotate(20deg); background: linear-gradient(135deg, #6a9a5a 0%, #5a8a4a 50%, #4a7a3a 100%); }
+        .leaf-3 { width: 55px; height: 28px; top: 5%; right: 10%; transform: rotate(-40deg); }
+        .leaf-4 { width: 45px; height: 22px; top: 35%; left: 5%; transform: rotate(35deg); }
+        .leaf-5 { width: 70px; height: 35px; top: 25%; right: 0%; transform: rotate(-15deg); background: linear-gradient(135deg, #7aaa6a 0%, #6a9a5a 50%, #5a8a4a 100%); }
+        .leaf-6 { width: 58px; height: 29px; top: 50%; left: 25%; transform: rotate(50deg); }
+        .leaf-7 { width: 62px; height: 31px; top: 45%; right: 15%; transform: rotate(-25deg); }
+        .leaf-8 { width: 48px; height: 24px; top: 65%; left: 10%; transform: rotate(15deg); }
+        .leaf-9 { width: 55px; height: 27px; top: 60%; right: 5%; transform: rotate(-35deg); background: linear-gradient(135deg, #8aba7a 0%, #7aaa6a 50%, #6a9a5a 100%); }
+
+        .pot {
+            position: absolute;
+            bottom: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 50px;
+            background: linear-gradient(to bottom, #a65d3a, #8B4513, #6d3a10);
+            border-radius: 5px 5px 20px 20px;
+            box-shadow: inset 0 5px 10px rgba(255,255,255,0.1), inset 0 -5px 10px rgba(0,0,0,0.3);
+        }
+
+        .pot::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: -5px;
+            right: -5px;
+            height: 12px;
+            background: linear-gradient(to bottom, #b86d4a, #a65d3a);
+            border-radius: 3px;
+        }
+
+        /* Control panel */
+        .control-panel {
+            background: rgba(28, 28, 30, 0.98);
+            border-radius: 24px 24px 0 0;
+            padding: 16px 14px 12px;
+            margin-top: -20px;
+            position: relative;
+            z-index: 10;
+            flex-shrink: 0;
+        }
+
+        /* Mode tabs */
+        .mode-tabs {
+            display: flex;
+            gap: 36px;
+            justify-content: center;
+            margin-bottom: 14px;
+        }
+
+        .mode-tab {
+            color: #6e6e73;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .mode-tab.active {
+            color: #fff;
+            border-bottom-color: #c41e3a;
+        }
+
+        /* Button rows */
+        .button-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .control-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            padding: 10px 6px;
+            background: rgba(58, 58, 60, 0.6);
+            border: 1px solid rgba(99, 99, 102, 0.4);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .control-btn:hover {
+            background: rgba(72, 72, 74, 0.7);
+        }
+
+        .control-btn .icon {
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .control-btn .icon svg {
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: #fff;
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .control-btn .icon-text {
+            font-size: 11px;
+            font-weight: 600;
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.5);
+            border-radius: 3px;
+            padding: 2px 4px;
+        }
+
+        .control-btn .label {
+            font-size: 9px;
+            color: #8e8e93;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        /* Promotional carousel section */
+        .promo-section {
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .drag-handle {
+            width: 36px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            margin: 0 auto 10px;
+            cursor: pointer;
+        }
+
+        .promo-section.minimized .drag-handle {
+            margin-bottom: 4px;
+        }
+
+        .promo-hint {
+            display: none;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 10px;
+            text-align: center;
+            margin-top: 4px;
+            letter-spacing: 0.3px;
+        }
+
+        .promo-section.minimized .promo-hint {
+            display: block;
+        }
+
+        /* Swipeable tile carousel */
+        .promo-carousel {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            padding: 2px 0 6px;
+            margin: 0 -4px;
+            padding-left: 4px;
+        }
+
+        .promo-carousel::-webkit-scrollbar {
+            display: none;
+        }
+
+        .promo-section.minimized .promo-carousel {
+            display: none;
+        }
+
+        .promo-tile {
+            flex: 0 0 calc(50% - 12px);
+            scroll-snap-align: start;
+            border-radius: 14px;
+            padding: 14px 12px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            position: relative;
+            overflow: hidden;
+            min-height: 80px;
+        }
+
+        .promo-tile:last-child {
+            margin-right: 40px;
+        }
+
+        .promo-tile:hover {
+            transform: scale(1.02);
+        }
+
+        /* Tile 1: Tutorials */
+        .promo-tile.tutorials {
+            background: linear-gradient(135deg, #1a3a5c 0%, #0d2840 100%);
+            border: 1px solid rgba(74, 144, 226, 0.3);
+        }
+
+        .promo-tile.tutorials::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, rgba(74, 144, 226, 0.3) 0%, transparent 70%);
+        }
+
+        .promo-tile.tutorials .tile-icon {
+            width: 28px;
+            height: 28px;
+            margin-bottom: 8px;
+        }
+
+        .promo-tile.tutorials .tile-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: none;
+            stroke: #4A90E2;
+            stroke-width: 1.5;
+        }
+
+        /* Tile 2: Leica Akademie Challenge */
+        .promo-tile.challenge {
+            background: linear-gradient(135deg, #3d1a1a 0%, #2a0d0d 100%);
+            border: 1px solid rgba(196, 30, 58, 0.3);
+        }
+
+        .promo-tile.challenge::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, rgba(196, 30, 58, 0.25) 0%, transparent 70%);
+        }
+
+        .promo-tile.challenge .tile-icon {
+            width: 28px;
+            height: 28px;
+            margin-bottom: 8px;
+        }
+
+        .promo-tile.challenge .tile-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: none;
+            stroke: #c41e3a;
+            stroke-width: 1.5;
+        }
+
+        /* Tile 3: New Features */
+        .promo-tile.features {
+            background: linear-gradient(135deg, #1a3d2a 0%, #0d2a1a 100%);
+            border: 1px solid rgba(76, 217, 100, 0.3);
+        }
+
+        .promo-tile.features::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, rgba(76, 217, 100, 0.25) 0%, transparent 70%);
+        }
+
+        .promo-tile.features .tile-icon {
+            width: 28px;
+            height: 28px;
+            margin-bottom: 8px;
+        }
+
+        .promo-tile.features .tile-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: none;
+            stroke: #4CD964;
+            stroke-width: 1.5;
+        }
+
+        .promo-tile .tile-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: #fff;
+            line-height: 1.3;
+            margin-bottom: 4px;
+        }
+
+        .promo-tile .tile-subtitle {
+            font-size: 9px;
+            color: rgba(255,255,255,0.6);
+            line-height: 1.3;
+        }
+
+        /* Scroll indicator dots */
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 8px;
+        }
+
+        .promo-section.minimized .carousel-dots {
+            display: none;
+        }
+
+        .dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+        }
+
+        .dot.active {
+            background: rgba(255,255,255,0.8);
+            width: 12px;
+            border-radius: 3px;
+        }
+
+        /* Bottom bar */
+        .bottom-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .battery {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #8e8e93;
+            font-size: 11px;
+        }
+
+        .battery-icon {
+            display: flex;
+            align-items: center;
+            gap: 1px;
+        }
+
+        .battery-icon svg {
+            width: 22px;
+            height: 11px;
+        }
+
+        .menu-btn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #8e8e93;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .menu-btn svg {
+            width: 16px;
+            height: 16px;
+            stroke: #8e8e93;
+            stroke-width: 1.5;
+            fill: none;
+        }
+
+        /* Spec label */
+        .spec-label {
+            color: #666;
+            font-size: 11px;
+            margin-top: 12px;
+            text-align: center;
+        }
+
+        /* ==================== */
+        /* VERIFICATION PANEL   */
+        /* ==================== */
+        .verification-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(40, 40, 40, 0.95);
+            border: 1px solid #444;
+            border-radius: 12px;
+            padding: 16px;
+            color: #fff;
+            font-size: 12px;
+            max-width: 280px;
+            z-index: 1000;
+        }
+
+        .verification-panel h3 {
+            margin-bottom: 12px;
+            font-size: 14px;
+            border-bottom: 1px solid #555;
+            padding-bottom: 8px;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            padding: 4px 0;
+        }
+
+        .check-item .status {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            flex-shrink: 0;
+        }
+
+        .check-item .status.pass {
+            background: #32D74B;
+            color: #000;
+        }
+
+        .check-item .status.fail {
+            background: #FF453A;
+            color: #fff;
+        }
+
+        .check-item .status.warn {
+            background: #FF9F0A;
+            color: #000;
+        }
+
+        .check-item .desc {
+            flex: 1;
+        }
+
+        .verification-panel .summary {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #555;
+            font-weight: 600;
+        }
+
+        #runTestsBtn {
+            display: block;
+            width: 100%;
+            margin-top: 12px;
+            padding: 10px;
+            background: #0A84FF;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        #runTestsBtn:hover {
+            background: #409CFF;
+        }
+    </style>
+</head>
+<body>
+    <!-- Verification Panel -->
+    <div class="verification-panel">
+        <h3>UI Verification Tests</h3>
+        <div id="testResults"></div>
+        <button id="runTestsBtn">Run Tests</button>
+    </div>
+
+    <!-- Expanded State -->
+    <div class="mockup-container" id="expanded-mockup">
+        <div class="mockup-label">Expanded State</div>
+        <div class="phone-frame">
+            <div class="screen">
+                <div class="dynamic-island"></div>
+
+                <div class="top-bar">
+                    <div class="flash-off-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                            <line x1="2" y1="2" x2="22" y2="22" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <div class="recording-indicator"></div>
+                    <div class="format-badge">JPG</div>
+                </div>
+
+                <div class="viewfinder">
+                    <div class="plant-scene">
+                        <div class="leaf leaf-1"></div>
+                        <div class="leaf leaf-2"></div>
+                        <div class="leaf leaf-3"></div>
+                        <div class="leaf leaf-4"></div>
+                        <div class="leaf leaf-5"></div>
+                        <div class="leaf leaf-6"></div>
+                        <div class="leaf leaf-7"></div>
+                        <div class="leaf leaf-8"></div>
+                        <div class="leaf leaf-9"></div>
+                        <div class="pot"></div>
+                    </div>
+                    <div class="grid-overlay"></div>
+                </div>
+
+                <div class="control-panel">
+                    <div class="mode-tabs">
+                        <div class="mode-tab active">PHOTO</div>
+                        <div class="mode-tab">APERTURE</div>
+                    </div>
+
+                    <div class="button-row">
+                        <div class="control-btn">
+                            <div class="icon"><span class="icon-text">JPG</span></div>
+                            <span class="label">Format</span>
+                        </div>
+                        <div class="control-btn">
+                            <div class="icon">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M3 21L12 3l9 18H3z"/>
+                                    <line x1="12" y1="3" x2="12" y2="14"/>
+                                </svg>
+                            </div>
+                            <span class="label">Perspective</span>
+                        </div>
+                        <div class="control-btn">
+                            <div class="icon">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                                    <line x1="2" y1="2" x2="22" y2="22" stroke-width="2"/>
+                                </svg>
+                            </div>
+                            <span class="label">Flash</span>
+                        </div>
+                        <div class="control-btn">
+                            <div class="icon">
+                                <svg viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="9"/>
+                                    <path d="M12 6v6l4 2"/>
+                                    <line x1="1" y1="1" x2="5" y2="5"/>
+                                </svg>
+                            </div>
+                            <span class="label">Timer</span>
+                        </div>
+                    </div>
+
+                    <div class="button-row">
+                        <div class="control-btn">
+                            <div class="icon">
+                                <svg viewBox="0 0 24 24">
+                                    <rect x="3" y="3" width="7" height="7"/>
+                                    <rect x="14" y="3" width="7" height="7"/>
+                                    <rect x="3" y="14" width="7" height="7"/>
+                                    <rect x="14" y="14" width="7" height="7"/>
+                                </svg>
+                            </div>
+                            <span class="label">Grid</span>
+                        </div>
+                        <div class="control-btn">
+                            <div class="icon">
+                                <svg viewBox="0 0 24 24">
+                                    <line x1="4" y1="12" x2="20" y2="12"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                            </div>
+                            <span class="label">Level</span>
+                        </div>
+                        <div class="control-btn">
+                            <div class="icon">
+                                <svg viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="8"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                    <line x1="12" y1="2" x2="12" y2="6"/>
+                                    <line x1="12" y1="18" x2="12" y2="22"/>
+                                </svg>
+                            </div>
+                            <span class="label">Focus Peaking</span>
+                        </div>
+                        <div class="control-btn">
+                            <div class="icon">
+                                <svg viewBox="0 0 24 24">
+                                    <rect x="2" y="6" width="3" height="12"/>
+                                    <rect x="7" y="10" width="3" height="8"/>
+                                    <rect x="12" y="4" width="3" height="14"/>
+                                    <rect x="17" y="8" width="3" height="10"/>
+                                </svg>
+                            </div>
+                            <span class="label">Histogram</span>
+                        </div>
+                    </div>
+
+                    <!-- Promotional Section - Expanded with swipeable tiles -->
+                    <div class="promo-section expanded">
+                        <div class="drag-handle"></div>
+                        <div class="promo-carousel">
+                            <div class="promo-tile tutorials">
+                                <div class="tile-icon">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                                        <line x1="8" y1="7" x2="16" y2="7"/>
+                                        <line x1="8" y1="11" x2="14" y2="11"/>
+                                    </svg>
+                                </div>
+                                <div class="tile-title">Tutorials</div>
+                                <div class="tile-subtitle">Master your camera</div>
+                            </div>
+                            <div class="promo-tile challenge">
+                                <div class="tile-icon">
+                                    <svg viewBox="0 0 24 24">
+                                        <circle cx="12" cy="8" r="6"/>
+                                        <path d="M8 14l-2 8h12l-2-8"/>
+                                        <path d="M12 2v2"/>
+                                        <path d="M12 12v2"/>
+                                    </svg>
+                                </div>
+                                <div class="tile-title">Leica Akademie</div>
+                                <div class="tile-subtitle">Photography challenge</div>
+                            </div>
+                            <div class="promo-tile features">
+                                <div class="tile-icon">
+                                    <svg viewBox="0 0 24 24">
+                                        <polygon points="12 2 15 8.5 22 9.3 17 14 18 21 12 17.8 6 21 7 14 2 9.3 9 8.5 12 2"/>
+                                    </svg>
+                                </div>
+                                <div class="tile-title">New Features</div>
+                                <div class="tile-subtitle">See what's new</div>
+                            </div>
+                        </div>
+                        <div class="carousel-dots">
+                            <div class="dot active"></div>
+                            <div class="dot"></div>
+                        </div>
+                    </div>
+
+                    <div class="bottom-bar">
+                        <div class="battery">
+                            <div class="battery-icon">
+                                <svg viewBox="0 0 24 12">
+                                    <rect x="1" y="1" width="18" height="10" rx="2" fill="none" stroke="#8e8e93" stroke-width="1"/>
+                                    <rect x="19" y="3.5" width="3" height="5" rx="1" fill="#8e8e93"/>
+                                    <rect x="2.5" y="2.5" width="15" height="7" rx="1" fill="#32D74B"/>
+                                </svg>
+                            </div>
+                            <span>90 %</span>
+                        </div>
+                        <div class="menu-btn">
+                            <span>Menu</span>
+                            <svg viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="3"/>
+                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="spec-label">iPhone 17 Pro (6.3")</div>
+    </div>
+
+    <!-- Minimized State -->
+    <div class="mockup-container" id="minimized-mockup">
+        <div class="mockup-label">Minimized State</div>
+        <div class="phone-frame">
+            <div class="screen">
+                <div class="dynamic-island"></div>
+
+                <div class="top-bar">
+                    <div class="flash-off-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                            <line x1="2" y1="2" x2="22" y2="22" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <div class="recording-indicator"></div>
+                    <div class="format-badge">JPG</div>
+                </div>
+
+                <div class="viewfinder">
+                    <div class="plant-scene">
+                        <div class="leaf leaf-1"></div>
+                        <div class="leaf leaf-2"></div>
+                        <div class="leaf leaf-3"></div>
+                        <div class="leaf leaf-4"></div>
+                        <div class="leaf leaf-5"></div>
+                        <div class="leaf leaf-6"></div>
+                        <div class="leaf leaf-7"></div>
+                        <div class="leaf leaf-8"></div>
+                        <div class="leaf leaf-9"></div>
+                        <div class="pot"></div>
+                    </div>
+                    <div class="grid-overlay"></div>
+                </div>
+
+                <div class="control-panel">
+                    <div class="mode-tabs">
+                        <div class="mode-tab active">PHOTO</div>
+                        <div class="mode-tab">APERTURE</div>
+                    </div>
+
+                    <div class="button-row">
+                        <div class="control-btn">
+                            <div class="icon"><span class="icon-text">JPG</span></div>
+                            <span class="label">Format</span>
+                        </div>
+                        <div class="control-btn">
+                            <div class="icon">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M3 21L12 3l9 18H3z"/>
+                                    <line x1="12" y1="3" x2="12" y2="14"/>
+                                </svg>
+                            </div>
+                            <span class="label">Perspective</span>
+                        </div>
+                        <div class="control-btn">
+                            <div class="icon">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                                    <line x1="2" y1="2" x2="22" y2="22" stroke-width="2"/>
+                                </svg>
+                            </div>
+                            <span class="label">Flash</span>
+                        </div>
+                        <div class="control-btn">
+                            <div class="icon">
+                                <svg viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="9"/>
+                                    <path d="M12 6v6l4 2"/>
+                                    <line x1="1" y1="1" x2="5" y2="5"/>
+                                </svg>
+                            </div>
+                            <span class="label">Timer</span>
+                        </div>
+                    </div>
+
+                    <div class="button-row">
+                        <div class="control-btn">
+                            <div class="icon">
+                                <svg viewBox="0 0 24 24">
+                                    <rect x="3" y="3" width="7" height="7"/>
+                                    <rect x="14" y="3" width="7" height="7"/>
+                                    <rect x="3" y="14" width="7" height="7"/>
+                                    <rect x="14" y="14" width="7" height="7"/>
+                                </svg>
+                            </div>
+                            <span class="label">Grid</span>
+                        </div>
+                        <div class="control-btn">
+                            <div class="icon">
+                                <svg viewBox="0 0 24 24">
+                                    <line x1="4" y1="12" x2="20" y2="12"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                            </div>
+                            <span class="label">Level</span>
+                        </div>
+                        <div class="control-btn">
+                            <div class="icon">
+                                <svg viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="8"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                    <line x1="12" y1="2" x2="12" y2="6"/>
+                                    <line x1="12" y1="18" x2="12" y2="22"/>
+                                </svg>
+                            </div>
+                            <span class="label">Focus Peaking</span>
+                        </div>
+                        <div class="control-btn">
+                            <div class="icon">
+                                <svg viewBox="0 0 24 24">
+                                    <rect x="2" y="6" width="3" height="12"/>
+                                    <rect x="7" y="10" width="3" height="8"/>
+                                    <rect x="12" y="4" width="3" height="14"/>
+                                    <rect x="17" y="8" width="3" height="10"/>
+                                </svg>
+                            </div>
+                            <span class="label">Histogram</span>
+                        </div>
+                    </div>
+
+                    <!-- Promotional Section - Minimized -->
+                    <div class="promo-section minimized">
+                        <div class="drag-handle"></div>
+                        <div class="promo-hint">Swipe up for tutorials & more</div>
+                        <div class="promo-carousel">
+                            <!-- Hidden when minimized via CSS -->
+                        </div>
+                        <div class="carousel-dots">
+                            <div class="dot active"></div>
+                            <div class="dot"></div>
+                        </div>
+                    </div>
+
+                    <div class="bottom-bar">
+                        <div class="battery">
+                            <div class="battery-icon">
+                                <svg viewBox="0 0 24 12">
+                                    <rect x="1" y="1" width="18" height="10" rx="2" fill="none" stroke="#8e8e93" stroke-width="1"/>
+                                    <rect x="19" y="3.5" width="3" height="5" rx="1" fill="#8e8e93"/>
+                                    <rect x="2.5" y="2.5" width="15" height="7" rx="1" fill="#32D74B"/>
+                                </svg>
+                            </div>
+                            <span>90 %</span>
+                        </div>
+                        <div class="menu-btn">
+                            <span>Menu</span>
+                            <svg viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="3"/>
+                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="spec-label">iPhone 17 Pro (6.3")</div>
+    </div>
+
+    <script>
+        // Verification Test Suite
+        function runTests() {
+            const tests = [];
+
+            // Test 1: Both phone frames have same dimensions
+            const frames = document.querySelectorAll('.phone-frame');
+            const frame1Rect = frames[0].getBoundingClientRect();
+            const frame2Rect = frames[1].getBoundingClientRect();
+            tests.push({
+                name: 'Phone frames same size',
+                pass: frame1Rect.width === frame2Rect.width && frame1Rect.height === frame2Rect.height,
+                details: `Expanded: ${frame1Rect.width}x${frame1Rect.height}, Minimized: ${frame2Rect.width}x${frame2Rect.height}`
+            });
+
+            // Test 2: All UI elements visible in expanded mockup
+            const expandedScreen = document.querySelector('#expanded-mockup .screen');
+            const expandedElements = [
+                { selector: '.top-bar', name: 'Top bar' },
+                { selector: '.viewfinder', name: 'Viewfinder' },
+                { selector: '.mode-tabs', name: 'Mode tabs' },
+                { selector: '.button-row', name: 'Button rows' },
+                { selector: '.promo-section', name: 'Promo section' },
+                { selector: '.bottom-bar', name: 'Bottom bar' }
+            ];
+
+            expandedElements.forEach(el => {
+                const element = document.querySelector('#expanded-mockup ' + el.selector);
+                if (element) {
+                    const rect = element.getBoundingClientRect();
+                    const screenRect = expandedScreen.getBoundingClientRect();
+                    const visible = rect.bottom <= screenRect.bottom + 2;
+                    tests.push({
+                        name: `${el.name} visible (expanded)`,
+                        pass: visible,
+                        details: visible ? 'Within screen bounds' : `Overflows by ${Math.round(rect.bottom - screenRect.bottom)}px`
+                    });
+                }
+            });
+
+            // Test 3: All UI elements visible in minimized mockup
+            const minimizedScreen = document.querySelector('#minimized-mockup .screen');
+            expandedElements.forEach(el => {
+                const element = document.querySelector('#minimized-mockup ' + el.selector);
+                if (element) {
+                    const rect = element.getBoundingClientRect();
+                    const screenRect = minimizedScreen.getBoundingClientRect();
+                    const visible = rect.bottom <= screenRect.bottom + 2;
+                    tests.push({
+                        name: `${el.name} visible (minimized)`,
+                        pass: visible,
+                        details: visible ? 'Within screen bounds' : `Overflows by ${Math.round(rect.bottom - screenRect.bottom)}px`
+                    });
+                }
+            });
+
+            // Test 4: Promo tiles visible in expanded, hidden in minimized
+            const expandedTiles = document.querySelector('#expanded-mockup .promo-carousel');
+            const minimizedTiles = document.querySelector('#minimized-mockup .promo-carousel');
+            const expandedTilesVisible = getComputedStyle(expandedTiles).display !== 'none';
+            const minimizedTilesHidden = getComputedStyle(minimizedTiles).display === 'none';
+            tests.push({
+                name: 'Tiles visible when expanded',
+                pass: expandedTilesVisible,
+                details: expandedTilesVisible ? 'Tiles displayed' : 'Tiles hidden'
+            });
+            tests.push({
+                name: 'Tiles hidden when minimized',
+                pass: minimizedTilesHidden,
+                details: minimizedTilesHidden ? 'Tiles hidden' : 'Tiles still visible'
+            });
+
+            // Test 5: Drag handle present in both states
+            const expandedHandle = document.querySelector('#expanded-mockup .drag-handle');
+            const minimizedHandle = document.querySelector('#minimized-mockup .drag-handle');
+            tests.push({
+                name: 'Drag handle present',
+                pass: expandedHandle && minimizedHandle,
+                details: 'Drag handles found in both states'
+            });
+
+            // Test 6: Hint text only in minimized state
+            const minimizedHint = document.querySelector('#minimized-mockup .promo-hint');
+            const hintVisible = getComputedStyle(minimizedHint).display !== 'none';
+            tests.push({
+                name: 'Hint visible when minimized',
+                pass: hintVisible,
+                details: hintVisible ? 'Hint shown' : 'Hint hidden'
+            });
+
+            // Test 7: 8 control buttons present
+            const buttons = document.querySelectorAll('#expanded-mockup .control-btn');
+            tests.push({
+                name: '8 control buttons present',
+                pass: buttons.length === 8,
+                details: `Found ${buttons.length} buttons`
+            });
+
+            // Test 8: Carousel is scrollable (has overflow)
+            const carousel = document.querySelector('#expanded-mockup .promo-carousel');
+            const isScrollable = carousel.scrollWidth > carousel.clientWidth;
+            tests.push({
+                name: 'Carousel is scrollable',
+                pass: isScrollable,
+                details: isScrollable ? `Scroll width: ${carousel.scrollWidth}px, Client width: ${carousel.clientWidth}px` : 'Not scrollable'
+            });
+
+            // Render results
+            const resultsDiv = document.getElementById('testResults');
+            resultsDiv.innerHTML = '';
+            let passCount = 0;
+
+            tests.forEach(test => {
+                if (test.pass) passCount++;
+                const item = document.createElement('div');
+                item.className = 'check-item';
+                item.innerHTML = `
+                    <div class="status ${test.pass ? 'pass' : 'fail'}">${test.pass ? '✓' : '✗'}</div>
+                    <div class="desc">${test.name}</div>
+                `;
+                item.title = test.details;
+                resultsDiv.appendChild(item);
+            });
+
+            const summary = document.createElement('div');
+            summary.className = 'summary';
+            summary.textContent = `${passCount}/${tests.length} tests passed`;
+            summary.style.color = passCount === tests.length ? '#32D74B' : '#FF9F0A';
+            resultsDiv.appendChild(summary);
+        }
+
+        document.getElementById('runTestsBtn').addEventListener('click', runTests);
+
+        // Run tests on load
+        window.addEventListener('load', () => {
+            setTimeout(runTests, 100);
+        });
+    </script>
+</body>
+</html>
