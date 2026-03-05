@@ -241,16 +241,25 @@
         <div class="grid grid-cols-2 gap-2 mb-2">
           <div>
             <label class="text-[10px] text-gray-500 block mb-1">H FOV ratio</label>
-            <input type="number" id="fovRatioH" value="2.5" step="0.05" min="0.3" max="8" class="num-input">
+            <input type="number" id="fovRatioH" value="2.57" step="0.05" min="0.3" max="8" class="num-input">
           </div>
           <div>
             <label class="text-[10px] text-gray-500 block mb-1">V FOV ratio</label>
-            <input type="number" id="fovRatioV" value="2.5" step="0.05" min="0.3" max="8" class="num-input">
+            <input type="number" id="fovRatioV" value="2.57" step="0.05" min="0.3" max="8" class="num-input">
           </div>
         </div>
         <div class="flex justify-between text-xs text-gray-400 mb-1">
-          <span>H: <span id="fovAngleHDisplay" class="text-green-400">102.6&deg;</span></span>
-          <span>V: <span id="fovAngleVDisplay" class="text-green-400">102.6&deg;</span></span>
+          <span>H: <span id="fovAngleHDisplay" class="text-green-400">104.3&deg;</span></span>
+          <span>V: <span id="fovAngleVDisplay" class="text-green-400">104.3&deg;</span></span>
+        </div>
+      </div>
+      <div>
+        <label class="text-[10px] text-gray-500 block mb-2">Side Camera Mode</label>
+        <div class="flex gap-2">
+          <button id="btnSideWide" onclick="setSideMode('wide')"
+            class="flex-1 py-1.5 px-3 text-xs rounded font-semibold bg-green-600 text-white transition-colors">1&times;</button>
+          <button id="btnSideZoomed" onclick="setSideMode('zoomed')"
+            class="flex-1 py-1.5 px-3 text-xs rounded font-semibold bg-gray-700 text-gray-400 transition-colors">2&times; Zoom</button>
         </div>
       </div>
       <div>
@@ -436,7 +445,7 @@
       </div>
       <div class="data-desc">0&deg; = straight down</div>
 
-      <div class="cam-group-label">1&times; WIDE (FOV 102.6&deg;)</div>
+      <div class="cam-group-label">1&times; WIDE (FOV 104.3&deg;)</div>
       <div class="data-row"><span class="data-label">Near edge (S)</span><span class="data-value" id="oh1xNearW">--</span></div>
       <div class="data-row"><span class="data-label">Far edge (N)</span><span class="data-value" id="oh1xFarW">--</span></div>
       <div class="data-row"><span class="data-label">N&#8211;S span</span><span class="data-value" id="oh1xSpan">--</span></div>
@@ -1639,12 +1648,16 @@ const CAMERA_PRESETS = {
   'dji-oa6': {
     name: 'DJI Osmo Action 6',
     sensor: '1:1',
-    fovRatioH: 2.50,
-    fovRatioV: 2.50,
-    note: '1:1 sensor, variable f/2.0\u2013f/4.0 aperture, Wide mode. FOV ratio 2.50.',
+    fovRatioH: 2.57,
+    fovRatioV: 2.57,
+    note: '1:1 sensor, f/2.0\u2013f/4.0. Standard Dewarp, EIS off \u2248 14mm equiv \u2192 104.3\u00B0.',
+    side: {
+      wide:   { label: '1\u00D7',      fovRatioH: 2.57, fovRatioV: 2.57 },
+      zoomed: { label: '2\u00D7 Zoom', fovRatioH: 1.285, fovRatioV: 1.285 }
+    },
     corner: {
-      wide:   { label: '1\u00D7',      fovRatioH: 2.50, fovRatioV: 2.50 },
-      zoomed: { label: '2\u00D7 Zoom', fovRatioH: 1.25, fovRatioV: 1.25 }
+      wide:   { label: '1\u00D7',      fovRatioH: 2.57, fovRatioV: 2.57 },
+      zoomed: { label: '2\u00D7 Zoom', fovRatioH: 1.285, fovRatioV: 1.285 }
     }
   },
   'gopro-hero12': {
@@ -1653,6 +1666,10 @@ const CAMERA_PRESETS = {
     fovRatioH: 2.72,
     fovRatioV: 1.53,
     note: '8:7 sensor, 16:9 crop for 4K60. 100 Mbps. H +9% wider than DJI, V 39% narrower.',
+    side: {
+      wide:   { label: 'Wide',            fovRatioH: 2.72, fovRatioV: 1.53 },
+      zoomed: { label: '1.38\u00D7 Crop', fovRatioH: 1.97, fovRatioV: 1.11 }
+    },
     corner: {
       wide:   { label: 'Wide',            fovRatioH: 2.72, fovRatioV: 1.53 },
       zoomed: { label: '1.38\u00D7 Crop', fovRatioH: 1.97, fovRatioV: 1.11 }
@@ -1664,6 +1681,10 @@ const CAMERA_PRESETS = {
     fovRatioH: 2.72,
     fovRatioV: 1.53,
     note: '8:7 sensor, 16:9 crop for 4K60. 120 Mbps, GP-Log, HB lenses. H +9% wider than DJI, V 39% narrower.',
+    side: {
+      wide:   { label: 'Wide',            fovRatioH: 2.72, fovRatioV: 1.53 },
+      zoomed: { label: '1.38\u00D7 Crop', fovRatioH: 1.97, fovRatioV: 1.11 }
+    },
     corner: {
       wide:   { label: 'Wide',            fovRatioH: 2.72, fovRatioV: 1.53 },
       zoomed: { label: '1.38\u00D7 Crop', fovRatioH: 1.97, fovRatioV: 1.11 }
@@ -1672,12 +1693,16 @@ const CAMERA_PRESETS = {
   'custom': {
     name: 'Custom',
     sensor: 'custom',
-    fovRatioH: 2.50,
-    fovRatioV: 2.50,
+    fovRatioH: 2.57,
+    fovRatioV: 2.57,
     note: 'Enter your own FOV ratios',
+    side: {
+      wide:   { label: '1\u00D7',      fovRatioH: 2.57, fovRatioV: 2.57 },
+      zoomed: { label: '2\u00D7 Zoom', fovRatioH: 1.285, fovRatioV: 1.285 }
+    },
     corner: {
-      wide:   { label: '1\u00D7',      fovRatioH: 2.50, fovRatioV: 2.50 },
-      zoomed: { label: '2\u00D7 Zoom', fovRatioH: 1.25, fovRatioV: 1.25 }
+      wide:   { label: '1\u00D7',      fovRatioH: 2.57, fovRatioV: 2.57 },
+      zoomed: { label: '2\u00D7 Zoom', fovRatioH: 1.285, fovRatioV: 1.285 }
     }
   }
 };
@@ -1689,9 +1714,10 @@ const state = {
   cornerMargin: 0,
   actionWidth: 5.5,
   actionHeight: 5.5,
-  fovRatioH: 2.5,
-  fovRatioV: 2.5,
+  fovRatioH: 2.57,
+  fovRatioV: 2.57,
   cameraPreset: 'dji-oa6',
+  sideMode: 'wide',
   cornerMode: 'zoomed',
   tripodHeight: 1.60,
   kickHeight: 1.92, // Eva's max: Koryo fingertip at 1.92m
@@ -1729,16 +1755,22 @@ function computeDerived() {
   const cornerOffset = halfMat + state.cornerMargin;
   const sideDistance = sideOffset;
   const cornerDistance = Math.SQRT2 * cornerOffset;
-  // Look up corner FOV from preset's corner config
+  // Look up side FOV from preset's side config
   const preset = CAMERA_PRESETS[state.cameraPreset];
+  const sideCfg = preset && preset.side
+    ? preset.side[state.sideMode] || preset.side.wide
+    : { fovRatioH: state.fovRatioH, fovRatioV: state.fovRatioV };
+  const sideFovRatioH = sideCfg.fovRatioH;
+  const sideFovRatioV = sideCfg.fovRatioV;
+  // Look up corner FOV from preset's corner config
   const cornerCfg = preset && preset.corner
     ? preset.corner[state.cornerMode] || preset.corner.wide
     : { fovRatioH: state.fovRatioH, fovRatioV: state.fovRatioV };
   const cornerFovRatioH = cornerCfg.fovRatioH;
   const cornerFovRatioV = cornerCfg.fovRatioV;
-  const fovAngleHDeg = 2 * Math.atan(state.fovRatioH / 2) * (180 / Math.PI);
-  const fovAngleVDeg = 2 * Math.atan(state.fovRatioV / 2) * (180 / Math.PI);
-  return { halfMat, sideOffset, cornerOffset, sideDistance, cornerDistance, cornerFovRatioH, cornerFovRatioV, fovAngleHDeg, fovAngleVDeg };
+  const fovAngleHDeg = 2 * Math.atan(sideFovRatioH / 2) * (180 / Math.PI);
+  const fovAngleVDeg = 2 * Math.atan(sideFovRatioV / 2) * (180 / Math.PI);
+  return { halfMat, sideOffset, cornerOffset, sideDistance, cornerDistance, sideFovRatioH, sideFovRatioV, cornerFovRatioH, cornerFovRatioV, fovAngleHDeg, fovAngleVDeg };
 }
 
 // ── CAMERAS ────────────────────────────────────────────
@@ -2179,7 +2211,7 @@ function drawFOVCones(cameras, derived) {
   const h = derived.halfMat;
 
   cameras.forEach(cam => {
-    const ratio = cam.type === 'corner' ? derived.cornerFovRatioH : state.fovRatioH;
+    const ratio = cam.type === 'corner' ? derived.cornerFovRatioH : derived.sideFovRatioH;
     const angleToCenter = Math.atan2(-cam.y, -cam.x);
     const halfAngle = Math.atan(ratio / 2);
     const maxDist = state.matSize * 2;
@@ -2237,7 +2269,7 @@ function drawDeadZones(cameras, derived) {
   const res = 150;
 
   const coneParams = cameras.map(cam => {
-    const ratio = cam.type === 'corner' ? derived.cornerFovRatioH : state.fovRatioH;
+    const ratio = cam.type === 'corner' ? derived.cornerFovRatioH : derived.sideFovRatioH;
     return {
       x: cam.x, y: cam.y,
       aimAngle: Math.atan2(-cam.y, -cam.x),
@@ -2405,7 +2437,7 @@ function drawPOVOverlay(cam, derived) {
   const gsClearance = state.greenScreenHeight - gsIntersectHeight;
 
   // ── Kick as percentage of frame ──
-  const ratioV = isSide ? state.fovRatioV : derived.cornerFovRatioV;
+  const ratioV = isSide ? derived.sideFovRatioV : derived.cornerFovRatioV;
   const frameSize = distToZone * ratioV;
   const kickPct = (kickY / frameSize) * 100;
 
@@ -2681,8 +2713,8 @@ function updateDataPanel(derived, coverage) {
   const cdy = derived.cornerOffset - state.actionHeight / 2;
   const cornerDistToZone = Math.sqrt(cdx * cdx + cdy * cdy);
 
-  const sideFrameH = sideDistToZone * state.fovRatioH;
-  const sideFrameV = sideDistToZone * state.fovRatioV;
+  const sideFrameH = sideDistToZone * derived.sideFovRatioH;
+  const sideFrameV = sideDistToZone * derived.sideFovRatioV;
   const cornerFrameH = cornerDistToZone * derived.cornerFovRatioH;
   const cornerFrameV = cornerDistToZone * derived.cornerFovRatioV;
   const sideHeadroom = (state.tripodHeight + sideFrameV / 2) - ATHLETE_HEIGHT;
@@ -2847,6 +2879,22 @@ canvas.addEventListener('mouseleave', () => {
   }
 });
 
+// ── SIDE MODE ──────────────────────────────────────────
+function setSideMode(mode) {
+  state.sideMode = mode;
+  const btnW = document.getElementById('btnSideWide');
+  const btnZ = document.getElementById('btnSideZoomed');
+  if (mode === 'wide') {
+    btnW.className = 'flex-1 py-1.5 px-3 text-xs rounded font-semibold bg-green-600 text-white transition-colors';
+    btnZ.className = 'flex-1 py-1.5 px-3 text-xs rounded font-semibold bg-gray-700 text-gray-400 transition-colors';
+  } else {
+    btnZ.className = 'flex-1 py-1.5 px-3 text-xs rounded font-semibold bg-green-600 text-white transition-colors';
+    btnW.className = 'flex-1 py-1.5 px-3 text-xs rounded font-semibold bg-gray-700 text-gray-400 transition-colors';
+  }
+  render();
+}
+window.setSideMode = setSideMode;
+
 // ── CORNER MODE ────────────────────────────────────────
 function setCornerMode(mode) {
   state.cornerMode = mode;
@@ -2912,13 +2960,19 @@ function bindInputs() {
       document.getElementById('fovRatioV').readOnly = !isCustom;
       document.getElementById('fovRatioH').style.opacity = isCustom ? '1' : '0.6';
       document.getElementById('fovRatioV').style.opacity = isCustom ? '1' : '0.6';
+      // Update side button labels from preset
+      if (preset.side) {
+        document.getElementById('btnSideWide').textContent = preset.side.wide.label;
+        document.getElementById('btnSideZoomed').textContent = preset.side.zoomed.label;
+      }
       // Update corner button labels from preset
       if (preset.corner) {
         document.getElementById('btnWide').textContent = preset.corner.wide.label;
         document.getElementById('btnZoomed').textContent = preset.corner.zoomed.label;
       }
     }
-    // Reset corner to wide on preset change
+    // Reset to wide on preset change
+    setSideMode('wide');
     setCornerMode('wide');
   });
 
@@ -2932,14 +2986,20 @@ function bindInputs() {
       document.getElementById('fovRatioH').style.opacity = '1';
       document.getElementById('fovRatioV').style.opacity = '1';
       const cp = CAMERA_PRESETS.custom;
+      document.getElementById('btnSideWide').textContent = cp.side.wide.label;
+      document.getElementById('btnSideZoomed').textContent = cp.side.zoomed.label;
       document.getElementById('btnWide').textContent = cp.corner.wide.label;
       document.getElementById('btnZoomed').textContent = cp.corner.zoomed.label;
     }
   }
-  function syncCustomCorner() {
+  function syncCustomModes() {
     const cp = CAMERA_PRESETS.custom;
     cp.fovRatioH = state.fovRatioH;
     cp.fovRatioV = state.fovRatioV;
+    cp.side.wide.fovRatioH = state.fovRatioH;
+    cp.side.wide.fovRatioV = state.fovRatioV;
+    cp.side.zoomed.fovRatioH = state.fovRatioH / 2;
+    cp.side.zoomed.fovRatioV = state.fovRatioV / 2;
     cp.corner.wide.fovRatioH = state.fovRatioH;
     cp.corner.wide.fovRatioV = state.fovRatioV;
     cp.corner.zoomed.fovRatioH = state.fovRatioH / 2;
@@ -2950,7 +3010,7 @@ function bindInputs() {
     if (!isNaN(v) && v > 0) {
       state.fovRatioH = v;
       switchToCustom();
-      syncCustomCorner();
+      syncCustomModes();
       render();
     }
   });
@@ -2959,7 +3019,7 @@ function bindInputs() {
     if (!isNaN(v) && v > 0) {
       state.fovRatioV = v;
       switchToCustom();
-      syncCustomCorner();
+      syncCustomModes();
       render();
     }
   });
